@@ -1,16 +1,21 @@
-import type { FeaturedArticlesProps } from "../../types/homepage/organism.types";
-import styles from "../../styles/organisms/homepage/FeaturedArticles.module.css";
+import type { RelatedArticlesRowProps } from "../../types/article/article.types";
+import styles from "../../styles/organisms/article/RelatedArticlesRow.module.css";
 
-/** Highlighted stories shown as large image cards with a category tag. */
-export function FeaturedArticles({ identifier, cards }: FeaturedArticlesProps) {
+/** "Related articles" — cards by tag or section. */
+export function RelatedArticlesRow({
+  identifier,
+  heading,
+  cards,
+}: RelatedArticlesRowProps) {
   if (cards.length === 0) return null;
 
   return (
     <section
       className={styles.section}
       data-organism={identifier}
-      aria-label="Featured articles"
+      aria-label={heading ?? "Related articles"}
     >
+      <h2 className={styles.heading}>{heading ?? "Related Articles"}</h2>
       <div className={styles.grid}>
         {cards.map((card, index) => (
           <article key={`${identifier}-card-${index}`} className={styles.card}>
@@ -33,4 +38,4 @@ export function FeaturedArticles({ identifier, cards }: FeaturedArticlesProps) {
   );
 }
 
-export default FeaturedArticles;
+export default RelatedArticlesRow;

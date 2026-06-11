@@ -2,7 +2,7 @@ import { CDS_BASE_URL, CDS_PUBLISHER_ID, CDS_AUTH_HEADER } from "../config/cds";
 import type {
   CdsHomepageResponse,
   HomepageCustomEntity,
-} from "../types/cds.types";
+} from "../types/homepage/cds.types";
 
 /**
  * Fetch a post-addressable CDS entity (e.g. the homepage) by its legacy URL.

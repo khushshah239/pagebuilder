@@ -1,4 +1,4 @@
-import type { SectionRowProps } from "../../types/organism.types";
+import type { SectionRowProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/SectionRow.module.css";
 
 /** A row of section/category article cards with thumbnails. */

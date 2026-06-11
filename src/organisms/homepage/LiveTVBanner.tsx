@@ -1,4 +1,4 @@
-import type { LiveTVBannerProps } from "../../types/organism.types";
+import type { LiveTVBannerProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/LiveTVBanner.module.css";
 
 /**

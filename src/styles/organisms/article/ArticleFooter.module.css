@@ -1,0 +1,32 @@
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 0;
+  border-top: 1px solid var(--pb-border, #ececec);
+  text-align: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+}
+
+.publisher {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--pb-text, #111);
+}
+
+.copyright {
+  font-size: 12px;
+  color: var(--pb-muted, #777);
+}

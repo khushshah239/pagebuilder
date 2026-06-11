@@ -1,4 +1,4 @@
-import type { BreakingNewsStripProps } from "../../types/organism.types";
+import type { BreakingNewsStripProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/BreakingNewsStrip.module.css";
 
 /** Scrolling ticker of urgent headlines, prefixed with a labelled badge. */

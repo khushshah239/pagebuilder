@@ -1,4 +1,4 @@
-import type { WebStoryRailProps } from "../../types/organism.types";
+import type { WebStoryRailProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/WebStoryRail.module.css";
 
 /** Horizontally scrolling rail of circular web-story bubbles. */

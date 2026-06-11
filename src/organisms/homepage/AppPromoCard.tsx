@@ -1,4 +1,4 @@
-import type { AppPromoCardProps } from "../../types/organism.types";
+import type { AppPromoCardProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/AppPromoCard.module.css";
 
 /** Promotional banner driving app downloads, with a background image and CTA. */

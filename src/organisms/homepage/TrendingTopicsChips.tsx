@@ -1,4 +1,4 @@
-import type { TrendingTopicsChipsProps } from "../../types/organism.types";
+import type { TrendingTopicsChipsProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/TrendingTopicsChips.module.css";
 
 /** Row of clickable "trending now" topic chips. */

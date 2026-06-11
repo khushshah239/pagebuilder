@@ -5,7 +5,7 @@ import type {
   CdsLayoutOrganism,
   CdsTemplate,
   HomepageCustomEntity,
-} from "../../types/cds.types";
+} from "../../types/homepage/cds.types";
 
 // ─── Per-organism specs ─────────────────────────────────────────────────────
 // `kind` selects how props are built:

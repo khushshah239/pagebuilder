@@ -1,0 +1,29 @@
+.summary {
+  background: var(--pb-muted-bg, #f4f4f4);
+  border-left: 4px solid var(--pb-accent, #c8102e);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+
+.heading {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--pb-text, #111);
+}
+
+.points {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.point {
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--pb-text, #222);
+}

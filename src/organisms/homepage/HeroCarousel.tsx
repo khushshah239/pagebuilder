@@ -1,4 +1,4 @@
-import type { HeroCarouselProps } from "../../types/organism.types";
+import type { HeroCarouselProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/HeroCarousel.module.css";
 
 /** Top featured stories, presented as a horizontally scrollable hero carousel. */

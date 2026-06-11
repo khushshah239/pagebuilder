@@ -1,4 +1,4 @@
-import type { PostGridProps } from "../../types/organism.types";
+import type { PostGridProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/PostGrid.module.css";
 
 /**

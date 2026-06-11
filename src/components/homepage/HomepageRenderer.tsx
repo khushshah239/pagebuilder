@@ -3,7 +3,7 @@ import { buildOrganismProps, organismId } from "../../lib/homepage/buildProps";
 import type {
   CdsLayoutOrganism,
   HomepageCustomEntity,
-} from "../../types/cds.types";
+} from "../../types/homepage/cds.types";
 import {
   AppPromoCard,
   BreakingNewsStrip,

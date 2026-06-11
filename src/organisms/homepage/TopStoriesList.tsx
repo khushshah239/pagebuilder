@@ -1,4 +1,4 @@
-import type { TopStoriesListProps } from "../../types/organism.types";
+import type { TopStoriesListProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/TopStoriesList.module.css";
 
 /** Ranked list of top stories, numbered and text-only (no images). */

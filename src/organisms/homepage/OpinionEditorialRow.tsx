@@ -1,4 +1,4 @@
-import type { OpinionEditorialRowProps } from "../../types/organism.types";
+import type { OpinionEditorialRowProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/OpinionEditorialRow.module.css";
 
 /** Row of opinion / editorial cards with category and short excerpt. */

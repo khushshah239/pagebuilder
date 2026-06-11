@@ -1,4 +1,4 @@
-import type { VideoBriefingsRailProps } from "../../types/organism.types";
+import type { VideoBriefingsRailProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/VideoBriefingsRail.module.css";
 
 /** Horizontally scrolling rail of video thumbnails with duration badges. */

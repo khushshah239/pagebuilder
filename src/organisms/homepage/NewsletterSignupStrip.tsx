@@ -1,4 +1,4 @@
-import type { NewsletterSignupStripProps } from "../../types/organism.types";
+import type { NewsletterSignupStripProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/NewsletterSignupStrip.module.css";
 
 /** Inline newsletter email-capture strip with a background image and CTA. */

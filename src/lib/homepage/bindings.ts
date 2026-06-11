@@ -1,5 +1,5 @@
 import { getByPath } from "./path";
-import type { CdsFieldMapEntry } from "../../types/cds.types";
+import type { CdsFieldMapEntry } from "../../types/homepage/cds.types";
 
 /**
  * Group key = the source prefix up to and including its first array-index
