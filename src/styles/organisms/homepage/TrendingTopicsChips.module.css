@@ -1,0 +1,23 @@
+.section {
+  width: 100%;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pb-text, #111);
+  background: var(--pb-muted-bg, #f0f0f0);
+  border: 1px solid var(--pb-border, #e2e2e2);
+  border-radius: 999px;
+  padding: 6px 14px;
+  white-space: nowrap;
+}

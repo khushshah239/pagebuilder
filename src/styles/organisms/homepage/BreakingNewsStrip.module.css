@@ -1,0 +1,48 @@
+.strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #111;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  overflow: hidden;
+}
+
+.badge {
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: var(--pb-accent, #c8102e);
+}
+
+.ticker {
+  display: flex;
+  gap: 28px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+.ticker::-webkit-scrollbar {
+  display: none;
+}
+
+.item {
+  font-size: 14px;
+  position: relative;
+}
+
+.item:not(:first-child)::before {
+  content: "•";
+  position: absolute;
+  left: -16px;
+  opacity: 0.5;
+}
