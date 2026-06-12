@@ -3,12 +3,13 @@
 }
 
 .heading {
-  margin: 0 0 12px;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--pb-text, #111);
-  border-left: 4px solid var(--pb-accent, #c8102e);
-  padding-left: 10px;
+  margin: 0 0 18px;
+  padding-bottom: 9px;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--pb-text);
+  border-bottom: 3px solid var(--pb-accent);
 }
 
 .list {
@@ -22,9 +23,9 @@
 .item {
   display: flex;
   align-items: baseline;
-  gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--pb-border, #ececec);
+  gap: 16px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--pb-border);
 }
 
 .item:last-child {
@@ -33,14 +34,21 @@
 
 .rank {
   flex: 0 0 auto;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 800;
-  color: var(--pb-accent, #c8102e);
-  min-width: 22px;
+  color: var(--pb-accent);
+  min-width: 28px;
+  line-height: 1.1;
 }
 
 .title {
-  font-size: 15px;
-  line-height: 1.35;
-  color: var(--pb-text, #111);
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--pb-text);
+  transition: color 0.15s ease;
+}
+
+.item:hover .title {
+  color: var(--pb-accent);
 }

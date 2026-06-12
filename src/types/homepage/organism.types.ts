@@ -4,6 +4,9 @@
 // IMPORTANT: every field here is a RESOLVED value produced by the binding layer
 // (e.g. `image` is already the absolute URL string, not the raw CDS media object).
 // Components are purely presentational and never touch the CDS payload directly.
+//
+// `url_slug` (where present) is the article URL a card links to, bound from the
+// post's legacy_url. When set, the card renders as a link to that article.
 
 // ─── HeroCarousel ───────────────────────────────────────────────────────────
 export interface HeroCarouselSlide {
@@ -12,6 +15,7 @@ export interface HeroCarouselSlide {
   category_label: string;
   excerpt?: string;
   read_time?: string;
+  url_slug?: string;
 }
 
 export interface HeroCarouselProps {
@@ -22,6 +26,7 @@ export interface HeroCarouselProps {
 // ─── BreakingNewsStrip ──────────────────────────────────────────────────────
 export interface BreakingHeadline {
   title: string;
+  url_slug?: string;
 }
 
 export interface BreakingNewsStripProps {
@@ -35,6 +40,9 @@ export interface FeaturedCard {
   title: string;
   thumbnail: string;
   category_label?: string;
+  author?: string;
+  published_at?: string;
+  url_slug?: string;
 }
 
 export interface FeaturedArticlesProps {
@@ -46,6 +54,10 @@ export interface FeaturedArticlesProps {
 export interface SectionRowCard {
   title: string;
   thumbnail: string;
+  category_label?: string;
+  author?: string;
+  published_at?: string;
+  url_slug?: string;
 }
 
 export interface SectionRowProps {
@@ -57,6 +69,7 @@ export interface SectionRowProps {
 // ─── TopStoriesList ─────────────────────────────────────────────────────────
 export interface TopStory {
   title: string;
+  url_slug?: string;
 }
 
 export interface TopStoriesListProps {
@@ -70,6 +83,7 @@ export interface VideoBriefingCard {
   title: string;
   thumbnail: string;
   duration_label?: string;
+  url_slug?: string;
 }
 
 export interface VideoBriefingsRailProps {
@@ -82,6 +96,7 @@ export interface VideoBriefingsRailProps {
 export interface PostGridSideCard {
   title: string;
   thumbnail: string;
+  url_slug?: string;
 }
 
 export interface PostGridProps {
@@ -89,6 +104,7 @@ export interface PostGridProps {
   title: string;
   image: string;
   excerpt?: string;
+  url_slug?: string;
   sidecards: PostGridSideCard[];
 }
 
@@ -96,6 +112,7 @@ export interface PostGridProps {
 export interface WebStoryBubble {
   title: string;
   thumbnail: string;
+  url_slug?: string;
 }
 
 export interface WebStoryRailProps {
@@ -106,6 +123,7 @@ export interface WebStoryRailProps {
 // ─── TrendingTopicsChips ────────────────────────────────────────────────────
 export interface TrendingChip {
   label: string;
+  url_slug?: string;
 }
 
 export interface TrendingTopicsChipsProps {
@@ -119,6 +137,7 @@ export interface OpinionCard {
   thumbnail: string;
   category_label?: string;
   excerpt?: string;
+  url_slug?: string;
 }
 
 export interface OpinionEditorialRowProps {

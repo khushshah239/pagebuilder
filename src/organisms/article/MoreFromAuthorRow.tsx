@@ -1,3 +1,4 @@
+import { CardLink } from "../../components/CardLink";
 import type { MoreFromAuthorRowProps } from "../../types/article/article.types";
 import styles from "../../styles/organisms/article/MoreFromAuthorRow.module.css";
 
@@ -18,7 +19,11 @@ export function MoreFromAuthorRow({
       <h2 className={styles.heading}>{heading ?? "More from the Author"}</h2>
       <div className={styles.grid}>
         {articles.map((article, index) => (
-          <article key={`${identifier}-article-${index}`} className={styles.card}>
+          <CardLink
+            key={`${identifier}-article-${index}`}
+            href={article.url_slug}
+            className={styles.card}
+          >
             <img
               className={styles.thumbnail}
               src={article.thumbnail}
@@ -31,7 +36,7 @@ export function MoreFromAuthorRow({
                 <time className={styles.date}>{article.published_at}</time>
               ) : null}
             </div>
-          </article>
+          </CardLink>
         ))}
       </div>
     </section>

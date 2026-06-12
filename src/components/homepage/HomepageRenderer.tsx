@@ -1,5 +1,7 @@
 import type { ComponentType } from "react";
 import { buildOrganismProps, organismId } from "../../lib/homepage/buildProps";
+import { resolveOrganismLinks } from "../../lib/resolveLinks";
+import type { ArticleLinkResolver } from "../../api/articlePageIndex";
 import type {
   CdsLayoutOrganism,
   HomepageCustomEntity,
@@ -37,10 +39,18 @@ const COMPONENTS: Record<string, ComponentType<any>> = {
 
 /**
  * Walks the template layout in order and renders each organism with props built
- * from live CDS data (falling back to the template's inline defaults). Organisms
- * without a matching component (e.g. `sponsoredcontentstrip`) are skipped.
+ * from live CDS data (falling back to the template's inline defaults). Each
+ * card's `url_slug` is resolved to its ArticlePage route, so only curated
+ * articles become links. Organisms without a matching component (e.g.
+ * `sponsoredcontentstrip`) are skipped.
  */
-export function HomepageRenderer({ data }: { data: HomepageCustomEntity }) {
+export function HomepageRenderer({
+  data,
+  resolveLink,
+}: {
+  data: HomepageCustomEntity;
+  resolveLink: ArticleLinkResolver;
+}) {
   const template = data.template?.[0];
   if (!template) return null;
 
@@ -53,7 +63,8 @@ export function HomepageRenderer({ data }: { data: HomepageCustomEntity }) {
         const props = buildOrganismProps(node, template, data);
         if (!props) return null;
 
-        return <Component key={organismId(node) || index} {...props} />;
+        const linked = resolveOrganismLinks(props, resolveLink);
+        return <Component key={organismId(node) || index} {...linked} />;
       })}
     </>
   );

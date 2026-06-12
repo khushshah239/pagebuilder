@@ -23,6 +23,7 @@ export interface CdsArticleTemplate {
 export interface CdsPost {
   id?: number;
   title?: string;
+  legacy_url?: string;
   summary?: string;
   short_description?: string;
   banner_url?: string;

@@ -1,3 +1,4 @@
+import { CardLink } from "../../components/CardLink";
 import type { PostGridProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/PostGrid.module.css";
 
@@ -10,6 +11,7 @@ export function PostGrid({
   title,
   image,
   excerpt,
+  url_slug,
   sidecards,
 }: PostGridProps) {
   return (
@@ -18,18 +20,22 @@ export function PostGrid({
       data-organism={identifier}
       aria-label={title}
     >
-      <article className={styles.lead}>
+      <CardLink href={url_slug} className={styles.lead}>
         <img className={styles.leadImage} src={image} alt={title} loading="lazy" />
         <div className={styles.leadBody}>
           <h2 className={styles.leadTitle}>{title}</h2>
           {excerpt ? <p className={styles.leadExcerpt}>{excerpt}</p> : null}
         </div>
-      </article>
+      </CardLink>
 
       {sidecards.length > 0 ? (
         <div className={styles.sideColumn}>
           {sidecards.map((card, index) => (
-            <article key={`${identifier}-side-${index}`} className={styles.sideCard}>
+            <CardLink
+              key={`${identifier}-side-${index}`}
+              href={card.url_slug}
+              className={styles.sideCard}
+            >
               <img
                 className={styles.sideThumbnail}
                 src={card.thumbnail}
@@ -37,7 +43,7 @@ export function PostGrid({
                 loading="lazy"
               />
               <h3 className={styles.sideTitle}>{card.title}</h3>
-            </article>
+            </CardLink>
           ))}
         </div>
       ) : null}

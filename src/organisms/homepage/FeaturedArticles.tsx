@@ -1,3 +1,4 @@
+import { CardLink } from "../../components/CardLink";
 import type { FeaturedArticlesProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/FeaturedArticles.module.css";
 
@@ -13,7 +14,11 @@ export function FeaturedArticles({ identifier, cards }: FeaturedArticlesProps) {
     >
       <div className={styles.grid}>
         {cards.map((card, index) => (
-          <article key={`${identifier}-card-${index}`} className={styles.card}>
+          <CardLink
+            key={`${identifier}-card-${index}`}
+            href={card.url_slug}
+            className={styles.card}
+          >
             <img
               className={styles.thumbnail}
               src={card.thumbnail}
@@ -25,8 +30,17 @@ export function FeaturedArticles({ identifier, cards }: FeaturedArticlesProps) {
                 <span className={styles.category}>{card.category_label}</span>
               ) : null}
               <h3 className={styles.title}>{card.title}</h3>
+              {card.author || card.published_at ? (
+                <p className={styles.byline}>
+                  {card.author ? (
+                    <span className={styles.author}>By {card.author}</span>
+                  ) : null}
+                  {card.author && card.published_at ? " · " : null}
+                  {card.published_at}
+                </p>
+              ) : null}
             </div>
-          </article>
+          </CardLink>
         ))}
       </div>
     </section>

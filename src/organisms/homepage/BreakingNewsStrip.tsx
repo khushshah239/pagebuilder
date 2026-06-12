@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { BreakingNewsStripProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/BreakingNewsStrip.module.css";
 
@@ -19,7 +20,16 @@ export function BreakingNewsStrip({
       <ul className={styles.ticker}>
         {headlines.map((headline, index) => (
           <li key={`${identifier}-headline-${index}`} className={styles.item}>
-            {headline.title}
+            {headline.url_slug ? (
+              <Link
+                href={headline.url_slug}
+                style={{ color: "inherit", textDecoration: "none" }}
+              >
+                {headline.title}
+              </Link>
+            ) : (
+              headline.title
+            )}
           </li>
         ))}
       </ul>

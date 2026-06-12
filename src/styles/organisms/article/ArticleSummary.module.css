@@ -1,29 +1,32 @@
 .summary {
-  background: var(--pb-muted-bg, #f4f4f4);
-  border-left: 4px solid var(--pb-accent, #c8102e);
+  max-width: 740px;
+  margin: 0 auto;
+  width: 100%;
+  background: var(--pb-muted-bg);
+  border-left: 4px solid var(--pb-accent);
   border-radius: 8px;
-  padding: 16px 18px;
+  padding: 20px 22px;
 }
 
 .heading {
-  margin: 0 0 10px;
-  font-size: 15px;
-  font-weight: 700;
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--pb-text, #111);
+  letter-spacing: 0.06em;
+  color: var(--pb-accent);
 }
 
 .points {
   margin: 0;
-  padding-left: 18px;
+  padding-left: 20px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .point {
-  font-size: 15px;
-  line-height: 1.45;
-  color: var(--pb-text, #222);
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: var(--pb-text);
 }

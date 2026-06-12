@@ -1,3 +1,4 @@
+import { CardLink } from "../../components/CardLink";
 import type { WebStoryRailProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/WebStoryRail.module.css";
 
@@ -13,7 +14,11 @@ export function WebStoryRail({ identifier, stories }: WebStoryRailProps) {
     >
       <div className={styles.rail}>
         {stories.map((story, index) => (
-          <article key={`${identifier}-story-${index}`} className={styles.bubble}>
+          <CardLink
+            key={`${identifier}-story-${index}`}
+            href={story.url_slug}
+            className={styles.bubble}
+          >
             <img
               className={styles.thumbnail}
               src={story.thumbnail}
@@ -21,7 +26,7 @@ export function WebStoryRail({ identifier, stories }: WebStoryRailProps) {
               loading="lazy"
             />
             <span className={styles.title}>{story.title}</span>
-          </article>
+          </CardLink>
         ))}
       </div>
     </section>

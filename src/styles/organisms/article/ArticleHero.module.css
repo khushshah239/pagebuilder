@@ -1,7 +1,7 @@
 .hero {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .image {
@@ -10,13 +10,15 @@
   object-fit: cover;
   border-radius: 12px;
   display: block;
-  background: var(--pb-muted-bg, #e9e9e9);
+  background: var(--pb-muted-bg);
 }
 
 .excerpt {
-  margin: 0;
-  font-size: 17px;
-  line-height: 1.5;
-  color: var(--pb-muted, #444);
+  max-width: 740px;
+  margin: 0 auto;
+  width: 100%;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--pb-muted);
   font-style: italic;
 }

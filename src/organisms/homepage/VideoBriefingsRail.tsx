@@ -1,3 +1,4 @@
+import { CardLink } from "../../components/CardLink";
 import type { VideoBriefingsRailProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/VideoBriefingsRail.module.css";
 
@@ -18,7 +19,11 @@ export function VideoBriefingsRail({
       {heading ? <h2 className={styles.heading}>{heading}</h2> : null}
       <div className={styles.rail}>
         {videos.map((video, index) => (
-          <article key={`${identifier}-video-${index}`} className={styles.card}>
+          <CardLink
+            key={`${identifier}-video-${index}`}
+            href={video.url_slug}
+            className={styles.card}
+          >
             <div className={styles.thumbWrap}>
               <img
                 className={styles.thumbnail}
@@ -31,7 +36,7 @@ export function VideoBriefingsRail({
               ) : null}
             </div>
             <h3 className={styles.title}>{video.title}</h3>
-          </article>
+          </CardLink>
         ))}
       </div>
     </section>

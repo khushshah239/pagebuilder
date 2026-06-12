@@ -1,3 +1,4 @@
+import { CardLink } from "../../components/CardLink";
 import type { RelatedArticlesRowProps } from "../../types/article/article.types";
 import styles from "../../styles/organisms/article/RelatedArticlesRow.module.css";
 
@@ -18,7 +19,11 @@ export function RelatedArticlesRow({
       <h2 className={styles.heading}>{heading ?? "Related Articles"}</h2>
       <div className={styles.grid}>
         {cards.map((card, index) => (
-          <article key={`${identifier}-card-${index}`} className={styles.card}>
+          <CardLink
+            key={`${identifier}-card-${index}`}
+            href={card.url_slug}
+            className={styles.card}
+          >
             <img
               className={styles.thumbnail}
               src={card.thumbnail}
@@ -31,7 +36,7 @@ export function RelatedArticlesRow({
               ) : null}
               <h3 className={styles.title}>{card.title}</h3>
             </div>
-          </article>
+          </CardLink>
         ))}
       </div>
     </section>

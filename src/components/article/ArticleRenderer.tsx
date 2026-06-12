@@ -3,6 +3,8 @@ import {
   ARTICLE_TEMPLATE_ORDER,
   buildArticleProps,
 } from "../../lib/article/buildArticleProps";
+import { resolveOrganismLinks } from "../../lib/resolveLinks";
+import type { ArticleLinkResolver } from "../../api/articlePageIndex";
 import type { ArticleCustomEntity } from "../../types/article/article-cds.types";
 import {
   ArticleBody,
@@ -17,7 +19,6 @@ import {
 } from "../../organisms/article";
 
 /** Maps a CDS article `schema_slug` to its presentational organism component. */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const COMPONENTS: Record<string, ComponentType<any>> = {
   articlehero: ArticleHero,
   articleheader: ArticleHeader,
@@ -36,7 +37,13 @@ const COMPONENTS: Record<string, ComponentType<any>> = {
  * to the template's inline content. Organisms absent from this template variant
  * are skipped.
  */
-export function ArticleRenderer({ data }: { data: ArticleCustomEntity }) {
+export function ArticleRenderer({
+  data,
+  resolveLink,
+}: {
+  data: ArticleCustomEntity;
+  resolveLink: ArticleLinkResolver;
+}) {
   const template = data.template?.[0];
   if (!template) return null;
 
@@ -49,10 +56,11 @@ export function ArticleRenderer({ data }: { data: ArticleCustomEntity }) {
         const props = buildArticleProps(template, data, organism);
         if (!props) return null; // organism not in this variant
 
+        const linked = resolveOrganismLinks(props, resolveLink);
         return (
           <Component
-            key={(props.identifier as string) || index}
-            {...props}
+            key={(linked.identifier as string) || index}
+            {...linked}
           />
         );
       })}

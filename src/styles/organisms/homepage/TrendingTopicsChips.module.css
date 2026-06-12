@@ -13,11 +13,18 @@
 
 .chip {
   font-size: 13px;
-  font-weight: 600;
-  color: var(--pb-text, #111);
-  background: var(--pb-muted-bg, #f0f0f0);
-  border: 1px solid var(--pb-border, #e2e2e2);
+  font-weight: 700;
+  color: var(--pb-text);
+  background: var(--pb-muted-bg);
+  border: 1px solid var(--pb-border);
   border-radius: 999px;
-  padding: 6px 14px;
+  padding: 7px 16px;
   white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.chip:hover {
+  background: var(--pb-accent);
+  border-color: var(--pb-accent);
+  color: #fff;
 }

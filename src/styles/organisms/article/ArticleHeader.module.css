@@ -1,18 +1,31 @@
 .header {
+  max-width: 740px;
+  margin: 0 auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .title {
   margin: 0;
-  font-size: 32px;
-  line-height: 1.2;
+  font-size: 38px;
+  line-height: 1.15;
   font-weight: 800;
-  color: var(--pb-text, #111);
+  letter-spacing: -0.025em;
+  color: var(--pb-text);
 }
 
 .date {
   font-size: 13px;
-  color: var(--pb-muted, #666);
+  font-weight: 600;
+  color: var(--pb-muted);
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--pb-border);
+}
+
+@media (max-width: 640px) {
+  .title {
+    font-size: 28px;
+  }
 }

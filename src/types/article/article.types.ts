@@ -62,6 +62,7 @@ export interface RelatedArticleCard {
   title: string;
   thumbnail: string;
   category_label?: string;
+  url_slug?: string;
 }
 
 export interface RelatedArticlesRowProps {
@@ -75,6 +76,7 @@ export interface AuthorArticleCard {
   title: string;
   thumbnail: string;
   published_at?: string;
+  url_slug?: string;
 }
 
 export interface MoreFromAuthorRowProps {

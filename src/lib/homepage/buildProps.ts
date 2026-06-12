@@ -157,15 +157,22 @@ function buildPostGridProps(
   const lead = groups[0];
 
   if (lead) {
+    // Each side group holds the card fields under `sidecards` and its own link
+    // under `url_slug` (the binding targets `url_slug` at the group root); merge
+    // the link onto the card so it stays clickable.
     const sidecards = groups
       .slice(1)
-      .map((group) => group.sidecards as Record<string, unknown> | undefined)
+      .map((group): Record<string, unknown> | undefined => {
+        const card = group.sidecards as Record<string, unknown> | undefined;
+        return card ? { ...card, url_slug: group.url_slug } : undefined;
+      })
       .filter((card): card is Record<string, unknown> => Boolean(card));
     return {
       identifier: id,
       title: lead.title ?? "",
       image: lead.image ?? "",
       excerpt: lead.excerpt ?? "",
+      url_slug: lead.url_slug,
       sidecards,
     };
   }

@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Crictoday — Homepage",
+  title: "Crictoday — Cricket News, Live Scores, Features & Opinion",
   description: "Publisher homepage assembled from CDS components.",
 };
 

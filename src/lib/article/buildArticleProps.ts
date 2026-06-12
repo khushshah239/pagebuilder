@@ -58,6 +58,32 @@ function articlePost(article: ArticleCustomEntity): Record<string, unknown> {
   return posts?.[0] ?? {};
 }
 
+/** Strip a trailing slash so URLs compare reliably. */
+function stripSlash(url: string): string {
+  return url.replace(/\/$/, "");
+}
+
+/**
+ * Remove the currently-viewed article from a related/author list (so the page
+ * never lists itself) and dedupe repeated articles, keyed by `url_slug`.
+ */
+function dedupeExcludingCurrent(
+  items: Record<string, unknown>[],
+  currentUrl: string
+): Record<string, unknown>[] {
+  const seen = new Set<string>();
+  const out: Record<string, unknown>[] = [];
+  for (const item of items) {
+    const slug = stripSlash(asText(item.url_slug));
+    if (slug) {
+      if (slug === currentUrl || seen.has(slug)) continue;
+      seen.add(slug);
+    }
+    out.push(item);
+  }
+  return out;
+}
+
 /**
  * Resolve an organism's bindings against the live article data (used for the
  * related/author slots). Sources/targets are trimmed to tolerate CMS typos.
@@ -143,6 +169,7 @@ export const ARTICLE_TEMPLATE_ORDER: ArticleOrganism[] = [
       // before the template default.
       const body =
         asText(post.content) ||
+        asText(post.content_html) ||
         asText(post.summary) ||
         asText(post.short_description) ||
         asText(fallback.body);
@@ -184,16 +211,19 @@ export const ARTICLE_TEMPLATE_ORDER: ArticleOrganism[] = [
       );
       const fromLive = live.length > 0;
       const source = fromLive ? live : fallback;
-      return {
-        identifier: "related-articles",
-        cards: source.map((card) => ({
+      const currentUrl = stripSlash(asText(articlePost(article).legacy_url));
+      const cards = dedupeExcludingCurrent(
+        source.map((card) => ({
           title: asText(card.title).trim(),
           thumbnail: fromLive
             ? asText(card.thumbnail)
             : flattenMedia(card.thumbnail),
           category_label: card.category_label,
+          url_slug: fromLive ? asText(card.url_slug) : undefined,
         })),
-      };
+        currentUrl
+      );
+      return { identifier: "related-articles", cards };
     },
   },
   {
@@ -205,16 +235,19 @@ export const ARTICLE_TEMPLATE_ORDER: ArticleOrganism[] = [
       );
       const fromLive = live.length > 0;
       const source = fromLive ? live : fallback;
-      return {
-        identifier: "more-from-author",
-        articles: source.map((item) => ({
+      const currentUrl = stripSlash(asText(articlePost(article).legacy_url));
+      const articles = dedupeExcludingCurrent(
+        source.map((item) => ({
           title: asText(item.title).trim(),
           thumbnail: fromLive
             ? asText(item.thumbnail)
             : flattenMedia(item.thumbnail),
           published_at: item.published_at,
+          url_slug: fromLive ? asText(item.url_slug) : undefined,
         })),
-      };
+        currentUrl
+      );
+      return { identifier: "more-from-author", articles };
     },
   },
   {

@@ -1,3 +1,4 @@
+import { CardLink } from "../../components/CardLink";
 import type { OpinionEditorialRowProps } from "../../types/homepage/organism.types";
 import styles from "../../styles/organisms/homepage/OpinionEditorialRow.module.css";
 
@@ -18,7 +19,11 @@ export function OpinionEditorialRow({
       {heading ? <h2 className={styles.heading}>{heading}</h2> : null}
       <div className={styles.row}>
         {items.map((item, index) => (
-          <article key={`${identifier}-item-${index}`} className={styles.card}>
+          <CardLink
+            key={`${identifier}-item-${index}`}
+            href={item.url_slug}
+            className={styles.card}
+          >
             <img
               className={styles.thumbnail}
               src={item.thumbnail}
@@ -32,7 +37,7 @@ export function OpinionEditorialRow({
               <h3 className={styles.title}>{item.title}</h3>
               {item.excerpt ? <p className={styles.excerpt}>{item.excerpt}</p> : null}
             </div>
-          </article>
+          </CardLink>
         ))}
       </div>
     </section>
