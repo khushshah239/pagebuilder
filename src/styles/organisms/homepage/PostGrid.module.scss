@@ -1,0 +1,185 @@
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
+  gap: 18px;
+  /* Both columns stretch to the same (tallest) height so the right column
+     always matches the hero. */
+  align-items: stretch;
+}
+
+/* ─── Lead story: image on top, headline + excerpt below ─────────────────── */
+.lead {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  background: #fff;
+  border: 1px solid var(--pb-border, #e3e6e9);
+  border-radius: 0;
+  overflow: hidden;
+  transition: box-shadow 0.16s ease, transform 0.16s ease;
+}
+.lead:hover {
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+}
+
+/* Stretched overlay — covers the full card so the article is clickable everywhere
+   except where category / author links sit above it (z-index: 2). */
+.leadLink {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.leadImage {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  display: block;
+  background: var(--pb-muted-bg, #eef0f2);
+}
+
+.leadBody {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 16px 18px 20px;
+}
+
+.leadCategory {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pb-accent, #c8102e);
+  text-decoration: none;
+  position: relative;
+  z-index: 2;
+}
+.leadCategory:hover {
+  text-decoration: underline;
+}
+
+.leadTitle {
+  margin: 0;
+  font-family: var(--pb-heading-font, inherit);
+  font-size: clamp(25px, 2.4vw, 38px);
+  font-weight: 950;
+  line-height: 1.1;
+  letter-spacing: 0;
+  color: var(--pb-text, #15171a);
+}
+
+.leadExcerpt {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--pb-muted, #5b626b);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ─── Right column: title-left / thumbnail-right rows with dividers ──────── */
+.sidecards {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff;
+  border: 1px solid var(--pb-border, #e3e6e9);
+  border-radius: 0;
+  border-top: 4px solid var(--pb-accent, #c8102e);
+  padding: 0 16px;
+}
+
+/* Four equal slots — the column is split into quarters for a 4-article
+   capacity, so each story (and each empty slot) occupies one quarter. The title
+   and thumbnail below are sized to fill one of these slots. */
+.card,
+.cardEmpty {
+  flex: 1 1 0;
+  border-bottom: 1px solid var(--pb-border, #e3e6e9);
+}
+.card:last-child,
+.cardEmpty:last-child {
+  border-bottom: none;
+}
+
+.card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 16px;
+  align-items: stretch;
+  padding: 16px 0;
+  color: inherit;
+}
+
+.cardLink {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.cardText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.cardCategory {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--pb-accent, #c8102e);
+  text-decoration: none;
+  position: relative;
+  z-index: 2;
+}
+.cardCategory:hover {
+  text-decoration: underline;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: clamp(16px, 1.25vw, 20px);
+  font-weight: 850;
+  line-height: 1.25;
+  color: var(--pb-text, #15171a);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card:hover .cardTitle {
+  color: var(--pb-accent, #c8102e);
+}
+
+.cardThumb {
+  width: 260px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: var(--pb-muted-bg, #eef0f2);
+  transition: transform 0.2s ease;
+}
+.card:hover .cardThumb {
+  transform: scale(1.03);
+}
+
+@media (max-width: 880px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .sidecards {
+    border-top-width: 3px;
+  }
+  .card {
+    grid-template-columns: 1fr 140px;
+  }
+}

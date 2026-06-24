@@ -1,0 +1,88 @@
+.strip {
+  position: relative;
+  display: flex;
+  min-height: 170px;
+  border-radius: 16px;
+  overflow: hidden;
+  /* Branded base so white text is always readable, even before/without the image. */
+  background: linear-gradient(
+    120deg,
+    var(--pb-accent, #c8102e),
+    var(--pb-accent-dark, #a50d23)
+  );
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.48));
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+  width: 100%;
+  padding: 36px 44px;
+  color: #fff;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--pb-heading-font, inherit);
+  font-size: clamp(24px, 2.4vw, 32px);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.form {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+  min-width: 320px;
+  max-width: 520px;
+}
+
+.input {
+  flex: 1;
+  padding: 15px 18px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  color: var(--pb-text, #15171a);
+  background: #fff;
+}
+
+.button {
+  flex-shrink: 0;
+  padding: 15px 30px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--pb-accent, #c8102e);
+  background: #fff;
+}
+.button:hover {
+  background: rgba(255, 255, 255, 0.9);
+}

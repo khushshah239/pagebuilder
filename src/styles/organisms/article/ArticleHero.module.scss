@@ -1,0 +1,33 @@
+.hero {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+  border-radius: 0;
+  background: var(--pb-muted-bg, #eef0f2);
+}
+
+.caption {
+  margin: 0;
+  font-size: 13px;
+  color: var(--pb-muted, #6b7280);
+}
+
+/* Standfirst: a refined lead paragraph (the article summary) introducing the
+   body. Uses the heading font for an editorial feel, softer than body text. */
+.excerpt {
+  margin: 0;
+  font-family: var(--pb-heading-font, inherit);
+  font-size: clamp(19px, 1.8vw, 24px);
+  line-height: 1.45;
+  font-weight: 650;
+  letter-spacing: -0.005em;
+  color: var(--pb-text, #15171a);
+}
