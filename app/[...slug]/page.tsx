@@ -116,10 +116,12 @@ export default async function CatchAllPage({ params }: RouteParams) {
 
   if (identified?.type === "category") {
     const template = await fetchSectionTemplate();
-    const [posts, category] = await Promise.all([
+    const [rawSectionPosts, category] = await Promise.all([
       fetchCategoryPosts(identified.url, 1, sectionFeedSize(template)),
       fetchCategory(identified.url),
     ]);
+    const FEED_KEYS = ["url_slug", "title", "thumbnail", "category_label", "category_url", "author_name", "author_url", "published_at"] as const;
+    const posts = { ...rawSectionPosts, data: rawSectionPosts.data.map((p) => Object.fromEntries(FEED_KEYS.filter((k) => k in p).map((k) => [k, p[k]]))) };
 
     return (
       <main className="pb-page pb-page-section">
@@ -139,7 +141,9 @@ export default async function CatchAllPage({ params }: RouteParams) {
     const authorId = Number(profile?.id);
     if (!profile || !Number.isFinite(authorId) || authorId <= 0) notFound();
 
-    const posts = await fetchAuthorPosts(authorId, 1, authorFeedSize(template));
+    const rawAuthorPosts = await fetchAuthorPosts(authorId, 1, authorFeedSize(template));
+    const FEED_KEYS = ["url_slug", "title", "thumbnail", "category_label", "category_url", "author_name", "author_url", "published_at"] as const;
+    const posts = { ...rawAuthorPosts, data: rawAuthorPosts.data.map((p) => Object.fromEntries(FEED_KEYS.filter((k) => k in p).map((k) => [k, p[k]]))) };
 
     return (
       <main className="pb-page pb-page-section">
@@ -159,7 +163,10 @@ export default async function CatchAllPage({ params }: RouteParams) {
     const tagId = Number(tag?.id);
     if (!tag || !Number.isFinite(tagId) || tagId <= 0) notFound();
 
-    const posts = await fetchTagPosts(tagId, 1, tagFeedSize(template));
+    const rawTagPosts = await fetchTagPosts(tagId, 1, tagFeedSize(template));
+    // Strip to only rendered fields to reduce HTML payload size.
+    const FEED_KEYS = ["url_slug", "title", "thumbnail", "category_label", "category_url", "author_name", "author_url", "published_at"] as const;
+    const posts = { ...rawTagPosts, data: rawTagPosts.data.map((p) => Object.fromEntries(FEED_KEYS.filter((k) => k in p).map((k) => [k, p[k]]))) };
 
     return (
       <main className="pb-page pb-page-section">
