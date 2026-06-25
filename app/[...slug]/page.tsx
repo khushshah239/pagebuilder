@@ -58,25 +58,7 @@ const VIDEO_TYPE = "Video";
 
 type RouteParams = { params: Promise<{ slug: string[] }> };
 
-/**
- * Removes `dynamic_fields` from every organism node in a CDS template object.
- * dynamic_fields hold fallback article data that can be hundreds of KB — stripping
- * them after buildProps reduces the RSC payload embedded in the HTML.
- */
-function stripDynamicFields(template: Record<string, unknown>): Record<string, unknown> {
-  return Object.fromEntries(
-    Object.entries(template).map(([k, v]) => {
-      if (v && typeof v === "object" && !Array.isArray(v)) {
-        const node = v as Record<string, unknown>;
-        if (typeof node.schema_slug === "string" && Array.isArray(node.dynamic_fields)) {
-          const { dynamic_fields: _, ...rest } = node;
-          return [k, rest];
-        }
-      }
-      return [k, v];
-    })
-  );
-}
+
 
 /**
  * Reconstruct the CDS legacy URL from the catch-all path segments. Article cards
@@ -145,12 +127,10 @@ export default async function CatchAllPage({ params }: RouteParams) {
 
   if (identified?.type === "category") {
     const template = await fetchSectionTemplate();
-    const [rawSectionPosts, category] = await Promise.all([
+    const [posts, category] = await Promise.all([
       fetchCategoryPosts(identified.url, 1, sectionFeedSize(template)),
       fetchCategory(identified.url),
     ]);
-    const FEED_KEYS = ["url_slug", "title", "thumbnail", "category_label", "category_url", "author_name", "author_url", "published_at"] as const;
-    const posts = { ...rawSectionPosts, data: rawSectionPosts.data.map((p) => Object.fromEntries(FEED_KEYS.filter((k) => k in p).map((k) => [k, p[k]]))) };
 
     return (
       <main className="pb-page pb-page-section">
@@ -170,9 +150,7 @@ export default async function CatchAllPage({ params }: RouteParams) {
     const authorId = Number(profile?.id);
     if (!profile || !Number.isFinite(authorId) || authorId <= 0) notFound();
 
-    const rawAuthorPosts = await fetchAuthorPosts(authorId, 1, authorFeedSize(template));
-    const FEED_KEYS = ["url_slug", "title", "thumbnail", "category_label", "category_url", "author_name", "author_url", "published_at"] as const;
-    const posts = { ...rawAuthorPosts, data: rawAuthorPosts.data.map((p) => Object.fromEntries(FEED_KEYS.filter((k) => k in p).map((k) => [k, p[k]]))) };
+    const posts = await fetchAuthorPosts(authorId, 1, authorFeedSize(template));
 
     return (
       <main className="pb-page pb-page-section">
@@ -192,10 +170,7 @@ export default async function CatchAllPage({ params }: RouteParams) {
     const tagId = Number(tag?.id);
     if (!tag || !Number.isFinite(tagId) || tagId <= 0) notFound();
 
-    const rawTagPosts = await fetchTagPosts(tagId, 1, tagFeedSize(template));
-    // Strip to only rendered fields to reduce HTML payload size.
-    const FEED_KEYS = ["url_slug", "title", "thumbnail", "category_label", "category_url", "author_name", "author_url", "published_at"] as const;
-    const posts = { ...rawTagPosts, data: rawTagPosts.data.map((p) => Object.fromEntries(FEED_KEYS.filter((k) => k in p).map((k) => [k, p[k]]))) };
+    const posts = await fetchTagPosts(tagId, 1, tagFeedSize(template));
 
     return (
       <main className="pb-page pb-page-section">
