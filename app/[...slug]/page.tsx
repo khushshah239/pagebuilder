@@ -127,6 +127,12 @@ export default async function CatchAllPage({ params }: RouteParams) {
 
   const legacyUrl = legacyUrlFromSlug(slug);
 
+  // Fire all template fetches immediately — they don't depend on the URL type
+  // and are React-cache deduplicated, so calling them here is free if unused.
+  fetchSectionTemplate();
+  fetchTagTemplate();
+  fetchAuthorTemplate();
+
   // Fire both in parallel — articles are the most common case so we start
   // loadPost immediately instead of waiting for identifyUrl to finish first.
   const [identified, post] = await Promise.all([
