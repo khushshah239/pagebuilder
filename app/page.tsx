@@ -1,10 +1,8 @@
 import { extractCustomEntity, fetchHomepage } from "@/api/homepageApi";
 import { HomepageRenderer } from "@/components/homepage/HomepageRenderer";
-import { HOMEPAGE_LEGACY_URL } from "@/config/cds";
+import { HOMEPAGE_LEGACY_URL, REVALIDATE_SECONDS } from "@/config/cds";
 
-// Always render fresh so CMS changes (e.g. reordering the Dynamic Zone) appear
-// on the next load. Switch to an ISR window (e.g. `revalidate = 60`) for prod.
-export const dynamic = "force-dynamic";
+export const revalidate = REVALIDATE_SECONDS;
 
 /**
  * Homepage route. Runtime flow (per the screen-builder schema):

@@ -27,8 +27,12 @@ import { tagFeedSize } from "@/lib/tag/buildProps";
 import { videoFeedSize, videoBindingRootField } from "@/lib/video/buildProps";
 import { buildWebStory } from "@/lib/webstory/buildProps";
 import { getActivePublisher } from "@/config/publishers";
-import { VIDEO_TEMPLATE_LEGACY_URL } from "@/config/cds";
+import { VIDEO_TEMPLATE_LEGACY_URL, REVALIDATE_SECONDS } from "@/config/cds";
 import type { ArticleData } from "@/types/article/cds.types";
+
+// Page-level ISR — Vercel caches the full rendered page for this duration.
+// After expiry, the next request gets stale content while revalidating in background.
+export const revalidate = REVALIDATE_SECONDS;
 
 const WEB_STORY_TYPE = "Web Story";
 
