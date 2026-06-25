@@ -1,6 +1,6 @@
 import { widenCdnImage } from "@/lib/media";
 import type { InlineVideoEmbedProps } from "@/types/article/organism.types";
-import styles from "@/styles/organisms/article/InlineVideoEmbed.module.scss";
+import styles from "@/styles/organisms/article/InlineVideoEmbed.module.css";
 
 function PlayIcon() {
   return (

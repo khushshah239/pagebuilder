@@ -1,7 +1,7 @@
 import { cdnImageSrcSet } from "@/lib/media";
 import Link from "next/link";
 import type { PhotoGalleryTeaserRailProps } from "@/types/homepage/organism.types";
-import styles from "@/styles/organisms/homepage/PhotoGalleryTeaserRail.module.scss";
+import styles from "@/styles/organisms/homepage/PhotoGalleryTeaserRail.module.css";
 
 /** Horizontal scroll of wide photo-essay teasers. */
 export function PhotoGalleryTeaserRail({

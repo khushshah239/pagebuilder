@@ -3,7 +3,7 @@ import Link from "next/link";
 import { CategoryLink } from "@/components/CategoryLink";
 import { ArticleByline } from "@/components/ArticleByline";
 import type { PostGridProps } from "@/types/homepage/organism.types";
-import styles from "@/styles/organisms/homepage/PostGrid.module.scss";
+import styles from "@/styles/organisms/homepage/PostGrid.module.css";
 
 /** The right column always reserves this many story rows (filled + empty). */
 const SIDE_SLOTS = 4;

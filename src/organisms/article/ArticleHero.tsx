@@ -1,6 +1,6 @@
 import { widenCdnImage } from "@/lib/media";
 import type { ArticleHeroProps } from "@/types/article/organism.types";
-import styles from "@/styles/organisms/article/ArticleHero.module.scss";
+import styles from "@/styles/organisms/article/ArticleHero.module.css";
 
 /** Full-width hero image with an optional excerpt/standfirst below it. */
 export function ArticleHero({

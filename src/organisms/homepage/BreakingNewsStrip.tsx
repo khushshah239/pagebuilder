@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { BreakingNewsStripProps } from "@/types/homepage/organism.types";
-import styles from "@/styles/organisms/homepage/BreakingNewsStrip.module.scss";
+import styles from "@/styles/organisms/homepage/BreakingNewsStrip.module.css";
 
 /**
  * Scrolling ticker strip for urgent breaking headlines. The headlines are

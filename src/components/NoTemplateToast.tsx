@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import styles from "@/styles/components/NoTemplateToast.module.scss";
+import styles from "@/styles/components/NoTemplateToast.module.css";
 
 /**
  * Shown when an article has no CMS template selected.

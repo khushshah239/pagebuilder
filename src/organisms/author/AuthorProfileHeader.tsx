@@ -1,5 +1,5 @@
 import type { AuthorProfileHeaderProps } from "@/types/author/organism.types";
-import styles from "@/styles/organisms/author/AuthorProfileHeader.module.scss";
+import styles from "@/styles/organisms/author/AuthorProfileHeader.module.css";
 
 /**
  * AuthorPage header: circular avatar, the author's name, bio, and a divider

@@ -6,7 +6,7 @@ import { widenCdnImage } from "@/lib/media";
 import { ArticleByline } from "@/components/ArticleByline";
 import { CategoryLink } from "@/components/CategoryLink";
 import type { HeroCarouselProps } from "@/types/homepage/organism.types";
-import styles from "@/styles/organisms/homepage/HeroCarousel.module.scss";
+import styles from "@/styles/organisms/homepage/HeroCarousel.module.css";
 
 /**
  * Dominant visual zone at the top of the homepage — top stories presented as a

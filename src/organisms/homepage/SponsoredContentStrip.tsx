@@ -1,7 +1,7 @@
 import { cdnImageSrcSet } from "@/lib/media";
 import Link from "next/link";
 import type { SponsoredContentStripProps } from "@/types/homepage/organism.types";
-import styles from "@/styles/organisms/homepage/SponsoredContentStrip.module.scss";
+import styles from "@/styles/organisms/homepage/SponsoredContentStrip.module.css";
 
 /** Clearly labelled sponsored / branded content row, distinct from editorial. */
 export function SponsoredContentStrip({

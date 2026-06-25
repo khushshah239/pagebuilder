@@ -1,6 +1,6 @@
 import type { AppPromoCardProps } from "@/types/homepage/organism.types";
 import { fetchFooter } from "@/api/footerApi";
-import styles from "@/styles/organisms/homepage/AppPromoCard.module.scss";
+import styles from "@/styles/organisms/homepage/AppPromoCard.module.css";
 
 /**
  * App-download banner.

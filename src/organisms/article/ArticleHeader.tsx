@@ -1,7 +1,7 @@
 import { ArticleByline } from "@/components/ArticleByline";
 import { CategoryLink } from "@/components/CategoryLink";
 import type { ArticleHeaderProps } from "@/types/article/organism.types";
-import styles from "@/styles/organisms/article/ArticleHeader.module.scss";
+import styles from "@/styles/organisms/article/ArticleHeader.module.css";
 
 /** Article title, category tag and byline at the top of the article. */
 export function ArticleHeader({

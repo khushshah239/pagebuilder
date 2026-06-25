@@ -1,7 +1,7 @@
 "use client";
 
 import type { ShareBarProps } from "@/types/article/organism.types";
-import styles from "@/styles/organisms/article/ShareBar.module.scss";
+import styles from "@/styles/organisms/article/ShareBar.module.css";
 
 /**
  * Build a platform share URL. If the CMS URL ends with `=` or `?` it is a

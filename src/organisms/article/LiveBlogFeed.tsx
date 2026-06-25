@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { LiveBlogFeedProps, LiveUpdate } from "@/types/article/organism.types";
-import styles from "@/styles/organisms/article/LiveBlogFeed.module.scss";
+import styles from "@/styles/organisms/article/LiveBlogFeed.module.css";
 
 /**
  * Strip the origin from an absolute CDS URL so it routes through the local

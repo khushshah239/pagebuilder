@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import styles from "@/styles/organisms/article/ArticleBody.module.scss";
+import styles from "@/styles/organisms/article/ArticleBody.module.css";
 
 const COLLAPSED_MAX_HEIGHT = 640;
 const COLLAPSE_BUFFER = 80;

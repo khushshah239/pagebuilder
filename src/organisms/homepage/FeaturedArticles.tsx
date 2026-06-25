@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArticleByline } from "@/components/ArticleByline";
 import { CategoryLink } from "@/components/CategoryLink";
 import type { FeaturedArticlesProps } from "@/types/homepage/organism.types";
-import styles from "@/styles/organisms/homepage/FeaturedArticles.module.scss";
+import styles from "@/styles/organisms/homepage/FeaturedArticles.module.css";
 
 /** Curated article grid — thumbnail + title cards in a responsive layout. */
 export function FeaturedArticles({

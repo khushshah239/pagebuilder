@@ -1,6 +1,6 @@
 import type { ArticleBodyProps } from "@/types/article/organism.types";
 import { ArticleBodyCollapse } from "./ArticleBodyCollapse";
-import styles from "@/styles/organisms/article/ArticleBody.module.scss";
+import styles from "@/styles/organisms/article/ArticleBody.module.css";
 
 /**
  * Full rich-text article body. Server component — body HTML renders directly to

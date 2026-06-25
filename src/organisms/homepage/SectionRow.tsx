@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArticleByline } from "@/components/ArticleByline";
 import { CategoryLink } from "@/components/CategoryLink";
 import type { SectionRowProps } from "@/types/homepage/organism.types";
-import styles from "@/styles/organisms/homepage/SectionRow.module.scss";
+import styles from "@/styles/organisms/homepage/SectionRow.module.css";
 
 /** Category-specific article row — a horizontal scroll of thumbnail cards. */
 export function SectionRow({ identifier, heading, cards }: SectionRowProps) {

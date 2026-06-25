@@ -3,7 +3,7 @@ import Link from "next/link";
 import { CategoryLink } from "@/components/CategoryLink";
 import { ArticleByline } from "@/components/ArticleByline";
 import type { SidebarLatestNewsProps } from "@/types/article/organism.types";
-import styles from "@/styles/organisms/article/SidebarLatestNews.module.scss";
+import styles from "@/styles/organisms/article/SidebarLatestNews.module.css";
 
 /**
  * Right-column "Latest News" panel on the article page. A compact vertical list

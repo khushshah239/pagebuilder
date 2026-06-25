@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArticleByline } from "@/components/ArticleByline";
 import { CategoryLink } from "@/components/CategoryLink";
 import type { MoreFromAuthorRowProps } from "@/types/article/organism.types";
-import styles from "@/styles/organisms/article/MoreFromAuthorRow.module.scss";
+import styles from "@/styles/organisms/article/MoreFromAuthorRow.module.css";
 
 /** More stories by the same author — a row of article cards with publish dates. */
 export function MoreFromAuthorRow({

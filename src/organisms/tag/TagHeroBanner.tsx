@@ -1,5 +1,5 @@
 import type { TagHeroBannerProps } from "@/types/tag/organism.types";
-import styles from "@/styles/organisms/tag/TagHeroBanner.module.scss";
+import styles from "@/styles/organisms/tag/TagHeroBanner.module.css";
 
 /**
  * Top-of-tag banner: the tag name as a large title with an accent rule beneath

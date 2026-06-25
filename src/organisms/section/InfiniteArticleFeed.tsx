@@ -4,7 +4,7 @@ import { CategoryLink } from "@/components/CategoryLink";
 import { formatPublishedDateTime } from "@/lib/date";
 import { cdnImageSrcSet } from "@/lib/media";
 import type { InfiniteArticleFeedProps } from "@/types/section/organism.types";
-import styles from "@/styles/organisms/section/InfiniteArticleFeed.module.scss";
+import styles from "@/styles/organisms/section/InfiniteArticleFeed.module.css";
 
 /**
  * The category/tag/author article grid — renders real articles only (no

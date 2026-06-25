@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { WebStoryPlayerProps } from "@/types/webstory/organism.types";
-import styles from "@/styles/webstory/WebStoryPlayer.module.scss";
+import styles from "@/styles/webstory/WebStoryPlayer.module.css";
 
 const SLIDE_DURATION_MS = 5000;
 

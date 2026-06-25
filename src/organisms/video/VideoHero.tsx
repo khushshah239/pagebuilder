@@ -1,6 +1,6 @@
 import { widenCdnImage } from "@/lib/media";
 import type { VideoHeroProps } from "@/types/video/organism.types";
-import styles from "@/styles/organisms/video/VideoHero.module.scss";
+import styles from "@/styles/organisms/video/VideoHero.module.css";
 
 /**
  * Full-width YouTube video embed at the top of a video page.

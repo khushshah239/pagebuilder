@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { toInternalPath } from "@/lib/url";
 import type { TagsRowProps } from "@/types/article/organism.types";
-import styles from "@/styles/organisms/article/TagsRow.module.scss";
+import styles from "@/styles/organisms/article/TagsRow.module.css";
 
 /** Tag chip row shown below the article body. */
 export function TagsRow({ identifier, heading, article_tags }: TagsRowProps) {

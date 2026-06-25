@@ -1,5 +1,5 @@
 import type { ArticleFooterProps } from "@/types/article/organism.types";
-import styles from "@/styles/organisms/article/ArticleFooter.module.scss";
+import styles from "@/styles/organisms/article/ArticleFooter.module.css";
 
 /** Article footer with publisher info and copyright. */
 export function ArticleFooter({

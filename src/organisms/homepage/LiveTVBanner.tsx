@@ -1,5 +1,5 @@
 import type { LiveTVBannerProps } from "@/types/homepage/organism.types";
-import styles from "@/styles/organisms/homepage/LiveTVBanner.module.scss";
+import styles from "@/styles/organisms/homepage/LiveTVBanner.module.css";
 
 /** Promotional strip linking to the publisher's live TV / live stream. */
 export function LiveTVBanner({

@@ -2,7 +2,7 @@ import { formatPublishedDateTime } from "@/lib/date";
 import { CategoryLink } from "@/components/CategoryLink";
 import { AuthorLink } from "@/components/AuthorLink";
 import type { VideoHeaderProps } from "@/types/video/organism.types";
-import styles from "@/styles/organisms/video/VideoHeader.module.scss";
+import styles from "@/styles/organisms/video/VideoHeader.module.css";
 
 /**
  * Video page header: a category pill, large title, published date, and an author

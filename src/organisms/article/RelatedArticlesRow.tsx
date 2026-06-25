@@ -3,7 +3,7 @@ import Link from "next/link";
 import { CategoryLink } from "@/components/CategoryLink";
 import { ArticleByline } from "@/components/ArticleByline";
 import type { RelatedArticlesRowProps } from "@/types/article/organism.types";
-import styles from "@/styles/organisms/article/RelatedArticlesRow.module.scss";
+import styles from "@/styles/organisms/article/RelatedArticlesRow.module.css";
 
 /** Post-article recommended reading — a row of article cards. */
 export function RelatedArticlesRow({

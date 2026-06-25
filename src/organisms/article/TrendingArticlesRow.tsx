@@ -1,7 +1,7 @@
 import { cdnImageSrcSet } from "@/lib/media";
 import Link from "next/link";
 import type { TrendingArticlesRowProps } from "@/types/article/organism.types";
-import styles from "@/styles/organisms/article/TrendingArticlesRow.module.scss";
+import styles from "@/styles/organisms/article/TrendingArticlesRow.module.css";
 
 /** Trending articles shown below the article content — a row of cards. */
 export function TrendingArticlesRow({

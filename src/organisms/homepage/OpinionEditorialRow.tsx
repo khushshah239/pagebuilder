@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArticleByline } from "@/components/ArticleByline";
 import { CategoryLink } from "@/components/CategoryLink";
 import type { OpinionEditorialRowProps } from "@/types/homepage/organism.types";
-import styles from "@/styles/organisms/homepage/OpinionEditorialRow.module.scss";
+import styles from "@/styles/organisms/homepage/OpinionEditorialRow.module.css";
 
 /** Horizontal row of opinion / editorial pieces with author attribution. */
 export function OpinionEditorialRow({

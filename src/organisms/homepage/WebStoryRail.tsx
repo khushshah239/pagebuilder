@@ -1,7 +1,7 @@
 import { cdnImageSrcSet } from "@/lib/media";
 import Link from "next/link";
 import type { WebStoryRailProps } from "@/types/homepage/organism.types";
-import styles from "@/styles/organisms/homepage/WebStoryRail.module.scss";
+import styles from "@/styles/organisms/homepage/WebStoryRail.module.css";
 
 /** Small "web story" badge with a camera icon, shown on each portrait card. */
 function StoryBadge() {

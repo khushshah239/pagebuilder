@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArticleByline } from "@/components/ArticleByline";
 import type { TopStoriesListProps } from "@/types/homepage/organism.types";
-import styles from "@/styles/organisms/homepage/TopStoriesList.module.scss";
+import styles from "@/styles/organisms/homepage/TopStoriesList.module.css";
 
 /** Ranked vertical list of top stories — numbered, no thumbnails. */
 export function TopStoriesList({

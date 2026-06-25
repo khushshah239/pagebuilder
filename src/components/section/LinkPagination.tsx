@@ -1,5 +1,5 @@
 import Link from "next/link";
-import styles from "@/styles/components/Pagination.module.scss";
+import styles from "@/styles/components/Pagination.module.css";
 
 interface LinkPaginationProps {
   page: number;

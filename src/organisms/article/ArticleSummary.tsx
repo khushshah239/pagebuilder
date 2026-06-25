@@ -1,5 +1,5 @@
 import type { ArticleSummaryProps } from "@/types/article/organism.types";
-import styles from "@/styles/organisms/article/ArticleSummary.module.scss";
+import styles from "@/styles/organisms/article/ArticleSummary.module.css";
 
 /** Key points / takeaways box rendered above the article body. */
 export function ArticleSummary({

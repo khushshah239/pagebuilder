@@ -1,5 +1,5 @@
 import type { SectionHeroBannerProps } from "@/types/section/organism.types";
-import styles from "@/styles/organisms/section/SectionHeroBanner.module.scss";
+import styles from "@/styles/organisms/section/SectionHeroBanner.module.css";
 
 /**
  * Top-of-section banner: the category name as a large title with an accent rule

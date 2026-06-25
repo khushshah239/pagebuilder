@@ -3,7 +3,7 @@ import Link from "next/link";
 import { CategoryLink } from "@/components/CategoryLink";
 import { ArticleByline } from "@/components/ArticleByline";
 import type { VideoBriefingsRailProps } from "@/types/homepage/organism.types";
-import styles from "@/styles/organisms/homepage/VideoBriefingsRail.module.scss";
+import styles from "@/styles/organisms/homepage/VideoBriefingsRail.module.css";
 
 /** Short-video / explainer reel rail with play badge and duration. */
 export function VideoBriefingsRail({

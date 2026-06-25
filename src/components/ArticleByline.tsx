@@ -1,6 +1,6 @@
 import { AuthorLink } from "@/components/AuthorLink";
 import { formatPublishedDateTime } from "@/lib/date";
-import styles from "@/styles/components/ArticleByline.module.scss";
+import styles from "@/styles/components/ArticleByline.module.css";
 
 function CalendarIcon() {
   return (

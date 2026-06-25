@@ -6,7 +6,7 @@ import { themeToCssVariables } from "@/theme/cssVariables";
 import { fetchPublisherData } from "@/api/publisherApi";
 import { Navbar } from "@/components/nav/Navbar";
 import { Footer } from "@/components/footer/Footer";
-import "./globals.scss";
+import "./globals.css";
 
 const publisher = getActivePublisher();
 

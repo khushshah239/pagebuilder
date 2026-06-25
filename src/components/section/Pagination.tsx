@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/styles/components/Pagination.module.scss";
+import styles from "@/styles/components/Pagination.module.css";
 
 interface PaginationProps {
   page: number;
