@@ -56,6 +56,26 @@ const VIDEO_TYPE = "Video";
 type RouteParams = { params: Promise<{ slug: string[] }> };
 
 /**
+ * Removes `dynamic_fields` from every organism node in a CDS template object.
+ * dynamic_fields hold fallback article data that can be hundreds of KB — stripping
+ * them after buildProps reduces the RSC payload embedded in the HTML.
+ */
+function stripDynamicFields(template: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(template).map(([k, v]) => {
+      if (v && typeof v === "object" && !Array.isArray(v)) {
+        const node = v as Record<string, unknown>;
+        if (typeof node.schema_slug === "string" && Array.isArray(node.dynamic_fields)) {
+          const { dynamic_fields: _, ...rest } = node;
+          return [k, rest];
+        }
+      }
+      return [k, v];
+    })
+  );
+}
+
+/**
  * Reconstruct the CDS legacy URL from the catch-all path segments. Article cards
  * across the site link via `legacy_url → url_slug` (e.g. `/cricket/news/story`),
  * so the full path is the article's CDS address.
