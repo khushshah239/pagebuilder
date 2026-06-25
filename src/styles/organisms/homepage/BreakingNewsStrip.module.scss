@@ -1,0 +1,113 @@
+.strip {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border-radius: 0;
+  overflow: hidden;
+  border: 1px solid var(--pb-border, #e3e6e9);
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0 18px;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--pb-accent, #c8102e);
+}
+
+.viewport {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Two identical groups sit side by side; translating by exactly one group's
+   width (-50%) loops the ticker seamlessly with no gap or pause. */
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: pb-marquee 45s linear infinite;
+}
+.viewport:hover .marquee {
+  animation-play-state: paused;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  /* Trailing gap matches the inter-item gap so the loop seam is invisible. */
+  padding: 13px 32px 13px 0;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.item {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--pb-text, #15171a);
+  text-decoration: none;
+  position: relative;
+  padding-left: 30px;
+}
+.item:hover {
+  color: var(--pb-accent, #c8102e);
+}
+/* Red "live" dot before every headline, gently pulsing for a breaking feel. */
+.item::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--pb-accent, #c8102e);
+  box-shadow: 0 0 0 0 var(--pb-accent, #c8102e);
+  animation: pb-breaking-pulse 1.6s ease-out infinite;
+}
+
+@keyframes pb-breaking-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(200, 16, 46, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(200, 16, 46, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(200, 16, 46, 0);
+  }
+}
+
+@keyframes pb-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    animation: none;
+  }
+  .viewport {
+    overflow-x: auto;
+  }
+  /* No animation → drop the duplicate copy and let the user scroll manually. */
+  .group + .group {
+    display: none;
+  }
+  .item::before {
+    animation: none;
+  }
+}

@@ -1,0 +1,63 @@
+.section {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 18px;
+  border-radius: 0;
+  background: #fff;
+  border: 1px solid var(--pb-border, #e3e6e9);
+  box-shadow: none;
+}
+
+.heading {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--pb-accent, #c8102e);
+}
+/* Accent bar before the label for a sharper, more editorial look. */
+.heading::before {
+  content: "";
+  width: 4px;
+  height: 18px;
+  border-radius: 0;
+  background: var(--pb-accent, #c8102e);
+}
+
+.track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px 0;
+}
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.chip {
+  flex: 0 0 auto;
+  font-size: 14px;
+  font-weight: 800;
+  padding: 9px 16px;
+  border-radius: 3px;
+  background: var(--pb-muted-bg, #eef0f2);
+  border: 1.5px solid transparent;
+  color: var(--pb-text, #15171a);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.16s ease, color 0.16s ease, transform 0.16s ease,
+    border-color 0.16s ease, box-shadow 0.16s ease;
+}
+.chip:hover {
+  background: var(--pb-accent, #c8102e);
+  border-color: var(--pb-accent, #c8102e);
+  color: #fff;
+  transform: none;
+  box-shadow: 0 8px 18px rgba(200, 16, 46, 0.28);
+}

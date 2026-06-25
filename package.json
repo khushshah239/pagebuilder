@@ -1,0 +1,27 @@
+{
+  "name": "builder1",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Config-driven, component-based page builder for publisher news sites (CDS-backed).",
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.9",
+    "sass": "^1.101.0",
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,65 @@
+.hero {
+  margin: 0;
+  width: 100%;
+}
+
+/* 16:9 wrapper — overrides any inline width/height attributes on the injected
+   iframe so the embed always fills the container at the correct aspect ratio. */
+.embedWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Force the CMS-supplied iframe to fill the wrapper regardless of its own
+   width/height attributes (e.g. height="auto" from the Publive embed HTML). */
+.embedWrapper iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* ── Poster fallback (when no embed HTML) ─────────────────────────────────── */
+.posterLink {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--pb-muted-bg, #eef0f2);
+  text-decoration: none;
+  color: inherit;
+}
+
+.poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.posterFallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--pb-muted-bg, #eef0f2);
+}
+
+.playBadge {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  color: #fff;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+}
