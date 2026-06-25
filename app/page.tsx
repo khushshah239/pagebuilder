@@ -1,8 +1,8 @@
 import { extractCustomEntity, fetchHomepage } from "@/api/homepageApi";
 import { HomepageRenderer } from "@/components/homepage/HomepageRenderer";
-import { HOMEPAGE_LEGACY_URL, REVALIDATE_SECONDS } from "@/config/cds";
+import { HOMEPAGE_LEGACY_URL } from "@/config/cds";
 
-export const revalidate = REVALIDATE_SECONDS;
+export const revalidate = 60;
 
 /**
  * Homepage route. Runtime flow (per the screen-builder schema):
