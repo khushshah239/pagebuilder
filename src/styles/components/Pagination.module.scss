@@ -36,7 +36,9 @@
 }
 
 .page:disabled,
-.nav:disabled {
+.nav:disabled,
+.disabled {
   opacity: 0.45;
   cursor: default;
+  pointer-events: none;
 }

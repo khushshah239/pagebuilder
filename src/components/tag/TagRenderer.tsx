@@ -8,10 +8,9 @@ import type { CdsLayoutOrganism } from "@/types/article/cds.types";
 
 interface TagRendererProps {
   template: Record<string, unknown>;
-  /** The resolved tag record (`id`, `name`, `slug`, …). */
   tag: Record<string, unknown>;
-  /** The tag's articles (one binding-sized page). */
   posts: TagPostsResponse;
+  page?: number;
 }
 
 /** Template keys that are metadata, not organism nodes. */
@@ -58,7 +57,7 @@ const TAG_ORGANISM_COMPONENTS: Record<string, ComponentType<any>> = {
  * building props from the tag binding — mirrors how VideoRenderer works so all
  * template organisms (not just the hardcoded hero + feed) actually render.
  */
-export function TagRenderer({ template, tag, posts }: TagRendererProps) {
+export function TagRenderer({ template, tag, posts, page }: TagRendererProps) {
   return (
     <>
       {Object.entries(template)
@@ -72,7 +71,8 @@ export function TagRenderer({ template, tag, posts }: TagRendererProps) {
           if (!props) return null;
 
           const id = (node.dynamic_fields?.[0]?.id as string) || key;
-          return <Component key={id || index} {...(props as any)} />;
+          const extraProps = node.schema_slug.includes("feed") ? { page } : {};
+          return <Component key={id || index} {...(props as any)} {...extraProps} />;
         })}
     </>
   );

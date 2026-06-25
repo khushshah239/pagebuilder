@@ -56,7 +56,7 @@ const VIDEO_TYPE = "Video";
 // ISR: pages are cached for REVALIDATE_SECONDS then regenerated on next request.
 // Set REVALIDATE_SECONDS=0 in dev to always fetch fresh from CDS.
 
-type RouteParams = { params: Promise<{ slug: string[] }> };
+type RouteParams = { params: Promise<{ slug: string[] }>; searchParams: Promise<{ page?: string }> };
 
 
 
@@ -107,8 +107,10 @@ export async function generateMetadata({ params }: RouteParams): Promise<Metadat
  *   - `tag`      (via `identify_url`)  → TagPage.
  *   - any other post                   → article or video.
  */
-export default async function CatchAllPage({ params }: RouteParams) {
+export default async function CatchAllPage({ params, searchParams }: RouteParams) {
   const { slug } = await params;
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
 
   const legacyUrl = legacyUrlFromSlug(slug);
 
@@ -135,7 +137,7 @@ export default async function CatchAllPage({ params }: RouteParams) {
     return (
       <main className="pb-page pb-page-section">
         <div className="pb-stack">
-          <SectionRenderer template={template} posts={posts} category={category} />
+          <SectionRenderer template={template} posts={posts} category={category} page={page} />
         </div>
       </main>
     );
@@ -155,7 +157,7 @@ export default async function CatchAllPage({ params }: RouteParams) {
     return (
       <main className="pb-page pb-page-section">
         <div className="pb-stack">
-          <AuthorRenderer template={template} profile={profile} posts={posts} />
+          <AuthorRenderer template={template} profile={profile} posts={posts} page={page} />
         </div>
       </main>
     );
@@ -175,7 +177,7 @@ export default async function CatchAllPage({ params }: RouteParams) {
     return (
       <main className="pb-page pb-page-section">
         <div className="pb-stack">
-          <TagRenderer template={template} tag={tag} posts={posts} />
+          <TagRenderer template={template} tag={tag} posts={posts} page={page} />
         </div>
       </main>
     );

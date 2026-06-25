@@ -10,17 +10,18 @@ interface SectionRendererProps {
   template: Record<string, unknown>;
   posts: CategoryPostsResponse;
   category?: CategoryInfo | null;
+  page?: number;
 }
 
 /** Renders a category page: hero then article feed from the section template. */
-export function SectionRenderer({ template, posts, category }: SectionRendererProps) {
+export function SectionRenderer({ template, posts, category, page }: SectionRendererProps) {
   const heroProps = buildSectionHeroProps(template, posts, category);
   const articles = buildSectionFeedItems(template, posts);
 
   return (
     <>
       <SectionHeroBanner {...heroProps} />
-      <SectionFeed articles={articles} />
+      <SectionFeed articles={articles} page={page} />
     </>
   );
 }
