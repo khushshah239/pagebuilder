@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import type { ShareBarProps } from "@/types/article/organism.types";
 import styles from "@/styles/organisms/article/ShareBar.module.scss";
 
@@ -18,11 +17,7 @@ function buildHref(base: string, articleUrl: string): string {
 
 /** Social sharing action bar — one button per platform. */
 export function ShareBar({ identifier, label, share_buttons = [] }: ShareBarProps) {
-  const [articleUrl, setArticleUrl] = useState("");
-
-  useEffect(() => {
-    setArticleUrl(window.location.href);
-  }, []);
+  const articleUrl = typeof window !== "undefined" ? window.location.href : "";
 
   if (share_buttons.length === 0) return null;
 
