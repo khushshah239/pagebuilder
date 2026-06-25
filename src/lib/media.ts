@@ -29,8 +29,17 @@ export function flattenMediaFields(
   return out;
 }
 
-// Rewrites the CDN `fit-in/<w>x<h>` segment to request a larger image; no-op otherwise.
+// Rewrites the CDN `fit-in/<w>x<h>` segment to the requested dimensions.
 export function widenCdnImage(url: string, dimensions = "1280x720"): string {
   if (!url) return url;
   return url.replace(/\/fit-in\/\d+x\d+\//, `/fit-in/${dimensions}/`);
+}
+
+// Returns CDN URL sized for thumbnail cards: 568x340 desktop, 360x220 mobile.
+// Uses srcset so browser picks the right size automatically.
+export function cdnImageSrcSet(url: string): { src: string; srcSet: string } {
+  return {
+    src: widenCdnImage(url, "568x340"),
+    srcSet: `${widenCdnImage(url, "360x220")} 360w, ${widenCdnImage(url, "568x340")} 568w`,
+  };
 }

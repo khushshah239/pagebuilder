@@ -1,3 +1,4 @@
+import { cdnImageSrcSet } from "@/lib/media";
 import Link from "next/link";
 import type { WebStoryRailProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/WebStoryRail.module.scss";
@@ -42,7 +43,7 @@ export function WebStoryRail({ identifier, heading, stories }: WebStoryRailProps
               {story.thumbnail ? (
                 <img
                   className={styles.image}
-                  src={story.thumbnail}
+                  {...cdnImageSrcSet(story.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
                   alt={story.title}
                   loading="lazy"
                 />

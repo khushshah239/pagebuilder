@@ -49,7 +49,8 @@ export function HeroCarousel({ identifier, slides }: HeroCarouselProps) {
     >
       <div className={styles.track} ref={trackRef} onScroll={handleScroll}>
         {slides.map((slide, index) => {
-          const imageSrc = widenCdnImage(slide.image);
+          const imageSrc = widenCdnImage(slide.image, "1200x675");
+          const imageSrcSet = `${widenCdnImage(slide.image, "768x432")} 768w, ${widenCdnImage(slide.image, "1200x675")} 1200w`;
           const key = `${identifier}-slide-${index}`;
           // The whole slide links to the article via a stretched overlay link;
           // the overlay is click-through (pointer-events: none) except the
@@ -72,6 +73,8 @@ export function HeroCarousel({ identifier, slides }: HeroCarouselProps) {
                   <img
                     className={styles.backdrop}
                     src={imageSrc}
+                    srcSet={imageSrcSet}
+                    sizes="100vw"
                     alt=""
                     aria-hidden="true"
                     loading={index === 0 ? "eager" : "lazy"}
@@ -79,6 +82,8 @@ export function HeroCarousel({ identifier, slides }: HeroCarouselProps) {
                   <img
                     className={styles.image}
                     src={imageSrc}
+                    srcSet={imageSrcSet}
+                    sizes="100vw"
                     alt={slide.title}
                     loading={index === 0 ? "eager" : "lazy"}
                   />

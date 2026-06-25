@@ -1,3 +1,4 @@
+import { cdnImageSrcSet } from "@/lib/media";
 import Link from "next/link";
 import { CategoryLink } from "@/components/CategoryLink";
 import { ArticleByline } from "@/components/ArticleByline";
@@ -27,7 +28,7 @@ export function PostGrid({ identifier, items }: PostGridProps) {
           <Link href={lead.url_slug} className={styles.leadLink} aria-label={lead.title} />
         ) : null}
         {lead.image ? (
-          <img className={styles.leadImage} src={lead.image} alt={lead.title} loading="lazy" />
+          <img className={styles.leadImage} {...cdnImageSrcSet(lead.image)} sizes="(max-width: 400px) 360px, 568px" alt={lead.title} loading="lazy" />
         ) : null}
         <div className={styles.leadBody}>
           <CategoryLink
@@ -76,7 +77,7 @@ export function PostGrid({ identifier, items }: PostGridProps) {
               {card.thumbnail ? (
                 <img
                   className={styles.cardThumb}
-                  src={card.thumbnail}
+                  {...cdnImageSrcSet(card.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
                   alt={card.title}
                   loading="lazy"
                 />

@@ -1,3 +1,4 @@
+import { cdnImageSrcSet } from "@/lib/media";
 import Link from "next/link";
 import type { PhotoGalleryTeaserRailProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/PhotoGalleryTeaserRail.module.scss";
@@ -24,7 +25,7 @@ export function PhotoGalleryTeaserRail({
               {teaser.thumbnail ? (
                 <img
                   className={styles.thumb}
-                  src={teaser.thumbnail}
+                  {...cdnImageSrcSet(teaser.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
                   alt={teaser.title}
                   loading="lazy"
                 />

@@ -1,3 +1,4 @@
+import { cdnImageSrcSet } from "@/lib/media";
 import Link from "next/link";
 import { CategoryLink } from "@/components/CategoryLink";
 import { ArticleByline } from "@/components/ArticleByline";
@@ -36,7 +37,7 @@ export function VideoBriefingsRail({
                 {video.thumbnail ? (
                   <img
                     className={styles.thumb}
-                    src={video.thumbnail}
+                    {...cdnImageSrcSet(video.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
                     alt={video.title}
                     loading="lazy"
                   />

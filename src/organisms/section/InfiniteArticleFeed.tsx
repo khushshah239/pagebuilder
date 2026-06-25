@@ -2,7 +2,7 @@ import Link from "next/link";
 import { AuthorLink } from "@/components/AuthorLink";
 import { CategoryLink } from "@/components/CategoryLink";
 import { formatPublishedDateTime } from "@/lib/date";
-import { widenCdnImage } from "@/lib/media";
+import { cdnImageSrcSet } from "@/lib/media";
 import type { InfiniteArticleFeedProps } from "@/types/section/organism.types";
 import styles from "@/styles/organisms/section/InfiniteArticleFeed.module.scss";
 
@@ -43,7 +43,8 @@ export function InfiniteArticleFeed({
             {article.thumbnail ? (
               <img
                 className={styles.thumb}
-                src={widenCdnImage(article.thumbnail)}
+                {...cdnImageSrcSet(article.thumbnail)}
+                sizes="(max-width: 400px) 360px, 568px"
                 alt={article.title}
                 loading="lazy"
               />

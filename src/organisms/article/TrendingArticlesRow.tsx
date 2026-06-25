@@ -1,3 +1,4 @@
+import { cdnImageSrcSet } from "@/lib/media";
 import Link from "next/link";
 import type { TrendingArticlesRowProps } from "@/types/article/organism.types";
 import styles from "@/styles/organisms/article/TrendingArticlesRow.module.scss";
@@ -25,7 +26,7 @@ export function TrendingArticlesRow({
               {card.thumbnail ? (
                 <img
                   className={styles.thumb}
-                  src={card.thumbnail}
+                  {...cdnImageSrcSet(card.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
                   alt={card.title}
                   loading="lazy"
                 />

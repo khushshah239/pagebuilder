@@ -1,3 +1,4 @@
+import { cdnImageSrcSet } from "@/lib/media";
 import Link from "next/link";
 import type { SponsoredContentStripProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/SponsoredContentStrip.module.scss";
@@ -24,7 +25,7 @@ export function SponsoredContentStrip({
               {card.thumbnail ? (
                 <img
                   className={styles.thumb}
-                  src={card.thumbnail}
+                  {...cdnImageSrcSet(card.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
                   alt={card.title}
                   loading="lazy"
                 />

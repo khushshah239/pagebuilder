@@ -1,3 +1,4 @@
+import { widenCdnImage } from "@/lib/media";
 import type { VideoHeroProps } from "@/types/video/organism.types";
 import styles from "@/styles/organisms/video/VideoHero.module.scss";
 
@@ -34,7 +35,9 @@ export function VideoHero({ identifier, video_embed, video_url, thumbnail }: Vid
           {thumbnail ? (
             <img
               className={styles.poster}
-              src={thumbnail}
+              src={widenCdnImage(thumbnail, "1200x675")}
+              srcSet={`${widenCdnImage(thumbnail, "768x432")} 768w, ${widenCdnImage(thumbnail, "1200x675")} 1200w`}
+              sizes="(max-width: 768px) 768px, 1200px"
               alt="Video thumbnail"
               loading="eager"
             />

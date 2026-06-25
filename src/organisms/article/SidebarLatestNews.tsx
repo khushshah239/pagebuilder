@@ -1,3 +1,4 @@
+import { cdnImageSrcSet } from "@/lib/media";
 import Link from "next/link";
 import { CategoryLink } from "@/components/CategoryLink";
 import { ArticleByline } from "@/components/ArticleByline";
@@ -50,7 +51,7 @@ export function SidebarLatestNews({
               {item.thumbnail ? (
                 <img
                   className={styles.thumb}
-                  src={item.thumbnail}
+                  {...cdnImageSrcSet(item.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
                   alt={item.title}
                   loading="lazy"
                 />

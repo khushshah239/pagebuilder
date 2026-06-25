@@ -1,3 +1,4 @@
+import { cdnImageSrcSet } from "@/lib/media";
 import Link from "next/link";
 import { CategoryLink } from "@/components/CategoryLink";
 import { ArticleByline } from "@/components/ArticleByline";
@@ -35,7 +36,7 @@ export function RelatedArticlesRow({
               {card.thumbnail ? (
                 <img
                   className={styles.thumb}
-                  src={card.thumbnail}
+                  {...cdnImageSrcSet(card.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
                   alt={card.title}
                   loading="lazy"
                 />
