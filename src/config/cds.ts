@@ -25,4 +25,5 @@ export const TAG_PAGE_SIZE = 10;
 export const VIDEO_TEMPLATE_LEGACY_URL = "/videotemplates/videotemplate";
 
 // 0 = no-store (always fresh); raise in production for ISR.
-export const REVALIDATE_SECONDS = 0;
+// 60s ISR cache — pages serve instantly after first load. Set to 0 for always-fresh during dev.
+export const REVALIDATE_SECONDS = 60;

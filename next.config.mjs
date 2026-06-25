@@ -1,8 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  compress: true,
+  poweredByHeader: false,
   images: {
-    // CDS media is served from arbitrary publisher CDNs; allow remote images.
     remotePatterns: [{ protocol: "https", hostname: "**" }],
+    formats: ["image/webp"],
+    minimumCacheTTL: 3600,
+  },
+  experimental: {
+    optimizePackageImports: ["react", "react-dom"],
   },
 };
 
