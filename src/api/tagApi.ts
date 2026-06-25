@@ -2,21 +2,7 @@ import { cache } from "react";
 import { cdsFetch, postByLegacyUrlPath } from "./cdsClient";
 import { TAG_TEMPLATE_LEGACY_URL } from "@/config/cds";
 
-/**
- * TagPage data access. A tag route resolves in a few calls, mirroring the
- * author/section flow:
- *   1. `identifyUrl` (in sectionApi) reports `type: "tag"` + the tag slug.
- *   2. `fetchTag` — the tag by slug; it carries the numeric `id` the posts
- *      endpoint needs (`/tags/` is not slug-addressable the same way).
- *   3. `fetchTagPosts` — one page of the tag's articles (by tag id).
- *   4. `fetchTagTemplate` — the shared layout + bindings (fetched once).
- */
-
-/**
- * The tag record (`id`, `name`, `slug`, `absolute_url`). The CDS detail endpoint
- * resolves the slug from `identify_url` directly. Returns `null` when the tag
- * can't be resolved, so the route can render a 404 cleanly.
- */
+/** Fetches the tag record by slug; returns null on failure. */
 export async function fetchTag(
   slug: string
 ): Promise<Record<string, unknown> | null> {
@@ -30,19 +16,14 @@ export async function fetchTag(
   }
 }
 
-/** One page of a tag's articles. */
+/** One page of a tag's article listing. */
 export interface TagPostsResponse {
   data: Record<string, unknown>[];
   page_no?: number;
   per_page?: number;
 }
 
-/**
- * Fetch one page of a tag's articles (newest first), filtered by tag id. The
- * endpoint returns no total count, so callers detect the last page by a short
- * result set (fewer than `limit`). Only Article-type posts are fetched so that
- * web stories and video posts sharing the tag don't consume binding slots.
- */
+/** Fetches one page of a tag's articles; a short result set means last page. */
 export async function fetchTagPosts(
   id: number,
   page: number,
@@ -57,11 +38,7 @@ export async function fetchTagPosts(
   };
 }
 
-/**
- * The shared TagPage template `custom_entity` (layout + `data_binding`). Wrapped
- * in React's `cache` so the page render and the pagination API route de-duplicate
- * it within a request rather than re-fetching the same template.
- */
+/** Fetches the shared TagPage template; React cache deduplicates within a request. */
 export const fetchTagTemplate = cache(
   async (): Promise<Record<string, unknown>> => {
     const response = await cdsFetch<{

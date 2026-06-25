@@ -4,16 +4,7 @@ import { flattenMedia, flattenMediaFields } from "@/lib/media";
 import { getByPath } from "@/lib/path";
 import type { CdsFieldMapEntry, CdsLayoutOrganism } from "@/types/article/cds.types";
 
-/**
- * Resolve VideoPage organism props from the shared video template + live post
- * data. Mirrors article/buildProps.ts in structure — the key difference is that
- * the video template uses `data_bindings` (plural, like the tag template) and its
- * `custom_entity` carries named-key organisms whose key IS the schema_slug.
- */
-
-// ─── Media keys ──────────────────────────────────────────────────────────────
-// Local set so `author_avatar` is flattened without touching the global MEDIA_KEYS,
-// and `video_embed` is deliberately excluded — it is raw iframe HTML, not a URL.
+// video_embed is intentionally excluded — it is raw iframe HTML, not a URL.
 const VIDEO_MEDIA_KEYS = new Set([
   "image",
   "thumbnail",
@@ -22,21 +13,15 @@ const VIDEO_MEDIA_KEYS = new Set([
   "avatar",
   "logo",
   "icon",
-  "author_avatar", // video-specific: flatten CDS media object → URL string
-  // NOTE: "video_embed" is intentionally absent — it is raw iframe HTML
+  "author_avatar",
 ]);
 
-// ─── Per-organism build specs ─────────────────────────────────────────────────
-// `kind` selects how props are built (mirrors article/buildProps.ts spec shapes):
-//   single – scalar slots filled from the post via a non-indexed binding,
-//             template default as fallback (e.g. videohero, videoheader, videobody).
-//   list   – a repeated item array filled from an indexed binding,
-//             template default fallback (e.g. tagsrow, morefromauthor).
+// kind: "single" = scalar binding, "list" = item array
 type VideoOrganismSpec =
   | { kind: "single" }
   | { kind: "list"; itemsProp: string; defaultHeading?: string };
 
-/** How each video template organism (keyed by `schema_slug`) builds its props. */
+/** Build spec per video organism schema_slug. */
 const VIDEO_ORGANISM_SPECS: Record<string, VideoOrganismSpec> = {
   videohero: { kind: "single" },
   videoheader: { kind: "single" },
@@ -59,20 +44,12 @@ const VIDEO_ORGANISM_SPECS: Record<string, VideoOrganismSpec> = {
   },
 };
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-/** Normalize an organism id: lowercase, strip hyphens/underscores. */
+/** Normalizes an organism id (lowercase, no hyphens/underscores). */
 function normalizeId(id: string): string {
   return id.toLowerCase().replace(/[-_]/g, "");
 }
 
-/**
- * The field-map for one video organism from the template's `data_bindings`.
- * Accepts both `data_bindings` (plural — the video template) and `data_binding`
- * (singular — other templates) so this helper is forward-compatible.
- * Tries exact match first, then normalized match so that e.g. "related-articles-row"
- * in the binding matches the schema_slug "relatedarticlesrow" on the layout node.
- */
+// Accepts data_bindings or data_binding; tries exact then normalized id match.
 function videoBinding(
   template: Record<string, unknown>,
   id: string
@@ -93,12 +70,12 @@ function videoBinding(
   return entry?.field_map.dynamic_fields ?? [];
 }
 
-/** Coerce a slot value: video-specific media keys → URL string; everything else as-is. */
+/** Flattens video media keys to URL strings; passes everything else through. */
 function coerce(key: string, value: unknown): unknown {
   return VIDEO_MEDIA_KEYS.has(key) ? flattenMedia(value) : value;
 }
 
-/** Template inline defaults (sans the binding `id`), media flattened to URLs. */
+/** Returns template inline defaults with media flattened to URL strings. */
 function defaultProps(node: CdsLayoutOrganism): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(firstDynamicField(node))) {
@@ -108,13 +85,13 @@ function defaultProps(node: CdsLayoutOrganism): Record<string, unknown> {
   return out;
 }
 
-/** Editor-overridable section title from the template default (empty → none). */
+/** Returns the template's heading string, or "" if absent. */
 function templateHeading(node: CdsLayoutOrganism): string {
   const h = firstDynamicField(node).heading;
   return typeof h === "string" ? h : "";
 }
 
-/** The first nested `{ dynamic_fields }` container in a list organism default. */
+/** Returns the first nested dynamic_fields array from a list organism's default. */
 function nestedItems(node: CdsLayoutOrganism): Record<string, unknown>[] {
   for (const value of Object.values(firstDynamicField(node))) {
     const container = value as { dynamic_fields?: Record<string, unknown>[] };
@@ -125,11 +102,7 @@ function nestedItems(node: CdsLayoutOrganism): Record<string, unknown>[] {
   return [];
 }
 
-/**
- * The top-level data key the binding uses as its source root for a list
- * organism (e.g. `"related_article"` from `"related_article.results.0.title"`).
- * Returns an empty string when the organism has no binding.
- */
+/** Returns the top-level data key from the binding's first source path. */
 export function videoBindingRootField(
   template: Record<string, unknown>,
   schemaSlug: string
@@ -138,13 +111,7 @@ export function videoBindingRootField(
   return first.split(".")[0];
 }
 
-/**
- * How many items to fetch for a video list organism: one past the highest
- * array-index the binding references so every bound slot has data. Falls back
- * to `fallback` when the organism has no indexed binding (e.g. no template
- * configured). Mirrors `tagFeedSize` — count comes from the binding, never
- * hardcoded.
- */
+/** Returns fetch count from the binding's max array index, or `fallback` if unconfigured. */
 export function videoFeedSize(
   template: Record<string, unknown>,
   schemaSlug: string,
@@ -158,15 +125,7 @@ export function videoFeedSize(
   return maxIndex >= 0 ? maxIndex + 1 : fallback;
 }
 
-// ─── Main builder ─────────────────────────────────────────────────────────────
-
-/**
- * Build presentational props for one video page organism: live bound data when
- * present, otherwise the template's inline defaults. `node.schema_slug` is the
- * template key, injected by the renderer before calling here. `data` is the
- * resolution root (post fields merged with its `custom_entity`). Returns `null`
- * for organisms with no matching build spec.
- */
+/** Builds props for one video organism from live data or template defaults. */
 export function buildVideoOrganismProps(
   node: CdsLayoutOrganism,
   template: Record<string, unknown>,
@@ -175,20 +134,16 @@ export function buildVideoOrganismProps(
   const spec = VIDEO_ORGANISM_SPECS[node.schema_slug];
   if (!spec) return null;
 
-  // organism_id = id field inside the template default, falling back to schema_slug.
   const id = organismId(node);
 
   if (spec.kind === "single") {
-    // Template defaults first, then overlay each non-blank live bound value.
     const props: Record<string, unknown> = { identifier: id, ...defaultProps(node) };
     for (const { source, target } of videoBinding(template, id)) {
       const live = getByPath(data, source);
       if (!isBlank(live)) props[target] = coerce(target, live);
     }
 
-    // VideoHeader: auto-fill category + author when the binding didn't map them,
-    // mirroring the articleheader fallback in article/buildProps.ts so the category
-    // pill and byline always render even when the template skips those binding entries.
+    // VideoHeader: auto-fill category + author from post fields when binding omits them.
     if (node.schema_slug === "videoheader") {
       const category = data.primary_category as
         | { name?: string; absolute_url?: string }
@@ -216,7 +171,7 @@ export function buildVideoOrganismProps(
     return props;
   }
 
-  // list organism: live items from the binding → template inline defaults as fallback.
+  // list organism: live bound items → template inline defaults as fallback.
   const fieldMap = videoBinding(template, id);
   const liveItems = resolveBoundItems(fieldMap, data).map(flattenMediaFields);
   const items = liveItems.length > 0 ? liveItems : nestedItems(node);

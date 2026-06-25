@@ -25,14 +25,7 @@ import {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyComponent = (props: any) => any;
 
-/**
- * Maps a CDS `schema_slug` to its presentational organism component.
- *
- * The resolver builds props dynamically (a `Record<string, unknown>` shaped to
- * each organism's contract), so the map is typed with `ComponentType<any>`: the
- * compile-time prop type per organism is enforced where each organism is defined,
- * not at this dynamic dispatch boundary.
- */
+/** Maps schema_slug to its organism component. */
 const ORGANISM_COMPONENTS: Record<string, AnyComponent> = {
   herocarousel: HeroCarousel,
   postgrid_with_hero_image: PostGrid,
@@ -51,11 +44,7 @@ const ORGANISM_COMPONENTS: Record<string, AnyComponent> = {
   apppromocard: AppPromoCard,
 };
 
-/**
- * Walk the template layout in render order and draw each organism with props
- * built from live CDS data (falling back to the template's inline defaults).
- * Organisms with no matching component or no resolvable props are skipped.
- */
+/** Renders homepage organisms in template layout order. */
 export function HomepageRenderer({ data }: { data: HomepageCustomEntity }) {
   const template = data.template?.[0];
   if (!template) return null;

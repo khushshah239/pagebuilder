@@ -9,26 +9,13 @@ export interface CategoryInfo {
   parent_category?: unknown;
 }
 
-/**
- * SectionPage (category) data access. A category route resolves in three calls:
- *   1. `identifyUrl` — is this legacy URL a category or a post?
- *   2. `fetchSectionTemplate` — the shared layout + bindings (fetched once).
- *   3. `fetchCategoryPosts` — one page of the category's articles.
- */
-
 /** What the CDS `identify_url` endpoint reports for a legacy URL. */
 export interface IdentifyResult {
-  /** e.g. `"category"` or `"post"`. */
-  type: string;
-  /** The normalised URL/slug (no leading slash for categories). */
+  type: string; // e.g. "category" or "post"
   url: string;
 }
 
-/**
- * Classify a legacy URL via the CDS so the catch-all route knows whether to
- * render a category (SectionPage) or an article. Returns `null` on failure so
- * the caller can fall back to the article flow.
- */
+/** Classifies a legacy URL as category or post; returns null on failure. */
 export async function identifyUrl(
   legacyUrl: string
 ): Promise<IdentifyResult | null> {
@@ -42,11 +29,7 @@ export async function identifyUrl(
   }
 }
 
-/**
- * The shared SectionPage template `custom_entity` (layout + `data_binding`).
- * Wrapped in React's `cache` so the page render and the pagination API route
- * de-duplicate it within a request rather than re-fetching the same template.
- */
+/** Fetches the shared SectionPage template; React cache deduplicates within a request. */
 export const fetchSectionTemplate = cache(
   async (): Promise<Record<string, unknown>> => {
     const response = await cdsFetch<{
@@ -56,18 +39,14 @@ export const fetchSectionTemplate = cache(
   }
 );
 
-/** One page of a category article listing. */
+/** One page of a category's article listing. */
 export interface CategoryPostsResponse {
   data: Record<string, unknown>[];
   page_no?: number;
   per_page?: number;
 }
 
-/**
- * Fetch the category record by its slug (name, id, parent_category, etc.).
- * Returns null on failure so the hero banner can still fall back to the
- * template default heading.
- */
+/** Fetches the category record by slug; returns null on failure. */
 export async function fetchCategory(
   slug: string
 ): Promise<CategoryInfo | null> {
@@ -80,11 +59,7 @@ export async function fetchCategory(
     return null;
   }
 }
-/**
- * Fetch one page of a category's articles (newest first), filtered by category
- * slug. The endpoint returns no total count, so callers detect the last page by
- * a short result set (fewer than `limit`).
- */
+/** Fetches one page of a category's articles; a short result set means last page. */
 export async function fetchCategoryPosts(
   slug: string,
   page: number,

@@ -6,7 +6,7 @@ export interface ArticleListResponse {
   data: Record<string, unknown>[];
 }
 
-/** Fetch articles from the same category, excluding the current article by id. */
+/** Fetches related articles by category, excluding the given article id. */
 export async function fetchRelatedArticles(
   categorySlug: string,
   excludeId: number,
@@ -22,7 +22,7 @@ export async function fetchRelatedArticles(
   }
 }
 
-/** Fetch recent articles by the same author (contributor id), excluding the current article. */
+/** Fetches recent articles by contributor id, excluding the given article. */
 export async function fetchMoreFromAuthor(
   authorId: number,
   excludeId: number,
@@ -38,7 +38,7 @@ export async function fetchMoreFromAuthor(
   }
 }
 
-/** Fetch recent articles site-wide (for sidebar "Latest News"). */
+/** Fetches recent site-wide articles, excluding the given article. */
 export async function fetchLatestNews(
   excludeId: number,
   limit: number
@@ -53,18 +53,13 @@ export async function fetchLatestNews(
   }
 }
 
-/** The same legacy URL with its trailing slash toggled on/off. */
+/** Toggles trailing slash on a legacy URL. */
 function toggleTrailingSlash(legacyUrl: string): string {
   return legacyUrl.endsWith("/") ? legacyUrl.slice(0, -1) : `${legacyUrl}/`;
 }
 
-/**
- * Fetch an article by its legacy URL. CDS stores `legacy_url` with an exact
- * trailing slash (some articles have one, some don't) while Next normalises it
- * away, so we try the URL as given and, on failure, retry with the slash
- * toggled. Wrapped in React's `cache` so the page render and `generateMetadata`
- * for the same request de-duplicate.
- */
+// Retries with trailing slash toggled because CDS legacy_url slash is inconsistent.
+// React cache deduplicates calls within the same request.
 export const fetchArticle = cache(
   async (legacyUrl: string): Promise<CdsArticleResponse> => {
     try {

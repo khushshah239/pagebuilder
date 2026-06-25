@@ -12,11 +12,7 @@ import {
   SidebarLatestNews,
 } from "@/organisms/article";
 
-/**
- * Maps a video template organism `schema_slug` to its presentational component.
- * The shared template at `/videotemplates/videotemplate` carries `schema_slug` on
- * each organism node (same convention as article templates).
- */
+/** Maps video organism schema_slug to its component. */
 const VIDEO_ORGANISM_COMPONENTS: Record<string, ComponentType<any>> = {
   videohero: VideoHero,
   videoheader: VideoHeader,
@@ -27,44 +23,26 @@ const VIDEO_ORGANISM_COMPONENTS: Record<string, ComponentType<any>> = {
   "sidebar-latest-news": SidebarLatestNews,
 };
 
-/**
- * Naming convention: any organism whose `schema_slug` starts with this prefix is
- * right-column content, regardless of where it sits in the template key order.
- */
+// Organisms whose slug starts with this prefix are rendered in the aside.
 const SIDEBAR_SLUG_PREFIX = "sidebar";
-
-/**
- * Organisms whose `schema_slug` marks them as right-column content. They are
- * rendered in the page's `<aside>` (via `VideoSidebar`) instead of the main
- * video flow, so a template can place a sidebar widget anywhere in its key
- * order and it still lands in the sidebar.
- */
 function isSidebarOrganism(schemaSlug: string): boolean {
   return schemaSlug.startsWith(SIDEBAR_SLUG_PREFIX);
 }
 
-/** A template entry is an organism when it carries a `schema_slug` + slots. */
+/** Returns true if a template key/value pair represents an organism node. */
 function isOrganismNode(key: string, value: unknown): value is CdsLayoutOrganism {
   if (key === "data_binding" || key === "data_bindings" || !value || typeof value !== "object") return false;
   const node = value as Partial<CdsLayoutOrganism>;
   return typeof node.schema_slug === "string" && Array.isArray(node.dynamic_fields);
 }
 
-/**
- * Walk the shared video template in its declared organism order and draw each
- * organism that `include` accepts, with props built from the live post data
- * (falling back to the template's inline defaults). Organisms with no matching
- * component or no resolvable props are skipped. No layout is hardcoded — the
- * template's own key order is the render order.
- */
+/** Renders video organisms in template key order, filtered by `include`. */
 function renderOrganisms(
   data: ArticleData,
   template: Record<string, unknown>,
   include: (schemaSlug: string) => boolean
 ) {
-  // Bindings address both the post fields (`title`, `tags.*`) and the
-  // collection slots under `custom_entity` (`more_from_author.results.*`), so
-  // resolve against the two merged into one root.
+  // Merge post fields + custom_entity so bindings resolve against either.
   const root: Record<string, unknown> = { ...data, ...(data.custom_entity ?? {}) };
 
   return Object.entries(template)

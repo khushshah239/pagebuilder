@@ -8,12 +8,6 @@ import type { TagHeroBannerProps } from "@/types/tag/organism.types";
 import type { SectionFeedArticle } from "@/types/section/organism.types";
 import type { CdsLayoutOrganism } from "@/types/article/cds.types";
 
-/**
- * Resolve TagPage organism props from the shared template + live data: the tag
- * record feeds the hero (`tag.name → tag_name`) and a page of the tag's articles
- * feeds the feed (`data.N.* → card`), exactly mirroring the SectionPage resolver.
- */
-
 type FieldMapEntry = { source: string; target: string };
 type TagTemplate = Record<string, unknown>;
 
@@ -22,11 +16,7 @@ interface TagBinding {
   field_map: { dynamic_fields: FieldMapEntry[] };
 }
 
-/**
- * The field-map for one tag organism from the template's binding block. The
- * TagPage schema names it `data_bindings` (plural); other templates use the
- * singular `data_binding`, so accept either.
- */
+// Accepts `data_bindings` (plural, tag template) or `data_binding` (other templates).
 function tagBinding(
   template: TagTemplate,
   organismId: string
@@ -45,7 +35,7 @@ function tagBinding(
   );
 }
 
-/** An organism's inline default block (its static fallback content). */
+/** Returns an organism's first inline default block. */
 function organismDefault(
   template: TagTemplate,
   key: string
@@ -56,16 +46,11 @@ function organismDefault(
   return node?.dynamic_fields?.[0] ?? {};
 }
 
-/** Coerce a slot value: media keys become URL strings, everything else as-is. */
 function coerce(key: string, value: unknown): unknown {
   return MEDIA_KEYS.has(key) ? flattenMedia(value) : value;
 }
 
-/**
- * How many of the tag's articles to fetch. Checks `tag-feed` first (dedicated
- * tag template), then `section-feed` (when the section template is reused for
- * tag pages). Falls back to TAG_PAGE_SIZE when neither binding is configured.
- */
+// Checks tag-feed first, then section-feed (when section template is reused for tags).
 export function tagFeedSize(template: TagTemplate): number {
   for (const orgId of ["tag-feed", "section-feed"]) {
     let maxIndex = -1;
@@ -78,7 +63,7 @@ export function tagFeedSize(template: TagTemplate): number {
   return TAG_PAGE_SIZE;
 }
 
-/** Static fallback feed rows stored on the template (media flattened to URLs). */
+/** Returns static fallback feed rows from the template. */
 function staticFeed(template: TagTemplate): SectionFeedArticle[] {
   const slot = organismDefault(template, "tag_feed").feed_articles as
     | { dynamic_fields?: Record<string, unknown>[] }
@@ -88,13 +73,7 @@ function staticFeed(template: TagTemplate): SectionFeedArticle[] {
   );
 }
 
-/**
- * Resolve the tag feed using the same binding approach as section pages.
- * Checks `tag-feed` first (dedicated tag template), then falls back to
- * `section-feed` (when the section page template is reused for tag pages).
- * This mirrors `buildSectionFeedItems` exactly, so images and all card fields
- * resolve identically to category pages.
- */
+/** Builds tag feed from binding (tag-feed or section-feed), falling back to static rows. */
 export function buildTagFeedItems(
   template: TagTemplate,
   posts: TagPostsResponse
@@ -110,12 +89,7 @@ export function buildTagFeedItems(
   return live.length > 0 ? live : staticFeed(template);
 }
 
-/**
- * Resolve the tag hero: the template's inline defaults (e.g. `heading`) first,
- * then each non-blank live value bound from the tag record or posts.
- * Context is `{ tag, data, page_no }` so bindings like `tag.name` and
- * `data.0.title` both resolve correctly from the same object.
- */
+/** Builds tag hero props; context merges tag + posts so `tag.name` and `data.0.*` resolve. */
 export function buildTagHeroProps(
   template: TagTemplate,
   tag: Record<string, unknown>,
@@ -133,8 +107,7 @@ export function buildTagHeroProps(
     if (!isBlank(live)) props[target] = coerce(target, live);
   }
 
-  // Always show the tag name — even when no tag-hero binding exists (e.g.
-  // when the section template is reused and has no tag-hero organism).
+  // Ensure tag_name always shows even when the section template is reused.
   if (isBlank(props.tag_name)) {
     props.tag_name = (tag.name ?? tag.tag_name ?? tag.title) as string | undefined;
   }
@@ -142,12 +115,7 @@ export function buildTagHeroProps(
   return props as unknown as TagHeroBannerProps;
 }
 
-/**
- * Build presentational props for one tag page organism: routes each organism
- * schema_slug to the correct builder so `TagRenderer` can iterate all template
- * organisms dynamically (mirrors `buildVideoOrganismProps`).
- * Returns `null` for organism types not handled by this page.
- */
+/** Dispatches to the correct builder per schema_slug; returns null for unrecognized slugs. */
 export function buildTagOrganismProps(
   node: CdsLayoutOrganism,
   template: TagTemplate,
@@ -156,7 +124,7 @@ export function buildTagOrganismProps(
 ): Record<string, unknown> | null {
   const slug = node.schema_slug;
 
-  // Hero organisms — tag-specific or section template reuse
+  // Hero organisms: tag-specific or section template reuse
   if (
     slug === "tag_hero" || slug === "taghero" || slug === "tag-hero" ||
     slug === "section_hero" || slug === "sectionhero" || slug === "section-hero"
@@ -164,7 +132,7 @@ export function buildTagOrganismProps(
     return buildTagHeroProps(template, tag, posts) as unknown as Record<string, unknown>;
   }
 
-  // Feed organisms — tag-specific or section template reuse
+  // Feed organisms: tag-specific or section template reuse
   if (
     slug === "tag_feed" || slug === "tagfeed" || slug === "tag-feed" ||
     slug === "section_feed" || slug === "sectionfeed" || slug === "section-feed"

@@ -9,26 +9,13 @@ import type {
   CdsLayoutOrganism,
 } from "@/types/article/cds.types";
 
-// ─── Per-organism build specs ───────────────────────────────────────────────
-// `kind` selects how an article organism's props are built:
-//   single – scalar slots filled from the post via a non-indexed binding
-//            (`summary → excerpt`), template default as fallback.
-//   list   – a repeated item array filled from an indexed binding
-//            (`related_article.results.N.* → card`), template default fallback.
-//   static – no live binding; slots are read straight from the template default
-//            (ShareBar buttons, ArticleSummary key points, ArticleFooter).
-//
-// Only `list` needs configuration — the prop name the component expects for its
-// item array; the binding never names that array. `single`/`static` props are
-// derived entirely from the data, so nothing about the post is hardcoded here.
+// kind: "single" = scalar slots from binding, "list" = item array, "static" = template-only
 type ArticleOrganismSpec =
   | { kind: "single" }
   | { kind: "static" }
-  // `defaultHeading` is the section title shown when the template default carries
-  // no `heading` of its own. A template-set heading always wins.
   | { kind: "list"; itemsProp: string; defaultHeading?: string };
 
-/** How each article organism (keyed by `schema_slug`) builds its props. */
+/** Build spec per article organism schema_slug. */
 const ARTICLE_ORGANISM_SPECS: Record<string, ArticleOrganismSpec> = {
   articlehero: { kind: "single" },
   articleheader: { kind: "single" },
@@ -62,16 +49,12 @@ const ARTICLE_ORGANISM_SPECS: Record<string, ArticleOrganismSpec> = {
   },
 };
 
-/** Normalize an organism id for loose matching: lowercase, strip hyphens/underscores. */
+/** Normalizes an organism id for loose matching (lowercase, no hyphens/underscores). */
 function normalizeOrganismId(id: string): string {
   return id.toLowerCase().replace(/[-_]/g, "");
 }
 
-/**
- * The field-map for an organism id from the template's `data_binding`.
- * Tries exact match first, then normalized match so that e.g. "tags-row"
- * in the binding matches the schema_slug "tagsrow" on the layout node.
- */
+// Tries exact match then normalized match (e.g. "tags-row" matches "tagsrow").
 function articleBinding(
   template: CdsArticleTemplate,
   id: string
@@ -84,12 +67,11 @@ function articleBinding(
   return entry?.field_map.dynamic_fields ?? [];
 }
 
-/** Coerce a slot value: media keys become URL strings, everything else as-is. */
 function coerce(key: string, value: unknown): unknown {
   return MEDIA_KEYS.has(key) ? flattenMedia(value) : value;
 }
 
-/** Template inline defaults (sans the binding `id`), media flattened to URLs. */
+/** Template inline defaults with media flattened to URL strings. */
 function defaultProps(node: CdsLayoutOrganism): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(firstDynamicField(node))) {
@@ -99,13 +81,13 @@ function defaultProps(node: CdsLayoutOrganism): Record<string, unknown> {
   return out;
 }
 
-/** Editor-overridable section title from the template default (empty → none). */
+/** Returns the template's heading string, or "" if absent. */
 function templateHeading(node: CdsLayoutOrganism): string {
   const heading = firstDynamicField(node).heading;
   return typeof heading === "string" ? heading : "";
 }
 
-/** The first nested `{ dynamic_fields }` container in a list organism default. */
+/** Returns the first nested dynamic_fields array from a list organism's default. */
 function nestedItems(node: CdsLayoutOrganism): Record<string, unknown>[] {
   for (const value of Object.values(firstDynamicField(node))) {
     const container = value as { dynamic_fields?: Record<string, unknown>[] };
@@ -116,12 +98,7 @@ function nestedItems(node: CdsLayoutOrganism): Record<string, unknown>[] {
   return [];
 }
 
-/**
- * How many items to fetch for an article list organism: one past the highest
- * array-index the binding references. Falls back to `fallback` when there is
- * no indexed binding (template not configured). Mirrors `videoFeedSize` —
- * the count is always read from the template, never hardcoded in the route.
- */
+/** Returns fetch count from the binding's max array index, or `fallback` if unconfigured. */
 export function articleFeedSize(
   template: CdsArticleTemplate,
   schemaSlug: string,
@@ -135,12 +112,7 @@ export function articleFeedSize(
   return maxIndex >= 0 ? maxIndex + 1 : fallback;
 }
 
-/**
- * Build presentational props for one article organism: live bound data when
- * present, otherwise the template's inline defaults. `data` is the resolution
- * root (the post fields merged with its `custom_entity`). Returns `null` for
- * organisms with no matching build spec.
- */
+/** Builds props for one article organism from live data or template defaults. */
 export function buildArticleOrganismProps(
   node: CdsLayoutOrganism,
   template: CdsArticleTemplate,
@@ -152,12 +124,8 @@ export function buildArticleOrganismProps(
   const id = organismId(node);
 
   if (spec.kind === "static") {
-    // Contentful organism: slots come from the template default, but a live
-    // binding (if the template defines one) overrides the inline items.
     const liveItems = resolveBoundItems(articleBinding(template, id), data);
-    // The article's API summary is already shown as the hero standfirst, so the
-    // summary box's template FALLBACK key points would just repeat it — drop
-    // them in that case (live-bound key points are still kept).
+    // Drop summary key points when the post summary already fills the standfirst.
     const summaryCoveredByStandfirst =
       node.schema_slug === "articlesummary" && !isBlank(data.summary);
 
@@ -184,15 +152,12 @@ export function buildArticleOrganismProps(
   const fieldMap = articleBinding(template, id);
 
   if (spec.kind === "single") {
-    // Template defaults first, then overlay each non-blank live bound value.
     const props: Record<string, unknown> = { identifier: id, ...defaultProps(node) };
     for (const { source, target } of fieldMap) {
       const live = getByPath(data, source);
       if (!isBlank(live)) props[target] = coerce(target, live);
     }
-    // Header category box: fall back to the post's own `primary_category` (name
-    // + section URL) when the binding didn't map it, so the clickable category
-    // pill always renders. An explicit binding still wins (set above).
+    // Auto-fill category + author from post fields when the binding omits them.
     if (node.schema_slug === "articleheader") {
       const category = data.primary_category as
         | { name?: string; absolute_url?: string }
@@ -203,10 +168,6 @@ export function buildArticleOrganismProps(
       if (isBlank(props.category_url) && category?.absolute_url) {
         props.category_url = category.absolute_url;
       }
-      // Byline author: fall back to the post's own author (`member`, then the
-      // first `contributor`) for the name + author-page URL when the binding
-      // didn't map them, so the clickable author link always renders. An
-      // explicit binding still wins (set above).
       const author = (data.member ?? (data.contributors as unknown[])?.[0]) as
         | { name?: string; absolute_url?: string }
         | undefined;
@@ -220,16 +181,13 @@ export function buildArticleOrganismProps(
     return props;
   }
 
-  // Tags: resolved through the standard binding engine so the editor's choice
-  // of count and order is respected exactly. Falls back to all post tags only
-  // when there is no binding at all.
+  // Tags: resolved via binding engine; falls back to all post tags when no binding.
   if (node.schema_slug === "tagsrow") {
     const liveItems = resolveBoundItems(fieldMap, data);
 
     let article_tags: { title: string; url_slug: string }[];
 
     if (liveItems.length > 0) {
-      // Binding present — use only the resolved items (exact count + order).
       article_tags = liveItems
         .map((item) => ({
           title: ((item.title ?? item.name ?? item.tag_name) as string) || "",
@@ -238,7 +196,6 @@ export function buildArticleOrganismProps(
         }))
         .filter((t) => t.title);
     } else {
-      // No binding — fall back to every tag on the post.
       const rawTags = Array.isArray(data.tags)
         ? (data.tags as Record<string, unknown>[])
         : Array.isArray((data.tags as Record<string, unknown>)?.results)
@@ -260,21 +217,17 @@ export function buildArticleOrganismProps(
     };
   }
 
-  // list organism: live items the template's binding resolves (the editor's
-  // chosen articles) → fall back to the template's inline default items when
-  // there's no live data.
+  // list organism: live bound items → template inline defaults as fallback.
   const liveItems = resolveBoundItems(fieldMap, data).map(flattenMediaFields);
   const items = liveItems.length > 0 ? liveItems : nestedItems(node);
 
   const result: Record<string, unknown> = {
     identifier: id,
     [spec.itemsProp]: items,
-    // Template-default heading wins; fall back to the spec's default label.
     heading: templateHeading(node) || (spec.defaultHeading ?? ""),
   };
 
-  // Pass through any scalar (non-nested) fields from the template default that
-  // aren't already covered — e.g. `blog_title` on the live-blog organism.
+  // Pass through scalar template default fields not already set (e.g. blog_title).
   for (const [key, val] of Object.entries(firstDynamicField(node))) {
     if (key === "id" || key in result) continue;
     const container = val as { dynamic_fields?: unknown[] };

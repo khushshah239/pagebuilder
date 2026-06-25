@@ -5,20 +5,14 @@ import { InfiniteArticleFeed } from "@/organisms/section/InfiniteArticleFeed";
 import { Pagination } from "./Pagination";
 import type { SectionFeedArticle } from "@/types/section/organism.types";
 
-/** Cards per page — two rows of five. */
+/** Cards per page. */
 const CARDS_PER_PAGE = 10;
 
 interface SectionFeedProps {
-  /** Every article the `section-feed` binding resolved — the whole feed. */
   articles: SectionFeedArticle[];
 }
 
-/**
- * Renders the bound feed articles, paginating client-side only when the binding
- * maps more than one page's worth. The feed is exactly what the binding defines
- * — it does not walk the rest of the category — so there is a "next" page only
- * when the editor bound more than {@link CARDS_PER_PAGE} articles.
- */
+/** Renders bound feed articles with client-side pagination when count > CARDS_PER_PAGE. */
 export function SectionFeed({ articles }: SectionFeedProps) {
   const [page, setPage] = useState(1);
 

@@ -2,17 +2,13 @@ import { getByPath } from "./path";
 import { isBlank } from "./value";
 import type { CdsFieldMapEntry } from "@/types/cds.types";
 
-/**
- * Group key = the source prefix up to and including its first array-index
- * segment (e.g. `hero_carousel.results.1` or `featured_articles.0`). Every
- * field-map entry sharing a key belongs to the same item.
- */
+// Groups field-map entries by their source array-index prefix (e.g. `hero_carousel.results.1`)
 function groupKey(source: string): string {
   const match = source.match(/^(.*?\.\d+)(?:\.|$)/);
   return match ? match[1] : source;
 }
 
-/** Assign `value` into `item` at a (possibly dotted) target like `sidecards.title`. */
+/** Write a value into a nested target path on an item. */
 function setTarget(
   item: Record<string, unknown>,
   target: string,
@@ -27,7 +23,7 @@ function setTarget(
   node[parts[parts.length - 1]] = value;
 }
 
-/** An item is "real" when at least one (possibly nested) leaf has live content. */
+/** Returns true if any leaf value in the item is non-blank. */
 function hasContent(item: Record<string, unknown>): boolean {
   return Object.values(item).some((value) =>
     value && typeof value === "object"
@@ -36,14 +32,7 @@ function hasContent(item: Record<string, unknown>): boolean {
   );
 }
 
-/**
- * Resolve a binding field-map into an ordered list of item objects.
- *
- * Field-maps are chunked by their source array-index (`results.0`, `results.1`,
- * …); each chunk becomes one item whose keys are the binding `target`s. Items
- * that resolve to nothing (slot shorter than the binding, or missing data) are
- * dropped — so an empty result means "no live data; use the template default".
- */
+/** Resolve a field-map into ordered item objects, dropping empty items. */
 export function resolveBoundItems(
   fieldMap: CdsFieldMapEntry[],
   data: unknown
@@ -57,8 +46,6 @@ export function resolveBoundItems(
     groups.set(key, item);
   }
 
-  // Render order = the order groups first appear in the field-map. This means
-  // reordering binding entries in the CMS (e.g. swapping slot 0 and slot 1)
-  // immediately changes which card renders first. Map preserves insertion order.
+  // Map preserves insertion order, so render order matches field-map order.
   return [...groups.values()].filter(hasContent);
 }

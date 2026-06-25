@@ -3,15 +3,7 @@ const MONTHS = [
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 ];
 
-/**
- * Format a CDS published timestamp (e.g. `2026-03-07T11:23:40.570+05:30`) into a
- * readable date-time like `Mar 07, 2026 11:23 IST`.
- *
- * Parses the ISO string's own fields directly (no `Date` construction), so the
- * output is identical on server and client — no timezone shift, no hydration
- * mismatch. The `IST` label is derived from the `+05:30` offset; other offsets
- * are shown without a label. Returns "" for missing/unparseable input.
- */
+// Parses ISO fields directly (no Date construction) to avoid hydration mismatch.
 export function formatPublishedDateTime(value: string | undefined): string {
   if (!value) return "";
   const match =

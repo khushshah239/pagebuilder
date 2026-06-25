@@ -4,26 +4,15 @@ import type {
   HomepageCustomEntity,
 } from "@/types/homepage/cds.types";
 
-/**
- * Fetch the homepage CustomEntity by its legacy URL. Returns the raw
- * `{ status, data, "Cache-Tags" }` envelope; callers unwrap it with
- * `extractCustomEntity`.
- */
+/** Fetches the homepage CDS envelope by legacy URL. */
 export async function fetchHomepage(
   legacyUrl: string
 ): Promise<CdsHomepageResponse> {
   return cdsFetch<CdsHomepageResponse>(postByLegacyUrlPath(legacyUrl));
 }
 
-/**
- * Pull `custom_entity` out of the CDS envelope and merge top-level post fields
- * (Relation fields like `trending_topic_tags`, `laterst_news_right`, etc.) into
- * it so the binding layer can resolve any source path regardless of whether it
- * lives inside `custom_entity` or at the post root. `custom_entity` keys win on
- * collision (same priority as the article renderer's merged root).
- *
- * @throws Error when `custom_entity` is absent.
- */
+// Merges top-level post fields into custom_entity so all binding sources resolve.
+// custom_entity keys win on collision. Throws if custom_entity is absent.
 export function extractCustomEntity(
   response: CdsHomepageResponse
 ): HomepageCustomEntity {
@@ -35,7 +24,6 @@ export function extractCustomEntity(
   if (!customEntity) {
     throw new Error("CDS response is missing custom_entity");
   }
-  // Spread top-level post fields first so Relation fields are reachable, then
-  // overlay custom_entity so its slots always win.
+  // Relation fields first, then overlay custom_entity so its slots win.
   return { ...postData, ...customEntity } as HomepageCustomEntity;
 }

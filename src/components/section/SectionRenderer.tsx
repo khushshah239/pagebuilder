@@ -12,11 +12,7 @@ interface SectionRendererProps {
   category?: CategoryInfo | null;
 }
 
-/**
- * Render a category page from the shared SectionPage template and the bound
- * articles: the hero (resolved from the template + first article) followed by
- * the feed of exactly the articles the `section-feed` binding defines.
- */
+/** Renders a category page: hero then article feed from the section template. */
 export function SectionRenderer({ template, posts, category }: SectionRendererProps) {
   const heroProps = buildSectionHeroProps(template, posts, category);
   const articles = buildSectionFeedItems(template, posts);

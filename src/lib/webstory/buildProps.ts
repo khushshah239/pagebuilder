@@ -1,10 +1,5 @@
+// Builds slides directly from content_json — no template, no binding.
 import type { WebStorySlide } from "@/types/webstory/organism.types";
-
-/**
- * Build the Web Story player's slides + animation straight from the post's own
- * content_json — no template, no binding. The story renders exactly as authored
- * in the CMS, slide by slide.
- */
 
 function toSlide(raw: Record<string, unknown>): WebStorySlide {
   return {

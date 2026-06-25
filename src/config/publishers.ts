@@ -1,15 +1,8 @@
-/**
- * Publisher registry.
- *
- * Two publishers share the exact same component system and resolver; they differ
- * only in the data here — CDS publisher id, navigation, and branding tokens.
- * This is the answer to "how does publisher A differ from publisher B": it is a
- * config entry, not a code fork.
- */
+// Publisher registry — add a new entry here to onboard a new publisher.
 import { ACTIVE_PUBLISHER_KEY } from "./env";
 import type { PublisherConfig } from "./theme.types";
 
-/** Font stacks reused across publishers. */
+/** Shared font stacks. */
 const SANS_STACK =
   '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
 const SERIF_STACK = 'Georgia, "Times New Roman", Times, serif';
@@ -19,8 +12,7 @@ const CRICTODAY: PublisherConfig = {
   name: "Crictoday",
   tagline: "Cricket News, Live Scores, Features & Opinion",
   cdsPublisherId: "4027",
-  // Fallback logos — used only when the CDS /publisher/ API returns no logo fields.
-  // Preferred source is fetchPublisherData() in publisherApi.ts.
+  // Fallback logos — preferred source is fetchPublisherData() in publisherApi.ts.
   longLogo: "https://img-cdn.publive.online/crictoday/media/agency_attachments/2026/05/15/2026-05-15t051127404z-crictoday-dark-2048-2026-05-15-10-41-27.png",
   shortLogo: "https://img-cdn.publive.online/crictoday/media/agency_attachments/2026/01/08/2026-01-08t095049450z-ct-640x480-logo-sq-photoroom-cric-today-2026-01-08-15-20-49.png",
   theme: {
@@ -59,16 +51,16 @@ const METROPOST: PublisherConfig = {
   },
 };
 
-/** All known publishers, keyed by their stable `key`. */
+/** All known publishers keyed by their stable key. */
 export const PUBLISHERS: Record<string, PublisherConfig> = {
   [CRICTODAY.key]: CRICTODAY,
   [METROPOST.key]: METROPOST,
 };
 
-/** Fallback publisher used when the configured key is unknown. */
+/** Default publisher when the configured key is unknown. */
 const DEFAULT_PUBLISHER = CRICTODAY;
 
-/** Resolve the publisher selected by `NEXT_PUBLIC_PUBLISHER_KEY`. */
+/** Returns the active publisher config. */
 export function getActivePublisher(): PublisherConfig {
   return PUBLISHERS[ACTIVE_PUBLISHER_KEY] ?? DEFAULT_PUBLISHER;
 }

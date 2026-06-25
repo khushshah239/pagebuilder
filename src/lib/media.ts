@@ -1,4 +1,4 @@
-/** Prop keys whose values may arrive as raw CDS media objects needing flattening. */
+/** Prop keys whose CDS values may be media objects (not plain URL strings). */
 export const MEDIA_KEYS = new Set([
   "image",
   "thumbnail",
@@ -9,7 +9,7 @@ export const MEDIA_KEYS = new Set([
   "icon",
 ]);
 
-/** Reduce a CDS media object to its URL string; pass primitives through. */
+/** Extracts URL string from a CDS media object, or passes primitives through. */
 export function flattenMedia(value: unknown): string {
   if (value && typeof value === "object") {
     const media = value as Record<string, unknown>;
@@ -18,7 +18,7 @@ export function flattenMedia(value: unknown): string {
   return (value as string) ?? "";
 }
 
-/** Flatten any media-typed keys on an item to plain URL strings. */
+/** Flattens media-typed fields on an item to plain URL strings. */
 export function flattenMediaFields(
   item: Record<string, unknown>
 ): Record<string, unknown> {
@@ -29,11 +29,7 @@ export function flattenMediaFields(
   return out;
 }
 
-/**
- * Publive CDN images carry a `fit-in/<w>x<h>` resize segment. Rewrite it to a
- * larger size so big surfaces (e.g. the hero) request a sharper image instead of
- * upscaling the default thumbnail. URLs without that segment pass through.
- */
+// Rewrites the CDN `fit-in/<w>x<h>` segment to request a larger image; no-op otherwise.
 export function widenCdnImage(url: string, dimensions = "1280x720"): string {
   if (!url) return url;
   return url.replace(/\/fit-in\/\d+x\d+\//, `/fit-in/${dimensions}/`);

@@ -1,19 +1,13 @@
-/**
- * Presentational prop contracts for the SectionPage (category) organisms.
- * Values are already resolved by the section binding layer (e.g. `thumbnail` is
- * a URL string), mirroring the homepage/article organism conventions.
- */
+// Presentational prop contracts for SectionPage organisms; all values pre-resolved.
 
-// ─── SectionHeroBanner (section-hero) ────────────────────────────────────────
+// ─── SectionHeroBanner ───────────────────────────────────────────────────────
 export interface SectionHeroBannerProps {
   identifier: string;
-  /** Category name shown as the section title (e.g. "News"). */
   section_name?: string;
-  /** Template-default heading, used when no `section_name` resolves. */
-  heading?: string;
+  heading?: string; // fallback when section_name is absent
 }
 
-// ─── InfiniteArticleFeed (section-feed) ──────────────────────────────────────
+// ─── InfiniteArticleFeed ─────────────────────────────────────────────────────
 export interface SectionFeedArticle {
   title: string;
   thumbnail?: string;

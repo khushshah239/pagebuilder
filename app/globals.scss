@@ -249,10 +249,10 @@ img {
   border-right: 1px solid var(--pb-border, #e7e9ec);
 }
 
-/* Search bar — fills all remaining space between nav links and social icons */
+/* Search bar — fixed small width, pinned to the right */
 .pb-nav-search {
-  flex: 1 1 0;
-  min-width: 0;
+  flex: 0 0 auto;
+  margin-left: auto;
   display: flex;
   align-items: center;
   padding: 0 12px;
@@ -262,13 +262,13 @@ img {
 .pb-nav-search-inner {
   display: flex;
   align-items: center;
-  gap: 8px;
-  width: 100%;
+  gap: 6px;
+  width: 180px;
   background: #f3f4f6;
   border: 1.5px solid var(--pb-border, #e7e9ec);
   border-radius: 20px;
-  padding: 0 14px;
-  height: 32px;
+  padding: 0 10px;
+  height: 28px;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 .pb-nav-search-inner:focus-within {

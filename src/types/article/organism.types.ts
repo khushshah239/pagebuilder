@@ -1,14 +1,6 @@
-/**
- * Presentational prop contracts for every Article Page organism.
- *
- * As with the homepage, every value here is ALREADY RESOLVED by the binding
- * layer (e.g. `cover_image` is the absolute URL string). Organisms are purely
- * presentational and never touch the CDS payload directly.
- *
- * Kept entirely separate from the homepage organism types.
- */
+// Presentational prop contracts for Article Page organisms; all values pre-resolved.
 
-// ─── ArticleHeader (article-header) ──────────────────────────────────────────
+// ─── ArticleHeader ────────────────────────────────────────────────────────────
 export interface ArticleHeaderProps {
   identifier: string;
   title: string;
@@ -20,7 +12,7 @@ export interface ArticleHeaderProps {
   read_time?: string;
 }
 
-// ─── ArticleHero (article-hero) ──────────────────────────────────────────────
+// ─── ArticleHero ─────────────────────────────────────────────────────────────
 export interface ArticleHeroProps {
   identifier: string;
   cover_image: string;
@@ -28,7 +20,7 @@ export interface ArticleHeroProps {
   caption?: string;
 }
 
-// ─── ArticleSummary (article-summary) ────────────────────────────────────────
+// ─── ArticleSummary ──────────────────────────────────────────────────────────
 export interface ArticleKeyPoint {
   text: string;
 }
@@ -39,14 +31,13 @@ export interface ArticleSummaryProps {
   key_points: ArticleKeyPoint[];
 }
 
-// ─── ArticleBody (article-body) ──────────────────────────────────────────────
+// ─── ArticleBody ─────────────────────────────────────────────────────────────
 export interface ArticleBodyProps {
   identifier: string;
-  /** Rich-text HTML string from the CDS `body` / `content` field. */
-  body: string;
+  body: string; // rich-text HTML
 }
 
-// ─── ShareBar (share-bar) ────────────────────────────────────────────────────
+// ─── ShareBar ────────────────────────────────────────────────────────────────
 export interface ShareButton {
   platform_name: string;
   icon?: string;
@@ -59,7 +50,7 @@ export interface ShareBarProps {
   share_buttons: ShareButton[];
 }
 
-// ─── TagsRow (tags-row) ──────────────────────────────────────────────────────
+// ─── TagsRow ─────────────────────────────────────────────────────────────────
 export interface ArticleTag {
   title: string;
   url_slug?: string;
@@ -71,7 +62,7 @@ export interface TagsRowProps {
   article_tags: ArticleTag[];
 }
 
-// ─── RelatedArticlesRow (related-articles) ───────────────────────────────────
+// ─── RelatedArticlesRow ──────────────────────────────────────────────────────
 export interface RelatedCard {
   title: string;
   thumbnail: string;
@@ -89,7 +80,7 @@ export interface RelatedArticlesRowProps {
   related_cards: RelatedCard[];
 }
 
-// ─── MoreFromAuthorRow (more-from-author) ────────────────────────────────────
+// ─── MoreFromAuthorRow ───────────────────────────────────────────────────────
 export interface AuthorArticle {
   title: string;
   thumbnail: string;
@@ -107,7 +98,7 @@ export interface MoreFromAuthorRowProps {
   author_articles: AuthorArticle[];
 }
 
-// ─── ArticleFooter (article-footer) ──────────────────────────────────────────
+// ─── ArticleFooter ───────────────────────────────────────────────────────────
 export interface ArticleFooterProps {
   identifier: string;
   publisher_name?: string;
@@ -115,7 +106,7 @@ export interface ArticleFooterProps {
   copyright_text?: string;
 }
 
-// ─── InlineVideoEmbed (inline-video) ─────────────────────────────────────────
+// ─── InlineVideoEmbed ────────────────────────────────────────────────────────
 export interface InlineVideoEmbedProps {
   identifier: string;
   video_url: string;
@@ -123,7 +114,7 @@ export interface InlineVideoEmbedProps {
   caption?: string;
 }
 
-// ─── TrendingArticlesRow (trending-articles) ─────────────────────────────────
+// ─── TrendingArticlesRow ─────────────────────────────────────────────────────
 export interface TrendingCard {
   title: string;
   thumbnail: string;
@@ -137,7 +128,7 @@ export interface TrendingArticlesRowProps {
   trending_cards: TrendingCard[];
 }
 
-// ─── LiveBlogFeed (live-blog) ────────────────────────────────────────────────
+// ─── LiveBlogFeed ────────────────────────────────────────────────────────────
 export interface LiveUpdate {
   timestamp?: string;
   published_at?: string;
@@ -160,7 +151,7 @@ export interface LiveBlogFeedProps {
   live_updates: LiveUpdate[];
 }
 
-// ─── SidebarLatestNews (sidebar-latest-news) ─────────────────────────────────
+// ─── SidebarLatestNews ───────────────────────────────────────────────────────
 export interface SidebarLatestNewsItem {
   title: string;
   thumbnail?: string;

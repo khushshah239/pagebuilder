@@ -1,14 +1,4 @@
-/**
- * Presentational prop contracts for every homepage organism.
- *
- * Each interface = one organism's data contract. Every value here is ALREADY
- * RESOLVED by the binding layer (e.g. `image` is the absolute URL string, not a
- * raw CDS media object). Organisms are purely presentational and never touch the
- * CDS payload directly.
- *
- * `url_slug` (where present) is the post's legacy_url carried through the binding
- * layer; a card renders as a link when it is set, and as a plain block otherwise.
- */
+// Presentational prop contracts for homepage organisms; all values pre-resolved.
 
 // ─── HeroCarousel ───────────────────────────────────────────────────────────
 export interface HeroCarouselSlide {
@@ -29,9 +19,8 @@ export interface HeroCarouselProps {
   slides: HeroCarouselSlide[];
 }
 
-// ─── PostGrid (postgrid_with_hero_image) ────────────────────────────────────
-// A normal list organism: the first item is the main hero, the rest are side
-// cards. The lead carries `image`/`excerpt`; side cards carry `thumbnail`.
+// ─── PostGrid ───────────────────────────────────────────────────────────────
+// First item is the hero; the rest are side cards.
 export interface PostGridItem {
   title: string;
   image?: string;
@@ -165,8 +154,7 @@ export interface VideoBriefingCard {
   author_url?: string;
   published_at?: string;
   url_slug?: string;
-  /** Fallback when the CMS binding targets "url" instead of "url_slug". */
-  url?: string;
+  url?: string; // fallback when binding targets "url" instead of "url_slug"
 }
 
 export interface VideoBriefingsRailProps {
@@ -229,11 +217,8 @@ export interface NewsletterSignupStripProps {
 export interface AppPromoCardProps {
   identifier: string;
   title: string;
-  /** CMS field: Android button label (field key "cta(Android)"). */
   "cta(Android)"?: string;
-  /** CMS field: iPhone button label (field key "cta(iphone)"). */
   "cta(iphone)"?: string;
   background_image?: string;
-  /** Allows CDS-sanitized variants (e.g. cta_android, ctaAndroid) to flow through. */
-  [key: string]: unknown;
+  [key: string]: unknown; // allows CDS-sanitized key variants (e.g. cta_android)
 }

@@ -16,11 +16,11 @@ interface PublisherApiResponse {
   logo?: string;
 }
 
-/** Fetch publisher branding data from CDS GET /publisher/{id}/ */
+/** Fetches publisher branding from CDS; handles nested or flat response shapes. */
 export const fetchPublisherData = cache(async (): Promise<PublisherApiData> => {
   try {
     const res = await cdsFetch<PublisherApiResponse>("/");
-    // CDS may return data nested under `data` or at root level
+    // CDS may return logo fields nested under `data` or at root level.
     return res.data ?? {
       long_logo: res.long_logo,
       short_logo: res.short_logo,

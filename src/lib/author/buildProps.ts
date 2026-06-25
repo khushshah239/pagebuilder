@@ -7,12 +7,6 @@ import type { AuthorPostsResponse } from "@/api/authorApi";
 import type { AuthorProfileHeaderProps } from "@/types/author/organism.types";
 import type { SectionFeedArticle } from "@/types/section/organism.types";
 
-/**
- * Resolve AuthorPage organism props from the shared template + live data: the
- * profile feeds the header (`member.* → …`) and a page of the author's articles
- * feeds the feed (`data.N.* → card`), exactly mirroring the SectionPage resolver.
- */
-
 type FieldMapEntry = { source: string; target: string };
 type AuthorTemplate = Record<string, unknown>;
 
@@ -22,7 +16,7 @@ interface AuthorBinding {
 }
 
 
-/** The field-map for one author organism from the template's `data_binding`. */
+/** Returns the field-map for one author organism. */
 function authorBinding(
   template: AuthorTemplate,
   organismId: string
@@ -36,7 +30,7 @@ function authorBinding(
   return entry?.field_map.dynamic_fields ?? [];
 }
 
-/** An organism's inline default block (its static fallback content). */
+/** Returns an organism's first inline default block. */
 function organismDefault(
   template: AuthorTemplate,
   key: string
@@ -47,16 +41,11 @@ function organismDefault(
   return node?.dynamic_fields?.[0] ?? {};
 }
 
-/** Coerce a slot value: media keys become URL strings, everything else as-is. */
 function coerce(key: string, value: unknown): unknown {
   return MEDIA_KEYS.has(key) ? flattenMedia(value) : value;
 }
 
-/**
- * Build the author header: template inline defaults first, then each non-blank
- * live value bound from the profile (`member.*`). Social links are read straight
- * from the profile's known platform fields (see {@link SOCIAL_PLATFORMS}).
- */
+/** Builds author header props: template defaults overlaid with live profile values. */
 export function buildAuthorHeaderProps(
   template: AuthorTemplate,
   profile: Record<string, unknown>
@@ -78,12 +67,7 @@ export function buildAuthorHeaderProps(
   return props as unknown as AuthorProfileHeaderProps;
 }
 
-/**
- * How many of the author's articles to fetch: one past the highest `data.N`
- * index the `author-feed` binding references — so the feed holds exactly the
- * articles the editor bound (a binding of `data.0..data.2` → 3). Falls back to a
- * default page size when the binding references no indexed article.
- */
+/** Returns fetch count from the author-feed binding's max index, or AUTHOR_PAGE_SIZE. */
 export function authorFeedSize(template: AuthorTemplate): number {
   let maxIndex = -1;
   for (const { source } of authorBinding(template, "author-feed")) {
@@ -93,7 +77,7 @@ export function authorFeedSize(template: AuthorTemplate): number {
   return maxIndex >= 0 ? maxIndex + 1 : AUTHOR_PAGE_SIZE;
 }
 
-/** Static fallback feed rows stored on the template (media flattened to URLs). */
+/** Returns static fallback feed rows from the template. */
 function staticFeed(template: AuthorTemplate): SectionFeedArticle[] {
   const slot = organismDefault(template, "author_feed").feed_articles as
     | { dynamic_fields?: Record<string, unknown>[] }
@@ -103,13 +87,7 @@ function staticFeed(template: AuthorTemplate): SectionFeedArticle[] {
   );
 }
 
-/**
- * Resolve the author's article feed strictly from the `author-feed` binding:
- * each bound `data.N` index becomes one card, in index order, with that index's
- * mapped fields. So the page renders exactly as many articles as the template
- * binds — no more — exactly like the section feed. Falls back to the template's
- * static rows when the author returned no articles.
- */
+/** Builds author feed from live binding, falling back to template static rows. */
 export function buildAuthorFeedItems(
   template: AuthorTemplate,
   posts: AuthorPostsResponse

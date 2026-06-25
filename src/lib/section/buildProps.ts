@@ -9,13 +9,6 @@ import type {
 } from "@/types/section/organism.types";
 import type { CategoryInfo, CategoryPostsResponse } from "@/api/sectionApi";
 
-/**
- * Resolve SectionPage organism props from the shared template + a page of
- * category articles. The template's `data_binding` defines how article fields
- * map onto each organism's slots; bindings address the posts response, so source
- * paths look like `data.0.title`.
- */
-
 type FieldMapEntry = { source: string; target: string };
 type SectionTemplate = Record<string, unknown>;
 
@@ -24,7 +17,7 @@ interface SectionBinding {
   field_map: { dynamic_fields: FieldMapEntry[] };
 }
 
-/** The field-map for one section organism from the template's `data_binding`. */
+/** Returns the field-map for one section organism. */
 function sectionBinding(
   template: SectionTemplate,
   organismId: string
@@ -38,7 +31,7 @@ function sectionBinding(
   return entry?.field_map.dynamic_fields ?? [];
 }
 
-/** An organism's inline default block (its static fallback content). */
+/** Returns an organism's first inline default block. */
 function organismDefault(
   template: SectionTemplate,
   key: string
@@ -49,12 +42,7 @@ function organismDefault(
   return node?.dynamic_fields?.[0] ?? {};
 }
 
-/**
- * How many category articles to fetch for the feed: one past the HIGHEST `data.N`
- * index the binding references. Using the max index (not the count) means a
- * binding with a gap (e.g. `data.7` missing) still fetches enough articles for
- * every bound slot — `data.10` needs 11 articles even if only 10 are mapped.
- */
+// Uses max index (not count) so gaps in binding indices still fetch enough articles.
 export function sectionFeedSize(template: SectionTemplate): number {
   let maxIndex = -1;
   for (const { source } of sectionBinding(template, "section-feed")) {
@@ -64,7 +52,7 @@ export function sectionFeedSize(template: SectionTemplate): number {
   return maxIndex >= 0 ? maxIndex + 1 : SECTION_PAGE_SIZE;
 }
 
-/** Static fallback feed rows stored on the template (media flattened to URLs). */
+/** Returns static fallback feed rows from the template. */
 function staticFeed(template: SectionTemplate): SectionFeedArticle[] {
   const slot = organismDefault(template, "section_feed").feed_articles as
     | { dynamic_fields?: Record<string, unknown>[] }
@@ -74,13 +62,7 @@ function staticFeed(template: SectionTemplate): SectionFeedArticle[] {
   );
 }
 
-/**
- * Resolve the category feed strictly from the `section-feed` binding: each bound
- * `data.N` index becomes one card (in index order), with that index's mapped
- * fields. So the page renders exactly as many cards as the editor bound — no
- * more. Falls back to the template's static rows when the category returned no
- * articles.
- */
+/** Builds section feed from live binding, falling back to template static rows. */
 export function buildSectionFeedItems(
   template: SectionTemplate,
   posts: CategoryPostsResponse
@@ -92,11 +74,7 @@ export function buildSectionFeedItems(
   return live.length > 0 ? live : staticFeed(template);
 }
 
-/**
- * Resolve the section hero: scalar slots filled from the binding context
- * (which includes `category.name` from the live API), with the template's
- * inline defaults (e.g. `heading`) as fallback.
- */
+/** Builds section hero props from binding context (includes live category.name). */
 export function buildSectionHeroProps(
   template: SectionTemplate,
   posts: CategoryPostsResponse,
@@ -108,7 +86,7 @@ export function buildSectionHeroProps(
     if (key !== "id") props[key] = value;
   }
 
-  // Merge category alongside posts so bindings like `category.name` resolve.
+  // Merge category into context so `category.name` resolves from the binding.
   const context = { ...posts, category: category ?? {} };
 
   for (const { source, target } of sectionBinding(template, "section-hero")) {
