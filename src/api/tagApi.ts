@@ -38,20 +38,6 @@ export async function fetchTagPostsBySlug(
   };
 }
 
-/** Fetches one page of a tag's articles by numeric ID. */
-export async function fetchTagPosts(
-  id: number,
-  page: number,
-  limit: number
-): Promise<TagPostsResponse> {
-  const path = `/posts/?type__eq=Article&tags.id__eq=${id}&page=${page}&limit=${limit}`;
-  const response = await cdsFetch<TagPostsResponse>(path);
-  return {
-    data: Array.isArray(response.data) ? response.data : [],
-    page_no: response.page_no,
-    per_page: response.per_page,
-  };
-}
 
 /** Fetches the shared TagPage template; React cache deduplicates within a request. */
 export const fetchTagTemplate = cache(

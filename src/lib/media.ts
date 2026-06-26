@@ -15,7 +15,8 @@ export function flattenMedia(value: unknown): string {
     const media = value as Record<string, unknown>;
     return (media.absolute_path as string) ?? (media.path as string) ?? "";
   }
-  return (value as string) ?? "";
+  if (typeof value === "string") return value;
+  return "";
 }
 
 /** Flattens media-typed fields on an item to plain URL strings. */

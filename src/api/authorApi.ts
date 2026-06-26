@@ -23,21 +23,6 @@ export interface AuthorPostsResponse {
   per_page?: number;
 }
 
-/** Fetches one page of an author's articles by slug (no numeric ID needed). */
-export async function fetchAuthorPostsBySlug(
-  slug: string,
-  page: number,
-  limit: number
-): Promise<AuthorPostsResponse> {
-  const path = `/posts/?contributors.slug__eq=${slug}&page=${page}&limit=${limit}`;
-  const response = await cdsFetch<AuthorPostsResponse>(path);
-  return {
-    data: Array.isArray(response.data) ? response.data : [],
-    page_no: response.page_no,
-    per_page: response.per_page,
-  };
-}
-
 /** Fetches one page of an author's articles by numeric ID. */
 export async function fetchAuthorPosts(
   id: number,
@@ -52,6 +37,7 @@ export async function fetchAuthorPosts(
     per_page: response.per_page,
   };
 }
+
 
 /** Fetches the shared AuthorPage template; React cache deduplicates within a request. */
 export const fetchAuthorTemplate = cache(

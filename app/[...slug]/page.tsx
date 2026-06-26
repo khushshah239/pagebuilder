@@ -9,7 +9,7 @@ import {
   identifyUrl,
 } from "@/api/sectionApi";
 import {
-  fetchAuthorPostsBySlug,
+  fetchAuthorPosts,
   fetchAuthorProfile,
   fetchAuthorTemplate,
 } from "@/api/authorApi";
@@ -28,6 +28,7 @@ import { tagFeedSize } from "@/lib/tag/buildProps";
 import { videoFeedSize, videoBindingRootField } from "@/lib/video/buildProps";
 import { buildWebStory } from "@/lib/webstory/buildProps";
 import { getActivePublisher } from "@/config/publishers";
+import { CDS_PUBLISHER_ID } from "@/config/env";
 import { VIDEO_TEMPLATE_LEGACY_URL } from "@/config/cds";
 import type { ArticleData } from "@/types/article/cds.types";
 
@@ -108,51 +109,64 @@ export async function generateMetadata({ params }: RouteParams): Promise<Metadat
  *   - `tag`      (via `identify_url`)  → TagPage.
  *   - any other post                   → article or video.
  */
+// Cache key prefix scoped to publisher — prevents cross-publisher cache bleed
+// on multi-tenant deployments.
+const PUB = CDS_PUBLISHER_ID;
+
 // Cache ALL data for each page type including identifyUrl — every wave of CDS
 // calls is cached so second request to same URL is near-instant.
 const getIdentifiedUrl = unstable_cache(
   async (legacyUrl: string) => identifyUrl(legacyUrl),
-  ["identify-url"],
+  [`${PUB}-identify-url`],
   { revalidate: 60 }
 );
 
 const getCategoryPageData = unstable_cache(
   async (slug: string, limit: number) => {
-    const [posts, category] = await Promise.all([
-      fetchCategoryPosts(slug, 1, limit),
-      fetchCategory(slug),
-    ]);
-    return { posts, category };
+    try {
+      const [posts, category] = await Promise.all([
+        fetchCategoryPosts(slug, 1, limit),
+        fetchCategory(slug),
+      ]);
+      return { posts, category };
+    } catch {
+      return null;
+    }
   },
-  ["category-page"],
+  [`${PUB}-category-page`],
   { revalidate: 60 }
 );
 
 const getTagPageData = unstable_cache(
   async (tagSlug: string, limit: number) => {
-    // Fetch tag profile and posts in parallel — CDS supports tags.slug__eq
-    const [tag, posts] = await Promise.all([
-      fetchTag(tagSlug),
-      fetchTagPostsBySlug(tagSlug, 1, limit),
-    ]);
-    if (!tag) return null;
-    return { tag, posts };
+    try {
+      const [tag, posts] = await Promise.all([
+        fetchTag(tagSlug),
+        fetchTagPostsBySlug(tagSlug, 1, limit),
+      ]);
+      if (!tag) return null;
+      return { tag, posts };
+    } catch {
+      return null;
+    }
   },
-  ["tag-page"],
+  [`${PUB}-tag-page`],
   { revalidate: 60 }
 );
 
 const getAuthorPageData = unstable_cache(
   async (authorSlug: string, limit: number) => {
-    // Fetch author profile and posts in parallel — CDS supports contributors.slug__eq
-    const [profile, posts] = await Promise.all([
-      fetchAuthorProfile(authorSlug),
-      fetchAuthorPostsBySlug(authorSlug, 1, limit),
-    ]);
-    if (!profile) return null;
-    return { profile, posts };
+    try {
+      const profile = await fetchAuthorProfile(authorSlug);
+      const authorId = Number(profile?.id);
+      if (!profile || !Number.isFinite(authorId) || authorId <= 0) return null;
+      const posts = await fetchAuthorPosts(authorId, 1, limit);
+      return { profile, posts };
+    } catch {
+      return null;
+    }
   },
-  ["author-page-v2"],
+  [`${PUB}-author-page`],
   { revalidate: 60 }
 );
 
@@ -161,11 +175,9 @@ export default async function CatchAllPage({ params }: RouteParams) {
 
   const legacyUrl = legacyUrlFromSlug(slug);
 
-  // Fire all template fetches immediately — they don't depend on the URL type
-  // and are React-cache deduplicated, so calling them here is free if unused.
-  fetchSectionTemplate();
-  fetchTagTemplate();
-  fetchAuthorTemplate();
+  // Warm template caches in parallel — React cache deduplicates the awaits
+  // below so these calls are free if the page type doesn't need them.
+  void Promise.all([fetchSectionTemplate(), fetchTagTemplate(), fetchAuthorTemplate()]);
 
   // Use cached identifyUrl — on second request to same URL this returns instantly.
   // loadPost runs in parallel for article pages (most common case).
@@ -176,10 +188,9 @@ export default async function CatchAllPage({ params }: RouteParams) {
 
   if (identified?.type === "category") {
     const template = await fetchSectionTemplate();
-    const { posts, category } = await getCategoryPageData(
-      identified.url,
-      sectionFeedSize(template)
-    );
+    const categoryData = await getCategoryPageData(identified.url, sectionFeedSize(template));
+    if (!categoryData) notFound();
+    const { posts, category } = categoryData;
 
     return (
       <main className="pb-page pb-page-section">

@@ -4,10 +4,11 @@ import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { InfiniteArticleFeed } from "@/organisms/section/InfiniteArticleFeed";
 import Link from "next/link";
+import { SECTION_PAGE_SIZE } from "@/config/cds";
 import type { SectionFeedArticle } from "@/types/section/organism.types";
 import styles from "@/styles/components/Pagination.module.css";
 
-const CARDS_PER_PAGE = 10;
+const CARDS_PER_PAGE = SECTION_PAGE_SIZE;
 
 interface SectionFeedProps {
   articles: SectionFeedArticle[];
@@ -16,8 +17,9 @@ interface SectionFeedProps {
 function Pagination({ page, totalPages }: { page: number; totalPages: number }) {
   if (totalPages <= 1) return null;
   const windowStart = Math.max(1, page - 2);
+  const windowEnd = Math.min(totalPages, windowStart + 4);
   const pageNumbers: number[] = [];
-  for (let n = windowStart; n <= totalPages; n++) pageNumbers.push(n);
+  for (let n = windowStart; n <= windowEnd; n++) pageNumbers.push(n);
   return (
     <nav className={styles.pagination} aria-label="Section pages">
       <Link
