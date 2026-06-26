@@ -152,7 +152,7 @@ const getAuthorPageData = unstable_cache(
     if (!profile) return null;
     return { profile, posts };
   },
-  ["author-page"],
+  ["author-page-v2"],
   { revalidate: 60 }
 );
 
