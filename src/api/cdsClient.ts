@@ -4,7 +4,7 @@ import { REVALIDATE_SECONDS } from "@/config/cds";
 /** Max duration (ms) before a CDS request is aborted. */
 const REQUEST_TIMEOUT_MS = 12_000;
 /** Number of retries after the first attempt. */
-const MAX_RETRIES = 2;
+const MAX_RETRIES = 1;
 /** HTTP statuses that warrant a retry (transient errors). */
 const RETRYABLE_STATUSES = new Set([408, 425, 429, 500, 502, 503, 504]);
 

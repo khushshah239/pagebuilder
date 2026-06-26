@@ -38,6 +38,7 @@ export function InfiniteArticleFeed({
                 href={article.url_slug}
                 className={styles.cardLink}
                 aria-label={article.title}
+                prefetch={false}
               />
             ) : null}
             {article.thumbnail ? (

@@ -179,12 +179,9 @@ export default async function CatchAllPage({ params }: RouteParams) {
   // below so these calls are free if the page type doesn't need them.
   void Promise.all([fetchSectionTemplate(), fetchTagTemplate(), fetchAuthorTemplate()]);
 
-  // Use cached identifyUrl — on second request to same URL this returns instantly.
-  // loadPost runs in parallel for article pages (most common case).
-  const [identified, post] = await Promise.all([
-    getIdentifiedUrl(legacyUrl),
-    loadPost(slug),
-  ]);
+  // identifyUrl tells us the page type. For category/tag/author we skip loadPost
+  // entirely — it would always return null for those URLs and waste a CDS call.
+  const identified = await getIdentifiedUrl(legacyUrl);
 
   if (identified?.type === "category") {
     const template = await fetchSectionTemplate();
@@ -228,6 +225,9 @@ export default async function CatchAllPage({ params }: RouteParams) {
       </main>
     );
   }
+
+  // Only fetch the article post when identifyUrl didn't match a known page type.
+  const post = await loadPost(slug);
 
   if (!post) notFound();
 

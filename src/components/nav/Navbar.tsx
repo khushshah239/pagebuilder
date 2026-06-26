@@ -43,6 +43,7 @@ export async function Navbar() {
             <Link
               key={item.link + item.name}
               href={item.link}
+              prefetch={false}
               {...(item.open_new_tab ? { target: "_blank", rel: "noopener noreferrer" } : {})}
             >
               {item.name}
