@@ -22,8 +22,12 @@ export function MoreFromAuthorRow({
       ) : null}
       <div className={styles.grid}>
         {author_articles.map((card, index) => {
-          const body = (
-            <>
+          const key = `${identifier}-author-${index}`;
+          return (
+            <article key={key} className={styles.card}>
+              {card.url_slug ? (
+                <Link href={card.url_slug} className={styles.cardLink} aria-label={card.title} prefetch={false} />
+              ) : null}
               {card.thumbnail ? (
                 <img
                   className={styles.thumb}
@@ -35,26 +39,16 @@ export function MoreFromAuthorRow({
               <div className={styles.text}>
                 <CategoryLink
                   label={card.category_label}
-                  url={card.url_slug ? undefined : card.category_url}
+                  url={card.category_url}
                   className={styles.category}
                 />
                 <h3 className={styles.title}>{card.title}</h3>
                 <ArticleByline
                   authorName={card.author_name}
-                  authorUrl={card.url_slug ? undefined : card.author_url}
+                  authorUrl={card.author_url}
                   publishedAt={card.published_at}
                 />
               </div>
-            </>
-          );
-          const key = `${identifier}-author-${index}`;
-          return card.url_slug ? (
-            <Link key={key} href={card.url_slug} className={styles.card}>
-              {body}
-            </Link>
-          ) : (
-            <article key={key} className={styles.card}>
-              {body}
             </article>
           );
         })}

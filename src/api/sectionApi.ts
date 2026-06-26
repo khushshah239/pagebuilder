@@ -1,6 +1,7 @@
-import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { cdsFetch, postByLegacyUrlPath } from "./cdsClient";
 import { SECTION_TEMPLATE_LEGACY_URL } from "@/config/cds";
+import { CDS_PUBLISHER_ID } from "@/config/env";
 
 export interface CategoryInfo {
   id?: number;
@@ -21,7 +22,7 @@ export async function identifyUrl(
 ): Promise<IdentifyResult | null> {
   try {
     const response = await cdsFetch<{ data?: IdentifyResult }>(
-      `/identify_url/?legacy_url=${legacyUrl}`
+      `/identify_url/?legacy_url=${encodeURIComponent(legacyUrl)}`
     );
     return response.data ?? null;
   } catch {
@@ -29,14 +30,15 @@ export async function identifyUrl(
   }
 }
 
-/** Fetches the shared SectionPage template; React cache deduplicates within a request. */
-export const fetchSectionTemplate = cache(
+export const fetchSectionTemplate = unstable_cache(
   async (): Promise<Record<string, unknown>> => {
     const response = await cdsFetch<{
       data?: { custom_entity?: Record<string, unknown> };
     }>(postByLegacyUrlPath(SECTION_TEMPLATE_LEGACY_URL));
     return response.data?.custom_entity ?? {};
-  }
+  },
+  [`${CDS_PUBLISHER_ID}-section-template`],
+  { revalidate: 300 }
 );
 
 /** One page of a category's article listing. */
@@ -65,7 +67,7 @@ export async function fetchCategoryPosts(
   page: number,
   limit: number
 ): Promise<CategoryPostsResponse> {
-  const path = `/posts/?type__eq=Article&categories.slug__eq=${slug}&page=${page}&limit=${limit}`;
+  const path = `/posts/?type__eq=Article&categories.slug__eq=${encodeURIComponent(slug)}&page=${page}&limit=${limit}`;
   const response = await cdsFetch<CategoryPostsResponse>(path);
   return {
     data: Array.isArray(response.data) ? response.data : [],

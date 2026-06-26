@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { getActivePublisher } from "@/config/publishers";
 import { themeToCssVariables } from "@/theme/cssVariables";
 import { fetchPublisherData } from "@/api/publisherApi";
+import { fetchNavigation } from "@/api/navApi";
+import { fetchFooter } from "@/api/footerApi";
 import { Navbar } from "@/components/nav/Navbar";
 import { Footer } from "@/components/footer/Footer";
 import "./globals.css";
@@ -16,8 +19,12 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  // Fetch logo from CDS publisher API; fall back to publisher config if absent.
-  const publisherData = await fetchPublisherData();
+  // Fire all three fetches in parallel — unstable_cache makes cache hits instant.
+  const [publisherData] = await Promise.all([
+    fetchPublisherData(),
+    fetchNavigation(),
+    fetchFooter(),
+  ]);
   const logoUrl =
     publisherData.long_logo ??
     publisherData.logo ??
@@ -31,12 +38,13 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             <div className="pb-shell pb-masthead">
               <Link className="pb-brand" href="/" aria-label={`${publisher.name} home`}>
                 {logoUrl ? (
-                  <img
+                  <Image
                     className="pb-brand-logo"
                     src={logoUrl}
                     alt={publisher.name}
                     width={260}
                     height={60}
+                    priority
                   />
                 ) : (
                   <>

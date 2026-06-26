@@ -66,14 +66,14 @@
 
 .category {
   align-self: flex-start;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   color: #fff;
   background: var(--pb-accent, #c8102e);
-  padding: 6px 10px;
-  border-radius: 0;
+  padding: 3px 8px;
+  border-radius: 3px;
 }
 
 /* Linked category sits above the card's overlay link so it opens the section page. */

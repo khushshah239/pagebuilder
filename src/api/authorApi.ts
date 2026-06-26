@@ -1,6 +1,7 @@
-import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { cdsFetch, postByLegacyUrlPath } from "./cdsClient";
 import { AUTHOR_TEMPLATE_LEGACY_URL } from "@/config/cds";
+import { CDS_PUBLISHER_ID } from "@/config/env";
 
 /** Fetches an author profile by slug or numeric id; returns null on failure. */
 export async function fetchAuthorProfile(
@@ -39,12 +40,13 @@ export async function fetchAuthorPosts(
 }
 
 
-/** Fetches the shared AuthorPage template; React cache deduplicates within a request. */
-export const fetchAuthorTemplate = cache(
+export const fetchAuthorTemplate = unstable_cache(
   async (): Promise<Record<string, unknown>> => {
     const response = await cdsFetch<{
       data?: { custom_entity?: Record<string, unknown> };
     }>(postByLegacyUrlPath(AUTHOR_TEMPLATE_LEGACY_URL));
     return response.data?.custom_entity ?? {};
-  }
+  },
+  [`${CDS_PUBLISHER_ID}-author-template`],
+  { revalidate: 300 }
 );

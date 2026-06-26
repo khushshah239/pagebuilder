@@ -1,5 +1,6 @@
-import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { cdsFetch } from "./cdsClient";
+import { CDS_PUBLISHER_ID } from "@/config/env";
 
 export interface NavItem {
   name: string;
@@ -12,11 +13,16 @@ interface NavResponse {
   data?: NavItem[];
 }
 
-export const fetchNavigation = cache(async (): Promise<NavItem[]> => {
-  try {
-    const res = await cdsFetch<NavResponse>("/navbar/");
-    return Array.isArray(res.data) ? res.data : [];
-  } catch {
-    return [];
-  }
-});
+export const fetchNavigation = unstable_cache(
+  async (): Promise<NavItem[]> => {
+    try {
+      const res = await cdsFetch<NavResponse>("/navbar/");
+      return Array.isArray(res.data) ? res.data : [];
+    } catch (err) {
+      console.error("[CDS] fetchNavigation failed:", err);
+      return [];
+    }
+  },
+  [`${CDS_PUBLISHER_ID}-navigation`],
+  { revalidate: 60 }
+);

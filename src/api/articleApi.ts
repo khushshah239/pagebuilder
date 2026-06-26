@@ -1,5 +1,7 @@
+import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { cdsFetch, postByLegacyUrlPath } from "./cdsClient";
+import { CDS_PUBLISHER_ID } from "@/config/env";
 import type { CdsArticleResponse } from "@/types/article/cds.types";
 
 export interface ArticleListResponse {
@@ -16,8 +18,9 @@ export async function fetchRelatedArticles(
     const path = `/posts/?type__eq=Article&categories.slug__eq=${categorySlug}&limit=${limit + 1}`;
     const response = await cdsFetch<ArticleListResponse>(path);
     const all = Array.isArray(response.data) ? response.data : [];
-    return { data: all.filter((a) => (a as Record<string, unknown>).id !== excludeId).slice(0, limit) };
-  } catch {
+    return { data: all.filter((a) => Number(a["id"]) !== excludeId).slice(0, limit) };
+  } catch (err) {
+    console.error("[CDS] fetchRelatedArticles failed:", err);
     return { data: [] };
   }
 }
@@ -32,8 +35,9 @@ export async function fetchMoreFromAuthor(
     const path = `/posts/?type__eq=Article&contributors.id__eq=${authorId}&limit=${limit + 1}`;
     const response = await cdsFetch<ArticleListResponse>(path);
     const all = Array.isArray(response.data) ? response.data : [];
-    return { data: all.filter((a) => (a as Record<string, unknown>).id !== excludeId).slice(0, limit) };
-  } catch {
+    return { data: all.filter((a) => Number(a["id"]) !== excludeId).slice(0, limit) };
+  } catch (err) {
+    console.error("[CDS] fetchMoreFromAuthor failed:", err);
     return { data: [] };
   }
 }
@@ -47,8 +51,9 @@ export async function fetchLatestNews(
     const path = `/posts/?type__eq=Article&limit=${limit + 1}`;
     const response = await cdsFetch<ArticleListResponse>(path);
     const all = Array.isArray(response.data) ? response.data : [];
-    return { data: all.filter((a) => (a as Record<string, unknown>).id !== excludeId).slice(0, limit) };
-  } catch {
+    return { data: all.filter((a) => Number(a["id"]) !== excludeId).slice(0, limit) };
+  } catch (err) {
+    console.error("[CDS] fetchLatestNews failed:", err);
     return { data: [] };
   }
 }
@@ -58,9 +63,8 @@ function toggleTrailingSlash(legacyUrl: string): string {
   return legacyUrl.endsWith("/") ? legacyUrl.slice(0, -1) : `${legacyUrl}/`;
 }
 
-// Retries with trailing slash toggled because CDS legacy_url slash is inconsistent.
-// React cache deduplicates calls within the same request.
-export const fetchArticle = cache(
+// Cross-request cache: same article URL returns instantly for 60s after first fetch.
+const fetchArticleFromCDS = unstable_cache(
   async (legacyUrl: string): Promise<CdsArticleResponse> => {
     try {
       return await cdsFetch<CdsArticleResponse>(postByLegacyUrlPath(legacyUrl));
@@ -69,5 +73,10 @@ export const fetchArticle = cache(
         postByLegacyUrlPath(toggleTrailingSlash(legacyUrl))
       );
     }
-  }
+  },
+  [`${CDS_PUBLISHER_ID}-article`],
+  { revalidate: 60 }
 );
+
+// Per-request dedup on top of cross-request cache.
+export const fetchArticle = cache(fetchArticleFromCDS);

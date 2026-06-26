@@ -22,6 +22,7 @@ import { TagRenderer } from "@/components/tag/TagRenderer";
 import { WebStoryPlayer } from "@/components/webstory/WebStoryPlayer";
 import { VideoRenderer, VideoSidebar } from "@/components/video/VideoRenderer";
 import { articleFeedSize } from "@/lib/article/buildProps";
+import { resolveBoundItems } from "@/lib/bindings";
 import { sectionFeedSize } from "@/lib/section/buildProps";
 import { authorFeedSize } from "@/lib/author/buildProps";
 import { tagFeedSize } from "@/lib/tag/buildProps";
@@ -37,19 +38,23 @@ export const revalidate = 60;
 
 const WEB_STORY_TYPE = "Web Story";
 
-/** Returns true if the article template contains a sidebar organism with at least one item. */
+/** Returns true only when a sidebar organism has live (non-default) data to show. */
 function hasSidebarOrganisms(post: ArticleData): boolean {
   const template = post.custom_entity?.template?.[0];
   if (!template) return false;
+
+  const root: Record<string, unknown> = { ...post, ...(post.custom_entity ?? {}) };
+  const allBindings = template.data_binding?.dynamic_fields ?? [];
+
+  // Only check known organism keys — skip data_binding and scalar fields.
   return Object.values(template).some((v) => {
-    if (!v || typeof v !== "object") return false;
-    const node = v as Record<string, unknown>;
-    return (
-      typeof node.schema_slug === "string" &&
-      (node.schema_slug as string).startsWith("sidebar") &&
-      Array.isArray(node.dynamic_fields) &&
-      (node.dynamic_fields as unknown[]).length > 0
-    );
+    if (!v || typeof v !== "object" || Array.isArray(v)) return false;
+    const node = v as { schema_slug?: string; id?: string; dynamic_fields?: unknown[] };
+    if (!node.schema_slug?.startsWith("sidebar") || !Array.isArray(node.dynamic_fields)) return false;
+
+    const orgId = node.id ?? node.schema_slug;
+    const binding = allBindings.find((b) => b.organism_id === orgId);
+    return resolveBoundItems(binding?.field_map?.dynamic_fields ?? [], root).length > 0;
   });
 }
 /** Content type the CDS assigns to video posts. */
@@ -78,19 +83,22 @@ function legacyUrlFromSlug(slug: string[]): string {
 async function loadPost(slug: string[]): Promise<ArticleData | null> {
   try {
     const response = await fetchArticle(legacyUrlFromSlug(slug));
-    const root = response as unknown as { data?: ArticleData };
-    return root.data ?? null;
-  } catch {
+    return response.data ?? null;
+  } catch (err) {
+    const status = (err as { status?: number }).status;
+    if (status !== 404) {
+      console.error("[CDS] loadPost failed for slug:", slug.join("/"), err);
+    }
     return null;
   }
 }
 
 function isWebStory(post: ArticleData): boolean {
-  return (post as Record<string, unknown>).type === WEB_STORY_TYPE;
+  return post["type"] === WEB_STORY_TYPE;
 }
 /** True when the post is a video post (rendered by VideoRenderer). */
 function isVideoPost(post: ArticleData): boolean {
-  return (post as Record<string, unknown>).type === VIDEO_TYPE;
+  return post["type"] === VIDEO_TYPE;
 }
 
 export async function generateMetadata({ params }: RouteParams): Promise<Metadata> {
@@ -175,64 +183,68 @@ export default async function CatchAllPage({ params }: RouteParams) {
 
   const legacyUrl = legacyUrlFromSlug(slug);
 
-  // Warm template caches in parallel — React cache deduplicates the awaits
-  // below so these calls are free if the page type doesn't need them.
+  // Pre-warm shared template caches (unstable_cache hits are instant in memory).
   void Promise.all([fetchSectionTemplate(), fetchTagTemplate(), fetchAuthorTemplate()]);
 
-  // identifyUrl tells us the page type. For category/tag/author we skip loadPost
-  // entirely — it would always return null for those URLs and waste a CDS call.
-  const identified = await getIdentifiedUrl(legacyUrl);
-
-  if (identified?.type === "category") {
-    const template = await fetchSectionTemplate();
-    const categoryData = await getCategoryPageData(identified.url, sectionFeedSize(template));
-    if (!categoryData) notFound();
-    const { posts, category } = categoryData;
-
-    return (
-      <main className="pb-page pb-page-section">
-        <div className="pb-stack">
-          <SectionRenderer template={template} posts={posts} category={category} />
-        </div>
-      </main>
-    );
-  }
-
-  if (identified?.type === "member") {
-    const template = await fetchAuthorTemplate();
-    const data = await getAuthorPageData(identified.url, authorFeedSize(template));
-    if (!data) notFound();
-
-    return (
-      <main className="pb-page pb-page-section">
-        <div className="pb-stack">
-          <AuthorRenderer template={template} profile={data.profile} posts={data.posts} />
-        </div>
-      </main>
-    );
-  }
-
-  if (identified?.type === "tag") {
-    const template = await fetchTagTemplate();
-    const data = await getTagPageData(identified.url, tagFeedSize(template));
-    if (!data) notFound();
-
-    return (
-      <main className="pb-page pb-page-section">
-        <div className="pb-stack">
-          <TagRenderer template={template} tag={data.tag} posts={data.posts} />
-        </div>
-      </main>
-    );
-  }
-
-  // Only fetch the article post when identifyUrl didn't match a known page type.
+  // loadPost is a React cache hit from generateMetadata — resolves instantly.
+  // Checking it first means article/video/webstory pages skip the identifyUrl
+  // network round-trip entirely.
   const post = await loadPost(slug);
 
-  if (!post) notFound();
+  if (!post) {
+    // Not an article — identify the page type.
+    const identified = await getIdentifiedUrl(legacyUrl);
+
+    if (identified?.type === "category") {
+      const template = await fetchSectionTemplate();
+      const categoryData = await getCategoryPageData(identified.url, sectionFeedSize(template));
+      if (!categoryData) notFound();
+      const { posts, category } = categoryData;
+
+      return (
+        <main className="pb-page pb-page-section">
+          <div className="pb-stack">
+            <SectionRenderer template={template} posts={posts} category={category} />
+          </div>
+        </main>
+      );
+    }
+
+    if (identified?.type === "member") {
+      const template = await fetchAuthorTemplate();
+      const data = await getAuthorPageData(identified.url, authorFeedSize(template));
+      if (!data) notFound();
+
+      return (
+        <main className="pb-page pb-page-section">
+          <div className="pb-stack">
+            <AuthorRenderer template={template} profile={data.profile} posts={data.posts} />
+          </div>
+        </main>
+      );
+    }
+
+    if (identified?.type === "tag") {
+      const template = await fetchTagTemplate();
+      const data = await getTagPageData(identified.url, tagFeedSize(template));
+      if (!data) notFound();
+
+      return (
+        <main className="pb-page pb-page-section">
+          <div className="pb-stack">
+            <TagRenderer template={template} tag={data.tag} posts={data.posts} />
+          </div>
+        </main>
+      );
+    }
+
+    notFound();
+  }
+
+  // post is non-null: article, video, or web story.
 
   if (isWebStory(post)) {
-    const { slides, animation } = buildWebStory(post as Record<string, unknown>);
+    const { slides, animation } = buildWebStory(post as ArticleData & Record<string, unknown>);
     return (
       <WebStoryPlayer
         slides={slides}
@@ -245,7 +257,7 @@ export default async function CatchAllPage({ params }: RouteParams) {
   if (isVideoPost(post)) {
     const videoTemplate = await fetchVideoTemplate(VIDEO_TEMPLATE_LEGACY_URL);
 
-    const videoPostId = Number(post.id);
+    const videoPostId = Number(post.id) || 0;
     // Video posts may store category as `primary_category` (object) or as the
     // first entry of `categories[]` — try both so the slug is always found.
     const videoPrimaryCategory = post.primary_category as { slug?: string; url_slug?: string } | null | undefined;
@@ -269,14 +281,12 @@ export default async function CatchAllPage({ params }: RouteParams) {
     const authorRootField  = videoBindingRootField(videoTemplate, "morefromauthorrow")  || "more_from_author";
     const sidebarRootField = videoBindingRootField(videoTemplate, "sidebar-latest-news") || "laterst_news_right";
 
-    const existing = (post.custom_entity ?? {}) as Record<string, unknown>;
+    const existing: Record<string, unknown> = { ...(post.custom_entity ?? {}) };
     const existingRelated  = ((existing[relatedRootField]  as { results?: Record<string, unknown>[] } | null)?.results ?? []);
     const existingAuthor   = ((existing[authorRootField]   as { results?: Record<string, unknown>[] } | null)?.results ?? []);
-    // Sidebar Relation field lives on the post root, not inside custom_entity.
-    // Check post root first, then fall back to custom_entity.
-    const postRoot = post as unknown as Record<string, unknown>;
-    const existingSidebar: Record<string, unknown>[] = Array.isArray(postRoot[sidebarRootField])
-      ? (postRoot[sidebarRootField] as Record<string, unknown>[])
+    // Sidebar field lives on post root, not inside custom_entity — check both.
+    const existingSidebar: Record<string, unknown>[] = Array.isArray(post[sidebarRootField])
+      ? (post[sidebarRootField] as Record<string, unknown>[])
       : Array.isArray(existing[sidebarRootField])
         ? (existing[sidebarRootField] as Record<string, unknown>[])
         : [];
@@ -288,7 +298,7 @@ export default async function CatchAllPage({ params }: RouteParams) {
       existingAuthor.length < authorSize && videoAuthorId > 0
         ? fetchMoreFromAuthor(videoAuthorId, videoPostId, authorSize)
         : Promise.resolve({ data: existingAuthor }),
-      existingSidebar.length === 0
+      existingSidebar.length < sidebarSize
         ? fetchLatestNews(videoPostId, sidebarSize)
         : Promise.resolve({ data: existingSidebar }),
     ]);
@@ -321,7 +331,7 @@ export default async function CatchAllPage({ params }: RouteParams) {
   // Article — needs its `custom_entity` (template variant + collection slots).
   if (!post.custom_entity) notFound();
 
-  const postId = Number(post.id);
+  const postId = Number(post.id) || 0;
   const category = post.primary_category as { slug?: string } | null | undefined;
   const categorySlug = category?.slug ?? "";
   const contributors = post.contributors as { id?: number }[] | null | undefined;

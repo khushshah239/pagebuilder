@@ -119,6 +119,10 @@ export interface TrendingCard {
   title: string;
   thumbnail: string;
   category_label?: string;
+  category_url?: string;
+  author_name?: string;
+  author_url?: string;
+  published_at?: string;
   url_slug?: string;
 }
 

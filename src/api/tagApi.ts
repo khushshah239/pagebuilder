@@ -1,6 +1,7 @@
-import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { cdsFetch, postByLegacyUrlPath } from "./cdsClient";
 import { TAG_TEMPLATE_LEGACY_URL } from "@/config/cds";
+import { CDS_PUBLISHER_ID } from "@/config/env";
 
 /** Fetches the tag record by slug; returns null on failure. */
 export async function fetchTag(
@@ -39,12 +40,13 @@ export async function fetchTagPostsBySlug(
 }
 
 
-/** Fetches the shared TagPage template; React cache deduplicates within a request. */
-export const fetchTagTemplate = cache(
+export const fetchTagTemplate = unstable_cache(
   async (): Promise<Record<string, unknown>> => {
     const response = await cdsFetch<{
       data?: { custom_entity?: Record<string, unknown> };
     }>(postByLegacyUrlPath(TAG_TEMPLATE_LEGACY_URL));
     return response.data?.custom_entity ?? {};
-  }
+  },
+  [`${CDS_PUBLISHER_ID}-tag-template`],
+  { revalidate: 300 }
 );

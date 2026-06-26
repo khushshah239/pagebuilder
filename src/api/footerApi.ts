@@ -1,5 +1,6 @@
-import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { cdsFetch } from "./cdsClient";
+import { CDS_PUBLISHER_ID } from "@/config/env";
 
 export interface SocialLink {
   title: string;
@@ -39,11 +40,16 @@ interface FooterResponse {
   data?: FooterData;
 }
 
-export const fetchFooter = cache(async (): Promise<FooterData> => {
-  try {
-    const res = await cdsFetch<FooterResponse>("/footer/");
-    return res.data ?? {};
-  } catch {
-    return {};
-  }
-});
+export const fetchFooter = unstable_cache(
+  async (): Promise<FooterData> => {
+    try {
+      const res = await cdsFetch<FooterResponse>("/footer/");
+      return res.data ?? {};
+    } catch (err) {
+      console.error("[CDS] fetchFooter failed:", err);
+      return {};
+    }
+  },
+  [`${CDS_PUBLISHER_ID}-footer`],
+  { revalidate: 60 }
+);

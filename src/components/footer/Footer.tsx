@@ -1,25 +1,7 @@
-import type { ReactElement } from "react";
+import Image from "next/image";
 import { fetchFooter } from "@/api/footerApi";
 import { getActivePublisher } from "@/config/publishers";
-
-// SVG shapes are code — the link URLs and titles come from the footer API.
-const SOCIAL_ICONS: Record<string, ReactElement> = {
-  Facebook: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-  ),
-  Twitter: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
-  ),
-  LinkedIn: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-  ),
-  Instagram: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-  ),
-  YouTube: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
-  ),
-};
+import { getSocialIcon, safeSocialHref } from "@/components/SocialIcons";
 
 /** Server component — all data from CDS /footer/ API. */
 export async function Footer() {
@@ -37,7 +19,7 @@ export async function Footer() {
         <div className="pb-footer-top">
           <div className="pb-footer-brand-col">
             {footer.logo ? (
-              <img src={footer.logo} alt={publisher.name} className="pb-footer-logo" />
+              <Image src={footer.logo} alt={publisher.name} className="pb-footer-logo" width={200} height={50} />
             ) : (
               <span className="pb-footer-brand-name">{publisher.name}</span>
             )}
@@ -51,13 +33,13 @@ export async function Footer() {
               {socialLinks.map((s) => (
                 <a
                   key={s.pk_key}
-                  href={s.link}
+                  href={safeSocialHref(s.link)}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.title}
                   className="pb-footer-social-link"
                 >
-                  {SOCIAL_ICONS[s.title] ?? <span>{s.title[0]}</span>}
+                  {getSocialIcon(s.title) ?? <span>{s.title.charAt(0) || "?"}</span>}
                 </a>
               ))}
             </div>
@@ -112,7 +94,7 @@ export async function Footer() {
         {/* Copyright */}
         <div className="pb-footer-bottom">
           <p className="pb-footer-copy">
-            {footer.copyRightText ?? `© ${new Date().getFullYear()} ${publisher.name}. All rights reserved.`}
+            {footer.copyRightText ?? `© ${(new Date()).getUTCFullYear()} ${publisher.name}. All rights reserved.`}
           </p>
         </div>
 

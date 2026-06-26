@@ -16,7 +16,7 @@ export function cdsUrl(path: string): string {
 
 /** Returns the CDS path for fetching a post by its legacy URL. */
 export function postByLegacyUrlPath(legacyUrl: string): string {
-  return `/post/?legacy_url=${legacyUrl}`;
+  return `/post/?legacy_url=${encodeURIComponent(legacyUrl)}`;
 }
 
 /** Returns Next.js cache config: no-store when REVALIDATE_SECONDS is 0, else ISR. */
@@ -28,15 +28,16 @@ function cacheInit(): RequestInit {
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/** Fetches once with an abort timeout. */
+/** Fetches once with a timeout implemented via Promise.race — no AbortSignal so
+ *  Next.js native fetch ISR cache is not bypassed. */
 async function fetchOnce(url: string, headers: Record<string, string>): Promise<Response> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
-  try {
-    return await fetch(url, { headers, signal: controller.signal, ...cacheInit() });
-  } finally {
-    clearTimeout(timeout);
-  }
+  const timeoutPromise = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error(`CDS request timed out after ${REQUEST_TIMEOUT_MS}ms: ${url}`)), REQUEST_TIMEOUT_MS)
+  );
+  return Promise.race([
+    fetch(url, { headers, ...cacheInit() }),
+    timeoutPromise,
+  ]);
 }
 
 /** Fetches a CDS endpoint as JSON with auth, caching, and retry on transient errors. */
@@ -58,9 +59,11 @@ export async function cdsFetch<T>(path: string): Promise<T> {
 
       // Fail fast on non-retryable statuses (e.g. 401/404).
       if (!RETRYABLE_STATUSES.has(response.status) || attempt === MAX_RETRIES) {
-        throw new Error(
+        const err = new Error(
           `CDS request failed (${response.status} ${response.statusText}): ${path}`
-        );
+        ) as Error & { status: number };
+        err.status = response.status;
+        throw err;
       }
       lastError = new Error(`CDS ${response.status} on ${path}`);
     } catch (error) {

@@ -2,16 +2,11 @@ import { extractCustomEntity, fetchHomepage } from "@/api/homepageApi";
 import { HomepageRenderer } from "@/components/homepage/HomepageRenderer";
 import { HOMEPAGE_LEGACY_URL } from "@/config/cds";
 
+// ISR: cdsFetch already sets { next: { revalidate: REVALIDATE_SECONDS } } on
+// the underlying fetch, so the HTTP response is cached natively by Next.js.
+// unstable_cache is not used here — the ~3MB homepage payload exceeds its 2MB limit.
 export const revalidate = 60;
 
-/**
- * Homepage route. Runtime flow (per the screen-builder schema):
- *   1. Fetch the HomePage CustomEntity by its legacy URL.
- *   2. Unwrap `custom_entity` — it carries the live data slots and the template.
- *   3. HomepageRenderer walks the template layout, applies each organism's
- *      binding field-map to the live data (template defaults as fallback), and
- *      renders the organisms in order.
- */
 export default async function HomePage() {
   const response = await fetchHomepage(HOMEPAGE_LEGACY_URL);
   const data = extractCustomEntity(response);

@@ -415,12 +415,19 @@ img {
 }
 
 .pb-search-card-category {
+  align-self: flex-start;
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 800;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--pb-accent, #e11d2e);
+  color: #fff;
+  background: var(--pb-accent, #c8102e);
+  padding: 3px 8px;
+  border-radius: 3px;
   text-decoration: none;
+}
+.pb-search-card-category:hover {
+  background: var(--pb-accent-dark, #a50d23);
 }
 
 .pb-search-card-title-link {

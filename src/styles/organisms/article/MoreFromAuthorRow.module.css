@@ -30,13 +30,20 @@
 }
 
 .card {
+  position: relative;
   flex: 0 0 max(240px, calc((100% - 48px) / 3));
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   gap: 11px;
-  text-decoration: none;
   color: inherit;
+}
+
+/* Stretched overlay link → article page; category + author links sit above it. */
+.cardLink {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
 }
 
 .thumb {
@@ -59,12 +66,12 @@
   z-index: 2;
   align-self: flex-start;
   text-decoration: none;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 6px 16px;
-  border-radius: 0;
+  border-radius: 3px;
   background: var(--pb-accent, #c8102e);
   color: #fff;
   transition: background 0.15s ease;
