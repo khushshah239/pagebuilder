@@ -108,9 +108,14 @@ export async function generateMetadata({ params }: RouteParams): Promise<Metadat
  *   - `tag`      (via `identify_url`)  → TagPage.
  *   - any other post                   → article or video.
  */
-// Cache entire data-fetch for each page type — persists across requests for 60s
-// even though the route is dynamic (ƒ). This is more reliable than fetch-level
-// caching for catch-all routes that Next.js won't ISR at the CDN level.
+// Cache ALL data for each page type including identifyUrl — every wave of CDS
+// calls is cached so second request to same URL is near-instant.
+const getIdentifiedUrl = unstable_cache(
+  async (legacyUrl: string) => identifyUrl(legacyUrl),
+  ["identify-url"],
+  { revalidate: 60 }
+);
+
 const getCategoryPageData = unstable_cache(
   async (slug: string, limit: number) => {
     const [posts, category] = await Promise.all([
@@ -124,16 +129,24 @@ const getCategoryPageData = unstable_cache(
 );
 
 const getTagPageData = unstable_cache(
-  async (tagSlug: string, tagId: number, limit: number) => {
-    return fetchTagPosts(tagId, 1, limit);
+  async (tagSlug: string, limit: number) => {
+    const tag = await fetchTag(tagSlug);
+    const tagId = Number(tag?.id);
+    if (!tag || !Number.isFinite(tagId) || tagId <= 0) return null;
+    const posts = await fetchTagPosts(tagId, 1, limit);
+    return { tag, posts };
   },
   ["tag-page"],
   { revalidate: 60 }
 );
 
 const getAuthorPageData = unstable_cache(
-  async (authorId: number, limit: number) => {
-    return fetchAuthorPosts(authorId, 1, limit);
+  async (authorSlug: string, limit: number) => {
+    const profile = await fetchAuthorProfile(authorSlug);
+    const authorId = Number(profile?.id);
+    if (!profile || !Number.isFinite(authorId) || authorId <= 0) return null;
+    const posts = await fetchAuthorPosts(authorId, 1, limit);
+    return { profile, posts };
   },
   ["author-page"],
   { revalidate: 60 }
@@ -150,10 +163,10 @@ export default async function CatchAllPage({ params }: RouteParams) {
   fetchTagTemplate();
   fetchAuthorTemplate();
 
-  // Fire both in parallel — articles are the most common case so we start
-  // loadPost immediately instead of waiting for identifyUrl to finish first.
+  // Use cached identifyUrl — on second request to same URL this returns instantly.
+  // loadPost runs in parallel for article pages (most common case).
   const [identified, post] = await Promise.all([
-    identifyUrl(legacyUrl),
+    getIdentifiedUrl(legacyUrl),
     loadPost(slug),
   ]);
 
@@ -174,40 +187,28 @@ export default async function CatchAllPage({ params }: RouteParams) {
   }
 
   if (identified?.type === "member") {
-    const [template, profile] = await Promise.all([
-      fetchAuthorTemplate(),
-      fetchAuthorProfile(identified.url),
-    ]);
-
-    const authorId = Number(profile?.id);
-    if (!profile || !Number.isFinite(authorId) || authorId <= 0) notFound();
-
-    const posts = await getAuthorPageData(authorId, authorFeedSize(template));
+    const template = await fetchAuthorTemplate();
+    const data = await getAuthorPageData(identified.url, authorFeedSize(template));
+    if (!data) notFound();
 
     return (
       <main className="pb-page pb-page-section">
         <div className="pb-stack">
-          <AuthorRenderer template={template} profile={profile} posts={posts} />
+          <AuthorRenderer template={template} profile={data.profile} posts={data.posts} />
         </div>
       </main>
     );
   }
 
   if (identified?.type === "tag") {
-    const [template, tag] = await Promise.all([
-      fetchTagTemplate(),
-      fetchTag(identified.url),
-    ]);
-
-    const tagId = Number(tag?.id);
-    if (!tag || !Number.isFinite(tagId) || tagId <= 0) notFound();
-
-    const posts = await getTagPageData(identified.url, tagId, tagFeedSize(template));
+    const template = await fetchTagTemplate();
+    const data = await getTagPageData(identified.url, tagFeedSize(template));
+    if (!data) notFound();
 
     return (
       <main className="pb-page pb-page-section">
         <div className="pb-stack">
-          <TagRenderer template={template} tag={tag} posts={posts} />
+          <TagRenderer template={template} tag={data.tag} posts={data.posts} />
         </div>
       </main>
     );
