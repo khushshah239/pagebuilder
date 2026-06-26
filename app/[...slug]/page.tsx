@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
 import { fetchArticle, fetchRelatedArticles, fetchMoreFromAuthor, fetchLatestNews } from "@/api/articleApi";
 import {
@@ -107,6 +108,37 @@ export async function generateMetadata({ params }: RouteParams): Promise<Metadat
  *   - `tag`      (via `identify_url`)  → TagPage.
  *   - any other post                   → article or video.
  */
+// Cache entire data-fetch for each page type — persists across requests for 60s
+// even though the route is dynamic (ƒ). This is more reliable than fetch-level
+// caching for catch-all routes that Next.js won't ISR at the CDN level.
+const getCategoryPageData = unstable_cache(
+  async (slug: string, limit: number) => {
+    const [posts, category] = await Promise.all([
+      fetchCategoryPosts(slug, 1, limit),
+      fetchCategory(slug),
+    ]);
+    return { posts, category };
+  },
+  ["category-page"],
+  { revalidate: 60 }
+);
+
+const getTagPageData = unstable_cache(
+  async (tagSlug: string, tagId: number, limit: number) => {
+    return fetchTagPosts(tagId, 1, limit);
+  },
+  ["tag-page"],
+  { revalidate: 60 }
+);
+
+const getAuthorPageData = unstable_cache(
+  async (authorId: number, limit: number) => {
+    return fetchAuthorPosts(authorId, 1, limit);
+  },
+  ["author-page"],
+  { revalidate: 60 }
+);
+
 export default async function CatchAllPage({ params }: RouteParams) {
   const { slug } = await params;
 
@@ -127,10 +159,10 @@ export default async function CatchAllPage({ params }: RouteParams) {
 
   if (identified?.type === "category") {
     const template = await fetchSectionTemplate();
-    const [posts, category] = await Promise.all([
-      fetchCategoryPosts(identified.url, 1, sectionFeedSize(template)),
-      fetchCategory(identified.url),
-    ]);
+    const { posts, category } = await getCategoryPageData(
+      identified.url,
+      sectionFeedSize(template)
+    );
 
     return (
       <main className="pb-page pb-page-section">
@@ -150,7 +182,7 @@ export default async function CatchAllPage({ params }: RouteParams) {
     const authorId = Number(profile?.id);
     if (!profile || !Number.isFinite(authorId) || authorId <= 0) notFound();
 
-    const posts = await fetchAuthorPosts(authorId, 1, authorFeedSize(template));
+    const posts = await getAuthorPageData(authorId, authorFeedSize(template));
 
     return (
       <main className="pb-page pb-page-section">
@@ -170,7 +202,7 @@ export default async function CatchAllPage({ params }: RouteParams) {
     const tagId = Number(tag?.id);
     if (!tag || !Number.isFinite(tagId) || tagId <= 0) notFound();
 
-    const posts = await fetchTagPosts(tagId, 1, tagFeedSize(template));
+    const posts = await getTagPageData(identified.url, tagId, tagFeedSize(template));
 
     return (
       <main className="pb-page pb-page-section">
