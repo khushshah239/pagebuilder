@@ -23,7 +23,22 @@ export interface TagPostsResponse {
   per_page?: number;
 }
 
-/** Fetches one page of a tag's articles; a short result set means last page. */
+/** Fetches one page of a tag's articles by tag slug (no numeric ID needed). */
+export async function fetchTagPostsBySlug(
+  slug: string,
+  page: number,
+  limit: number
+): Promise<TagPostsResponse> {
+  const path = `/posts/?type__eq=Article&tags.slug__eq=${slug}&page=${page}&limit=${limit}`;
+  const response = await cdsFetch<TagPostsResponse>(path);
+  return {
+    data: Array.isArray(response.data) ? response.data : [],
+    page_no: response.page_no,
+    per_page: response.per_page,
+  };
+}
+
+/** Fetches one page of a tag's articles by numeric ID. */
 export async function fetchTagPosts(
   id: number,
   page: number,

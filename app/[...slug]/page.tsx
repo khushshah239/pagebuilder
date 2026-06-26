@@ -9,11 +9,11 @@ import {
   identifyUrl,
 } from "@/api/sectionApi";
 import {
-  fetchAuthorPosts,
+  fetchAuthorPostsBySlug,
   fetchAuthorProfile,
   fetchAuthorTemplate,
 } from "@/api/authorApi";
-import { fetchTag, fetchTagPosts, fetchTagTemplate } from "@/api/tagApi";
+import { fetchTag, fetchTagPostsBySlug, fetchTagTemplate } from "@/api/tagApi";
 import { fetchVideoTemplate } from "@/api/videoApi";
 import { ArticleRenderer, ArticleSidebar } from "@/components/article/ArticleRenderer";
 import { AuthorRenderer } from "@/components/author/AuthorRenderer";
@@ -130,10 +130,12 @@ const getCategoryPageData = unstable_cache(
 
 const getTagPageData = unstable_cache(
   async (tagSlug: string, limit: number) => {
-    const tag = await fetchTag(tagSlug);
-    const tagId = Number(tag?.id);
-    if (!tag || !Number.isFinite(tagId) || tagId <= 0) return null;
-    const posts = await fetchTagPosts(tagId, 1, limit);
+    // Fetch tag profile and posts in parallel — same as category (2 waves total).
+    const [tag, posts] = await Promise.all([
+      fetchTag(tagSlug),
+      fetchTagPostsBySlug(tagSlug, 1, limit),
+    ]);
+    if (!tag) return null;
     return { tag, posts };
   },
   ["tag-page"],
@@ -142,10 +144,12 @@ const getTagPageData = unstable_cache(
 
 const getAuthorPageData = unstable_cache(
   async (authorSlug: string, limit: number) => {
-    const profile = await fetchAuthorProfile(authorSlug);
-    const authorId = Number(profile?.id);
-    if (!profile || !Number.isFinite(authorId) || authorId <= 0) return null;
-    const posts = await fetchAuthorPosts(authorId, 1, limit);
+    // Fetch author profile and posts in parallel — same as category (2 waves total).
+    const [profile, posts] = await Promise.all([
+      fetchAuthorProfile(authorSlug),
+      fetchAuthorPostsBySlug(authorSlug, 1, limit),
+    ]);
+    if (!profile) return null;
     return { profile, posts };
   },
   ["author-page"],
