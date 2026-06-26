@@ -10,17 +10,16 @@ interface AuthorRendererProps {
   template: Record<string, unknown>;
   profile: Record<string, unknown>;
   posts: AuthorPostsResponse;
-  page?: number;
 }
 
-export function AuthorRenderer({ template, profile, posts, page }: AuthorRendererProps) {
+export function AuthorRenderer({ template, profile, posts }: AuthorRendererProps) {
   const headerProps = buildAuthorHeaderProps(template, profile);
   const articles = buildAuthorFeedItems(template, posts);
 
   return (
     <>
       <AuthorProfileHeader {...headerProps} />
-      <SectionFeed articles={articles} page={page} />
+      <SectionFeed articles={articles} />
     </>
   );
 }

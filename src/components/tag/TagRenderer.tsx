@@ -10,7 +10,6 @@ interface TagRendererProps {
   template: Record<string, unknown>;
   tag: Record<string, unknown>;
   posts: TagPostsResponse;
-  page?: number;
 }
 
 /** Template keys that are metadata, not organism nodes. */
@@ -57,7 +56,7 @@ const TAG_ORGANISM_COMPONENTS: Record<string, ComponentType<any>> = {
  * building props from the tag binding — mirrors how VideoRenderer works so all
  * template organisms (not just the hardcoded hero + feed) actually render.
  */
-export function TagRenderer({ template, tag, posts, page }: TagRendererProps) {
+export function TagRenderer({ template, tag, posts }: TagRendererProps) {
   return (
     <>
       {Object.entries(template)
@@ -71,8 +70,7 @@ export function TagRenderer({ template, tag, posts, page }: TagRendererProps) {
           if (!props) return null;
 
           const id = (node.dynamic_fields?.[0]?.id as string) || key;
-          const extraProps = node.schema_slug.includes("feed") ? { page } : {};
-          return <Component key={id || index} {...(props as any)} {...extraProps} />;
+          return <Component key={id || index} {...(props as any)} />;
         })}
     </>
   );
