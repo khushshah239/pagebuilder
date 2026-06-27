@@ -24,8 +24,8 @@ import { VideoRenderer, VideoSidebar } from "@/components/video/VideoRenderer";
 import { articleFeedSize } from "@/lib/article/buildProps";
 import { resolveBoundItems } from "@/lib/bindings";
 import { sectionFeedSize } from "@/lib/section/buildProps";
-import { authorFeedSize } from "@/lib/author/buildProps";
 import { tagFeedSize } from "@/lib/tag/buildProps";
+import { authorFeedSize } from "@/lib/author/buildProps";
 import { videoFeedSize, videoBindingRootField } from "@/lib/video/buildProps";
 import { buildWebStory } from "@/lib/webstory/buildProps";
 import { getActivePublisher } from "@/config/publishers";
@@ -73,7 +73,11 @@ type RouteParams = { params: Promise<{ slug: string[] }> };
  * so the full path is the article's CDS address.
  */
 function legacyUrlFromSlug(slug: string[]): string {
-  return `/${slug.map((segment) => decodeURIComponent(segment)).join("/")}`;
+  return `/${slug.map((segment) => {
+    const decoded = decodeURIComponent(segment);
+    // Reject path traversal — if a segment contains "/" after decoding, keep it encoded.
+    return decoded.includes("/") ? segment : decoded;
+  }).join("/")}`;
 }
 
 /**
@@ -279,7 +283,7 @@ export default async function CatchAllPage({ params }: RouteParams) {
 
     const relatedRootField = videoBindingRootField(videoTemplate, "relatedarticlesrow") || "related_article";
     const authorRootField  = videoBindingRootField(videoTemplate, "morefromauthorrow")  || "more_from_author";
-    const sidebarRootField = videoBindingRootField(videoTemplate, "sidebar-latest-news") || "laterst_news_right";
+    const sidebarRootField = videoBindingRootField(videoTemplate, "sidebar-latest-news") || "latest_news_right";
 
     const existing: Record<string, unknown> = { ...(post.custom_entity ?? {}) };
     const existingRelated  = ((existing[relatedRootField]  as { results?: Record<string, unknown>[] } | null)?.results ?? []);

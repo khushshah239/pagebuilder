@@ -3,7 +3,6 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { widenCdnImage } from "@/lib/media";
-import { ArticleByline } from "@/components/ArticleByline";
 import { CategoryLink } from "@/components/CategoryLink";
 import type { HeroCarouselProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/HeroCarousel.module.css";
@@ -99,12 +98,15 @@ export function HeroCarousel({ identifier, slides }: HeroCarouselProps) {
                 {slide.excerpt ? (
                   <p className={styles.excerpt}>{slide.excerpt}</p>
                 ) : null}
-                <ArticleByline
-                  authorName={slide.author_name}
-                  authorUrl={slide.author_url}
-                  publishedAt={slide.published_at}
-                  readTime={slide.read_time}
-                />
+                {slide.url_slug ? (
+                  <Link href={slide.url_slug} className={styles.readMore} prefetch={false}>
+                    Read More
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                  </Link>
+                ) : null}
               </div>
             </article>
           );

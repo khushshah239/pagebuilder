@@ -1,54 +1,43 @@
-/* Editorial reading typography: a refined serif for the body (paired with the
-   sans-serif headings below) gives long-form content a professional,
-   newspaper-like feel rather than a generic UI look. */
 .body {
-  font-family: Charter, "Iowan Old Style", "Source Serif 4", Georgia,
-    "Times New Roman", serif;
-  font-size: 21px;
+  font-family: Charter, "Iowan Old Style", "Source Serif 4", Georgia, "Times New Roman", serif;
+  font-size: 20px;
   line-height: 1.75;
-  color: var(--pb-text, #15171a);
+  color: #1a1c1c;
 }
 
-/* Prose rhythm for the publisher HTML inside the body. */
 .body :global(p) {
-  margin: 0 0 26px;
+  margin: 0 0 24px;
 }
 
-/* Lead-in paragraph reads slightly larger, like a standfirst. */
 .body :global(p:first-of-type) {
-  font-size: 23px;
-  line-height: 1.6;
+  font-size: 21px;
+  line-height: 1.65;
 }
 
 .body :global(h2),
 .body :global(h3),
 .body :global(h4) {
-  font-family: var(--pb-heading-font, inherit);
-  font-weight: 800;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-  color: var(--pb-text, #15171a);
-  margin: 40px 0 16px;
+  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #000;
+  margin: 44px 0 16px;
 }
 
-.body :global(h2) {
-  font-size: 30px;
-}
-.body :global(h3) {
-  font-size: 24px;
-}
-.body :global(h4) {
-  font-size: 20px;
-}
+.body :global(h2) { font-size: 28px; }
+.body :global(h3) { font-size: 22px; }
+.body :global(h4) { font-size: 18px; }
 
 .body :global(a) {
-  color: var(--pb-accent, #c8102e);
+  color: var(--pb-accent, #bb0014);
   text-decoration: underline;
-  text-underline-offset: 2px;
-  transition: color 0.15s ease;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: color 0.15s;
 }
 .body :global(a:hover) {
-  color: var(--pb-accent-dark, #a50d23);
+  color: #8b000f;
 }
 
 .body :global(strong),
@@ -56,7 +45,6 @@
   font-weight: 700;
 }
 
-/* Figures / images sit full content width with breathing room. */
 .body :global(figure) {
   margin: 32px 0;
 }
@@ -65,7 +53,6 @@
   display: block;
   max-width: 100%;
   height: auto;
-  border-radius: 12px;
   margin: 28px 0;
 }
 .body :global(figure img) {
@@ -74,53 +61,57 @@
 
 .body :global(figcaption) {
   margin-top: 10px;
-  font-size: 14.5px;
+  font-size: 13px;
   line-height: 1.5;
-  color: var(--pb-muted, #6b7280);
-  text-align: center;
+  color: #888;
+  font-style: italic;
+  text-align: left;
+  border-left: 3px solid var(--pb-border, #e8e8e8);
+  padding-left: 10px;
 }
 
 .body :global(ul),
 .body :global(ol) {
-  margin: 0 0 26px;
-  padding-left: 26px;
+  margin: 0 0 24px;
+  padding-left: 24px;
 }
 
 .body :global(li) {
   margin-bottom: 10px;
 }
 .body :global(li)::marker {
-  color: var(--pb-accent, #c8102e);
+  color: var(--pb-accent, #bb0014);
 }
 
+/* Pull quote — editorial blockquote style */
 .body :global(blockquote) {
-  margin: 32px 0;
-  padding: 8px 0 8px 24px;
-  border-left: 4px solid var(--pb-accent, #c8102e);
+  margin: 36px 0;
+  padding: 24px 28px;
+  border-left: 4px solid var(--pb-accent, #bb0014);
+  background: #f9f6f3;
+  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
   font-size: 22px;
-  line-height: 1.6;
+  line-height: 1.55;
   font-style: italic;
-  color: var(--pb-text, #15171a);
+  font-weight: 400;
+  color: #222;
 }
 
-/* Horizontal rules and inline code, for completeness. */
 .body :global(hr) {
   margin: 40px 0;
   border: none;
-  border-top: 1px solid var(--pb-border, #e7e9ec);
+  border-top: 1px solid var(--pb-border, #e8e8e8);
 }
 
 .body :global(code) {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.88em;
+  font-size: 0.86em;
   padding: 2px 6px;
-  border-radius: 6px;
-  background: var(--pb-muted-bg, #eef0f2);
+  background: #f0f0f0;
+  color: #333;
 }
 
-/* ─── "Read more" collapse ──────────────────────────────────────────────── */
-/* While collapsed the body is clipped to its max-height with a fade to the page
-   background, signalling there's more to read below the toggle. */
+/* ─── "Read more" collapse ────────────────────────────────────────────────── */
 .collapsed {
   position: relative;
   overflow: hidden;
@@ -130,7 +121,7 @@
   position: absolute;
   inset: auto 0 0 0;
   height: 140px;
-  background: linear-gradient(to bottom, transparent, var(--pb-page-bg, #ffffff));
+  background: linear-gradient(to bottom, transparent, #fff);
   pointer-events: none;
 }
 
@@ -144,16 +135,17 @@
   appearance: none;
   cursor: pointer;
   font-family: inherit;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   padding: 12px 32px;
-  border-radius: 999px;
-  border: 1.5px solid var(--pb-accent, #c8102e);
+  border: 1.5px solid #000;
   background: transparent;
-  color: var(--pb-accent, #c8102e);
-  transition: background 0.16s ease, color 0.16s ease;
+  color: #000;
+  transition: background 0.15s, color 0.15s;
 }
 .toggle:hover {
-  background: var(--pb-accent, #c8102e);
+  background: #000;
   color: #fff;
 }

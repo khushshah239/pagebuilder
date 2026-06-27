@@ -30,7 +30,12 @@ export function NewsletterSignupStrip({
           <h2 className={styles.title}>{title}</h2>
         </div>
         <form className={styles.form} action="#" aria-label="Newsletter signup">
-          <input className={styles.input} type="email" aria-label="Email address" />
+          <input
+            className={styles.input}
+            type="email"
+            aria-label="Email address"
+            placeholder="Enter your email address"
+          />
           {cta_label ? (
             <button className={styles.button} type="submit">
               {cta_label}

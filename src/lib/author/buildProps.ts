@@ -1,11 +1,11 @@
 import { getByPath } from "@/lib/path";
 import { isBlank } from "@/lib/value";
-import { MEDIA_KEYS, flattenMedia, flattenMediaFields } from "@/lib/media";
+import { flattenMediaFields } from "@/lib/media";
 import { resolveBoundItems } from "@/lib/bindings";
 import { AUTHOR_PAGE_SIZE } from "@/config/cds";
-import type { AuthorPostsResponse } from "@/api/authorApi";
 import type { AuthorProfileHeaderProps } from "@/types/author/organism.types";
 import type { SectionFeedArticle } from "@/types/section/organism.types";
+import type { AuthorPostsResponse } from "@/api/authorApi";
 
 type FieldMapEntry = { source: string; target: string };
 type AuthorTemplate = Record<string, unknown>;
@@ -15,13 +15,12 @@ interface AuthorBinding {
   field_map: { dynamic_fields: FieldMapEntry[] };
 }
 
-
-/** Returns the field-map for one author organism. */
+/** Returns the field-map for one author organism. Accepts `data_bindings` (plural) or `data_binding`. */
 function authorBinding(
   template: AuthorTemplate,
   organismId: string
 ): FieldMapEntry[] {
-  const binding = template.data_binding as
+  const binding = (template.data_bindings ?? template.data_binding) as
     | { dynamic_fields?: AuthorBinding[] }
     | undefined;
   const entry = binding?.dynamic_fields?.find(
@@ -41,33 +40,7 @@ function organismDefault(
   return node?.dynamic_fields?.[0] ?? {};
 }
 
-function coerce(key: string, value: unknown): unknown {
-  return MEDIA_KEYS.has(key) ? flattenMedia(value) : value;
-}
-
-/** Builds author header props: template defaults overlaid with live profile values. */
-export function buildAuthorHeaderProps(
-  template: AuthorTemplate,
-  profile: Record<string, unknown>
-): AuthorProfileHeaderProps {
-  const props: Record<string, unknown> = { identifier: "author-header" };
-
-  for (const [key, value] of Object.entries(
-    organismDefault(template, "author_header")
-  )) {
-    if (key !== "id") props[key] = coerce(key, value);
-  }
-
-  const context = { member: profile };
-  for (const { source, target } of authorBinding(template, "author-header")) {
-    const live = getByPath(context, source);
-    if (!isBlank(live)) props[target] = coerce(target, live);
-  }
-
-  return props as unknown as AuthorProfileHeaderProps;
-}
-
-/** Returns fetch count from the author-feed binding's max index, or AUTHOR_PAGE_SIZE. */
+// Uses max index (not count) so gaps in binding indices still fetch enough articles.
 export function authorFeedSize(template: AuthorTemplate): number {
   let maxIndex = -1;
   for (const { source } of authorBinding(template, "author-feed")) {
@@ -97,4 +70,26 @@ export function buildAuthorFeedItems(
     (item) => flattenMediaFields(item) as unknown as SectionFeedArticle
   );
   return live.length > 0 ? live : staticFeed(template);
+}
+
+/** Builds author header props from binding context (includes live member profile). */
+export function buildAuthorHeaderProps(
+  template: AuthorTemplate,
+  profile: Record<string, unknown>
+): AuthorProfileHeaderProps {
+  const props: Record<string, unknown> = { identifier: "author-header" };
+
+  for (const [key, value] of Object.entries(organismDefault(template, "author_header"))) {
+    if (key !== "id") props[key] = value;
+  }
+
+  // Merge profile into context so `member.name` resolves from the binding.
+  const context = { member: profile ?? {} };
+
+  for (const { source, target } of authorBinding(template, "author-header")) {
+    const live = getByPath(context, source);
+    if (!isBlank(live)) props[target] = live;
+  }
+
+  return props as unknown as AuthorProfileHeaderProps;
 }

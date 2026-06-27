@@ -6,7 +6,8 @@ export function safeSocialHref(url: string): string {
     const parsed = new URL(url, "https://placeholder.invalid");
     if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return "#";
   } catch {
-    if (!url.startsWith("/")) return "#";
+    // Allow root-relative paths (/path) but reject protocol-relative (//evil.com).
+    if (!/^\/[^/]/.test(url)) return "#";
   }
   return url;
 }

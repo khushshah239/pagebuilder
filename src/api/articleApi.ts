@@ -68,7 +68,10 @@ const fetchArticleFromCDS = unstable_cache(
   async (legacyUrl: string): Promise<CdsArticleResponse> => {
     try {
       return await cdsFetch<CdsArticleResponse>(postByLegacyUrlPath(legacyUrl));
-    } catch {
+    } catch (err) {
+      // Only retry with a toggled trailing slash on 404 — auth errors and network
+      // failures propagate immediately to avoid masking the real problem.
+      if ((err as { status?: number }).status !== 404) throw err;
       return cdsFetch<CdsArticleResponse>(
         postByLegacyUrlPath(toggleTrailingSlash(legacyUrl))
       );

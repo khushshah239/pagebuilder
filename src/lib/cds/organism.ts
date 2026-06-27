@@ -17,12 +17,12 @@ export function firstDynamicField(node: CdsLayoutOrganism): Record<string, unkno
 
 /** Returns the organism's binding id, falling back to schema_slug. */
 export function organismId(node: CdsLayoutOrganism): string {
-  return (firstDynamicField(node).id as string) || node.schema_slug;
+  return String(firstDynamicField(node).id ?? "") || node.schema_slug;
 }
 
 /** Returns the field-map for a given organism id, or [] when none exists. */
 export function bindingFor(template: CdsTemplate, id: string): CdsFieldMapEntry[] {
-  const binding = template.bindings.dynamic_fields.find(
+  const binding = (template.bindings?.dynamic_fields ?? []).find(
     (entry: CdsBinding) => entry.organism_id === id
   );
   return binding?.field_map.dynamic_fields ?? [];

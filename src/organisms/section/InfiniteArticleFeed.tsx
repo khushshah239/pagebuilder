@@ -58,15 +58,18 @@ export function InfiniteArticleFeed({
               />
               <h3 className={styles.title}>{article.title}</h3>
               {article.author_name || time ? (
-                <span className={styles.meta}>
-                  <AuthorLink
-                    name={article.author_name}
-                    url={article.author_url}
-                    className={styles.author}
-                  />
-                  {article.author_name && time ? " · " : ""}
-                  {time}
-                </span>
+                <div className={styles.meta}>
+                  <div className={styles.metaTop}>
+                    {article.author_name ? (
+                      <AuthorLink
+                        name={article.author_name}
+                        url={article.author_url}
+                        className={styles.author}
+                      />
+                    ) : null}
+                  </div>
+                  {time ? <span className={styles.time}>{time}</span> : null}
+                </div>
               ) : null}
             </div>
           </article>

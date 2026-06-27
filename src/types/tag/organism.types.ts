@@ -4,5 +4,4 @@
 export interface TagHeroBannerProps {
   identifier: string;
   tag_name?: string;
-  heading?: string; // fallback when tag_name is absent
 }

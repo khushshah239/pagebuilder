@@ -1,6 +1,7 @@
 import { cdnImageSrcSet } from "@/lib/media";
 import Link from "next/link";
 import { ArticleByline } from "@/components/ArticleByline";
+import { ScrollRail } from "@/components/ScrollRail";
 import type { TrendingArticlesRowProps } from "@/types/article/organism.types";
 import styles from "@/styles/organisms/article/TrendingArticlesRow.module.css";
 
@@ -25,7 +26,7 @@ export function TrendingArticlesRow({
           <h2 className={styles.heading}>{heading}</h2>
         </header>
       ) : null}
-      <div className={cards.length >= 4 ? `${styles.grid} ${styles.gridScroll}` : styles.grid}>
+      <ScrollRail trackClassName={cards.length >= 4 ? `${styles.grid} ${styles.gridScroll}` : styles.grid}>
         {cards.map((card, index) => {
           const articleHref = toPath(card.url_slug);
           const categoryHref = toPath(card.category_url);
@@ -35,10 +36,12 @@ export function TrendingArticlesRow({
             <article key={key} className={styles.card}>
               {card.thumbnail && card.url_slug ? (
                 <Link href={articleHref} className={styles.imgWrap} tabIndex={-1} prefetch={false}>
+                  {/* alt="" — image and title link go to the same URL; screen readers
+                      would announce the headline twice if alt duplicated it. */}
                   <img
                     className={styles.thumb}
                     {...cdnImageSrcSet(card.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
-                    alt={card.title}
+                    alt=""
                     loading="lazy"
                   />
                 </Link>
@@ -78,7 +81,7 @@ export function TrendingArticlesRow({
             </article>
           );
         })}
-      </div>
+      </ScrollRail>
     </section>
   );
 }

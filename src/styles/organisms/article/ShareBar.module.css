@@ -1,62 +1,57 @@
 .bar {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
+  justify-content: space-between;
   flex-wrap: wrap;
-  padding: 14px 0;
-  border-top: 1px solid var(--pb-border, #e7e9ec);
-  border-bottom: 1px solid var(--pb-border, #e7e9ec);
+  gap: 12px;
+  padding: 16px 0;
+  border-top: 1px solid var(--pb-border, #e8e8e8);
+  border-bottom: 1px solid var(--pb-border, #e8e8e8);
 }
 
 .label {
-  font-size: 14px;
-  font-weight: 800;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--pb-muted, #6b7280);
+  letter-spacing: 0.1em;
+  color: #888;
 }
 
 .buttons {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
+  width: 40px;
+  height: 40px;
   border: none;
   cursor: pointer;
   text-decoration: none;
-  background: var(--pb-muted-bg, #eef0f2);
-  transition: background 0.15s ease, transform 0.1s ease;
-  flex-shrink: 0;
+  background: #f0f0f0;
+  color: #333;
+  transition: background 0.15s, color 0.15s, transform 0.1s;
 }
 .button:hover {
-  background: var(--pb-accent, #c8102e);
-  transform: scale(1.1);
-}
-.button:hover .icon {
-  filter: brightness(0) invert(1);
+  background: var(--pb-accent, #bb0014);
+  color: #fff;
+  transform: translateY(-2px);
 }
 
 .icon {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   object-fit: contain;
   display: block;
-  border-radius: 0;
 }
 
 .fallbackInitial {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
-  color: var(--pb-text, #15171a);
+  color: inherit;
   line-height: 1;
 }

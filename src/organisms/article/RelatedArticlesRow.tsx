@@ -2,6 +2,7 @@ import { cdnImageSrcSet } from "@/lib/media";
 import Link from "next/link";
 import { CategoryLink } from "@/components/CategoryLink";
 import { ArticleByline } from "@/components/ArticleByline";
+import { ScrollRail } from "@/components/ScrollRail";
 import type { RelatedArticlesRowProps } from "@/types/article/organism.types";
 import styles from "@/styles/organisms/article/RelatedArticlesRow.module.css";
 
@@ -20,7 +21,7 @@ export function RelatedArticlesRow({
           <h2 className={styles.heading}>{heading}</h2>
         </header>
       ) : null}
-      <div className={styles.grid}>
+      <ScrollRail trackClassName={styles.grid}>
         {related_cards.map((card, index) => {
           const key = `${identifier}-related-${index}`;
           // Stretched overlay link → article; category link above → section.
@@ -57,7 +58,7 @@ export function RelatedArticlesRow({
             </article>
           );
         })}
-      </div>
+      </ScrollRail>
     </section>
   );
 }

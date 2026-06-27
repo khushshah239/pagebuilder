@@ -5,6 +5,7 @@ import { CDS_PUBLISHER_ID } from "@/config/env";
 export interface PublisherApiData {
   long_logo?: string;
   short_logo?: string;
+  dark_mode_logo?: string;
   logo?: string;
   name?: string;
   tagline?: string;
@@ -14,6 +15,7 @@ interface PublisherApiResponse {
   data?: PublisherApiData;
   long_logo?: string;
   short_logo?: string;
+  dark_mode_logo?: string;
   logo?: string;
 }
 
@@ -25,6 +27,7 @@ export const fetchPublisherData = unstable_cache(
       return res.data ?? {
         long_logo: res.long_logo,
         short_logo: res.short_logo,
+        dark_mode_logo: res.dark_mode_logo,
         logo: res.logo,
       };
     } catch (err) {

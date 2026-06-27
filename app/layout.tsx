@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
 import type { ReactNode } from "react";
+import { Playfair_Display, Inter } from "next/font/google";
 import { getActivePublisher } from "@/config/publishers";
 import { themeToCssVariables } from "@/theme/cssVariables";
 import { fetchPublisherData } from "@/api/publisherApi";
@@ -11,6 +10,23 @@ import { Navbar } from "@/components/nav/Navbar";
 import { Footer } from "@/components/footer/Footer";
 import "./globals.css";
 
+// Self-hosted via next/font — eliminates the external Google Fonts network round-trip
+// and the DOM reconciler conflict that caused "Cannot read properties of null (removeChild)".
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  style: ["normal", "italic"],
+  variable: "--font-playfair",
+  display: "swap",
+});
+
 const publisher = getActivePublisher();
 
 export const metadata: Metadata = {
@@ -19,44 +35,18 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  // Fire all three fetches in parallel — unstable_cache makes cache hits instant.
-  const [publisherData] = await Promise.all([
+  // Warm shared caches in parallel — Navbar/Footer read from the same cache.
+  await Promise.all([
     fetchPublisherData(),
     fetchNavigation(),
     fetchFooter(),
   ]);
-  const logoUrl =
-    publisherData.long_logo ??
-    publisherData.logo ??
-    publisher.longLogo;
 
   return (
-    <html lang="en">
+    <html lang={publisher.lang ?? "en"} className={`${inter.variable} ${playfair.variable}`}>
       <body>
         <div className="pb-root" style={themeToCssVariables(publisher.theme)}>
           <header className="pb-site-header">
-            <div className="pb-shell pb-masthead">
-              <Link className="pb-brand" href="/" aria-label={`${publisher.name} home`}>
-                {logoUrl ? (
-                  <Image
-                    className="pb-brand-logo"
-                    src={logoUrl}
-                    alt={publisher.name}
-                    width={260}
-                    height={60}
-                    priority
-                  />
-                ) : (
-                  <>
-                    <span className="pb-brand-mark">{publisher.name[0]}</span>
-                    <span>
-                      <span className="pb-brand-name">{publisher.name}</span>
-                      <span className="pb-brand-tagline">{publisher.tagline}</span>
-                    </span>
-                  </>
-                )}
-              </Link>
-            </div>
             <Navbar />
           </header>
 

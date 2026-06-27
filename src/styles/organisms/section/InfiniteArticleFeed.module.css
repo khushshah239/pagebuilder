@@ -1,139 +1,158 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 20px;
+  gap: 24px;
   align-items: stretch;
 }
 @media (max-width: 1100px) {
-  .grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-@media (max-width: 720px) {
-  .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-  }
+@media (max-width: 760px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 }
 @media (max-width: 480px) {
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
+  .grid { grid-template-columns: 1fr; gap: 16px; }
 }
 
 .card {
   position: relative;
   display: flex;
   flex-direction: column;
-  min-height: 100%;
-  background: #fff;
-  border: 1px solid var(--pb-border, #e7e9ec);
-  border-radius: 0;
+  background: var(--pb-surface-bg, #fff);
+  border: 1px solid var(--pb-border, #c6c6cd);
+  border-radius: 8px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
-  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
-  transition: box-shadow 0.16s ease, transform 0.16s ease;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
 .card:hover {
-  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.12);
-  transform: translateY(-2px);
+  box-shadow: var(--pb-shadow, 0 4px 12px rgba(15, 23, 42, 0.05));
+  transform: scale(1.01);
 }
 
-/* Stretched link covering the card → article; the author byline sits above it. */
 .cardLink {
   position: absolute;
   inset: 0;
   z-index: 1;
-  border-radius: inherit;
 }
 
+/* Image wrapper effect — img is a direct child; parent overflow:hidden clips zoom */
 .thumb {
   width: 100%;
   aspect-ratio: 16 / 10;
   object-fit: cover;
-  background: var(--pb-muted-bg, #eef0f2);
+  display: block;
+  background: var(--pb-muted-bg, #eee);
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.4s ease;
+  flex-shrink: 0;
 }
+.card:hover .thumb { transform: scale(1.07); filter: brightness(1.03); }
 
 .text {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 14px 16px 18px;
+  gap: 10px;
+  padding: 16px 16px 18px;
   flex: 1;
 }
 
+/* ET-style text kicker — small red uppercase label, no background */
 .category {
   align-self: flex-start;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #fff;
-  background: var(--pb-accent, #c8102e);
-  padding: 3px 8px;
-  border-radius: 3px;
+  letter-spacing: 0.07em;
+  color: var(--pb-accent, #d4111e);
 }
 
-/* Linked category sits above the card's overlay link so it opens the section page. */
 a.category {
   position: relative;
   z-index: 2;
   text-decoration: none;
-  transition: color 0.15s ease;
+  transition: color 0.2s;
 }
-a.category:hover {
-  text-decoration: none;
-  background: var(--pb-accent-dark, #a50d23);
-}
+a.category:hover { color: var(--pb-accent-dark, #a60d17); text-decoration: underline; }
 
 .title {
+  position: relative;
   margin: 0;
-  font-size: clamp(14px, 1.1vw, 17px);
-  font-weight: 800;
-  line-height: 1.25;
-  letter-spacing: 0;
-  color: var(--pb-text, #15171a);
+  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.32;
+  color: #111;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  transition: color 0.2s;
 }
-.card:hover .title {
-  color: var(--pb-accent, #c8102e);
-}
+.card:hover .title { color: var(--pb-accent, #bb0014); }
 
 .meta {
   margin-top: auto;
-  font-size: 14px;
-  font-weight: 650;
-  letter-spacing: 0.01em;
-  font-variant-numeric: tabular-nums;
-  color: var(--pb-muted, #6b7280);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: #888;
+  padding-top: 10px;
+  border-top: 1px solid #f0f0f0;
 }
 
-/* Linked author sits above the card's overlay link so it opens the author page. */
+/* Top line: author (may wrap to 2 lines) on the left, "Read →" pinned right. */
+.metaTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Timestamp sits on its own second line — left-aligned under the author name and
+   never wraps, so a long author name above it can never break it. */
+.time {
+  text-align: left;
+  white-space: nowrap;
+  color: #888;
+  font-variant-numeric: tabular-nums;
+}
+
 a.author {
   position: relative;
   z-index: 2;
-  color: inherit;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  min-width: 0;
+  color: #555;
+  font-weight: 600;
   text-decoration: none;
-  transition: color 0.15s ease;
+  transition: color 0.15s;
 }
-a.author:hover {
-  color: var(--pb-accent, #c8102e);
-  text-decoration: underline;
-  text-underline-offset: 2px;
+a.author:hover { color: var(--pb-accent, #bb0014); }
+
+/* "Read story →" affordance that slides up on hover */
+.metaTop::after {
+  content: "Read →";
+  margin-left: auto;
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--pb-accent, #bb0014);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
+.card:hover .metaTop::after { opacity: 1; transform: translateX(0); }
 
 .empty {
   margin: 0;
-  padding: 56px 0;
+  padding: 60px 0;
   text-align: center;
-  font-size: 16px;
-  color: var(--pb-muted, #6b7280);
+  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-size: 20px;
+  color: #aaa;
 }

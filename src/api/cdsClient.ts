@@ -1,3 +1,4 @@
+import "server-only";
 import { CDS_BASE_URL, CDS_PUBLISHER_ID, buildAuthorizationHeader } from "@/config/env";
 import { REVALIDATE_SECONDS } from "@/config/cds";
 
@@ -71,8 +72,8 @@ export async function cdsFetch<T>(path: string): Promise<T> {
       if (attempt === MAX_RETRIES) break;
     }
 
-    // Exponential-ish backoff: 400ms then 1000ms.
-    await wait(400 + attempt * 600);
+    // Exponential backoff with jitter — avoids thundering-herd on CDS degradation.
+    await wait((400 + attempt * 600) * (0.5 + Math.random() * 0.5));
   }
 
   throw lastError instanceof Error

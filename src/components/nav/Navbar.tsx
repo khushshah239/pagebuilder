@@ -1,21 +1,43 @@
+import Image from "next/image";
 import Link from "next/link";
 import { fetchNavigation } from "@/api/navApi";
-import { fetchFooter } from "@/api/footerApi";
-import { getSocialIcon, safeSocialHref } from "@/components/SocialIcons";
+import { fetchPublisherData } from "@/api/publisherApi";
+import { getActivePublisher } from "@/config/publishers";
+import { safeSocialHref } from "@/components/SocialIcons";
 import { NavSearchBar } from "./NavSearchBar";
 
-/** Server component — fetches nav items and social links from CDS APIs. */
+/** Server component — single CHRONICLE-style bar: logo, links, search. */
 export async function Navbar() {
-  const [navItems, footer] = await Promise.all([
+  const [navItems, publisherData] = await Promise.all([
     fetchNavigation(),
-    fetchFooter(),
+    fetchPublisherData(),
   ]);
-
-  const socialLinks = (footer.socialLinks ?? []).sort((a, b) => a.pk_key - b.pk_key);
+  const publisher = getActivePublisher();
+  // Header is dark — prefer the dark-mode logo, then long logo, then config fallback.
+  const logoUrl =
+    publisherData.dark_mode_logo ??
+    publisherData.long_logo ??
+    publisher.longLogo;
 
   return (
     <nav className="pb-main-nav" aria-label="Primary navigation">
       <div className="pb-shell pb-nav-inner">
+
+        {/* Logo (from publisher API) — falls back to the text wordmark */}
+        <Link className="pb-brand" href="/" aria-label={`${publisher.name} home`}>
+          {logoUrl ? (
+            <Image
+              className="pb-brand-logo"
+              src={logoUrl}
+              alt={publisher.name}
+              width={200}
+              height={44}
+              priority
+            />
+          ) : (
+            <span className="pb-brand-name">{publisher.name}</span>
+          )}
+        </Link>
 
         {/* Nav links — from /navbar/ API */}
         <div className="pb-nav-links">
@@ -30,26 +52,10 @@ export async function Navbar() {
           ))}
         </div>
 
-        {/* Search bar */}
-        <NavSearchBar />
-
-        {/* Social icons — links from /footer/ API */}
-        {socialLinks.length > 0 && (
-          <div className="pb-nav-social">
-            {socialLinks.map((s) => (
-              <a
-                key={s.pk_key}
-                href={safeSocialHref(s.link)}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={s.title}
-                className="pb-nav-social-link"
-              >
-                {getSocialIcon(s.title) ?? <span>{s.title.charAt(0) || "?"}</span>}
-              </a>
-            ))}
-          </div>
-        )}
+        {/* Right cluster: search pill */}
+        <div className="pb-nav-right">
+          <NavSearchBar />
+        </div>
 
       </div>
     </nav>

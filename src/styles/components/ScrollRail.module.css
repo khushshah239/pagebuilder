@@ -1,0 +1,33 @@
+/* Positioning context for the overlaid slide arrows. */
+.viewport {
+  position: relative;
+}
+
+/* Prev / next slide arrows — overlaid at the vertical middle of the card edges
+   so they don't occupy a header row above the cards. */
+.navBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--pb-border, #c6c6cd);
+  background: var(--pb-surface-bg, #fff);
+  color: var(--pb-text, #1b1b1d);
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18);
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
+}
+.navBtn:hover {
+  background: var(--pb-accent, #ba0035);
+  border-color: var(--pb-accent, #ba0035);
+  color: #fff;
+  transform: translateY(-50%) scale(1.06);
+}
+.navPrev { left: 8px; }
+.navNext { right: 8px; }

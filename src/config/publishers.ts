@@ -2,10 +2,12 @@
 import { ACTIVE_PUBLISHER_KEY } from "./env";
 import type { PublisherConfig } from "./theme.types";
 
-/** Shared font stacks. */
+// var(--font-inter) / var(--font-playfair) are injected by next/font/google at build time
+// (self-hosted, no external request). The named families are retained as fallbacks.
 const SANS_STACK =
-  '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-const SERIF_STACK = 'Georgia, "Times New Roman", Times, serif';
+  'var(--font-inter), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+const SERIF_STACK =
+  'var(--font-playfair), "Playfair Display", Georgia, "Times New Roman", serif';
 
 const CRICTODAY: PublisherConfig = {
   key: "crictoday",
@@ -16,17 +18,19 @@ const CRICTODAY: PublisherConfig = {
   longLogo: "https://img-cdn.publive.online/crictoday/media/agency_attachments/2026/05/15/2026-05-15t051127404z-crictoday-dark-2048-2026-05-15-10-41-27.png",
   shortLogo: "https://img-cdn.publive.online/crictoday/media/agency_attachments/2026/01/08/2026-01-08t095049450z-ct-640x480-logo-sq-photoroom-cric-today-2026-01-08-15-20-49.png",
   theme: {
-    accent: "#e11d2e",
-    accentDark: "#b8172a",
-    text: "#15171a",
-    muted: "#6b7280",
-    mutedBg: "#eef0f2",
-    border: "#e7e9ec",
-    pageBg: "#ffffff",
+    // CHRONICLE "Standard Sentinel" design system (Design/DESIGN.md):
+    // dark header, soft off-white canvas, red reserved for urgent signals.
+    accent: "#ba0035",
+    accentDark: "#920028",
+    text: "#1b1b1d",
+    muted: "#45464d",
+    mutedBg: "#f0edef",
+    border: "#c6c6cd",
+    pageBg: "#fcf8fa",
     surfaceBg: "#ffffff",
-    shadow: "0 14px 30px rgba(15, 23, 42, 0.08)",
+    shadow: "0 4px 12px rgba(15, 23, 42, 0.05)",
     fontFamily: SANS_STACK,
-    headingFamily: SANS_STACK,
+    headingFamily: SERIF_STACK,
   },
 };
 
@@ -34,7 +38,9 @@ const METROPOST: PublisherConfig = {
   key: "metropost",
   name: "Metro Post",
   tagline: "Independent Journalism for the City",
-  // TODO: replace with the real CDS publisher ID when Metro Post is onboarded.
+  // FIXME: "4027" is Crictoday's ID — Metro Post is not yet onboarded on CDS.
+  // Setting NEXT_PUBLIC_PUBLISHER_KEY=metropost in production will silently serve
+  // Crictoday content. Replace with the real CDS publisher ID before enabling.
   cdsPublisherId: "4027",
   theme: {
     accent: "#1a4fd6",

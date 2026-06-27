@@ -56,9 +56,9 @@ export async function Footer() {
                   {menu.childQuickLinks.map((link) => (
                     <li key={link.link}>
                       <a
-                        href={link.link}
+                        href={safeSocialHref(link.link)}
                         className="pb-footer-menu-link"
-                        {...(link.link.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                        {...(link.link.startsWith("https://") || link.link.startsWith("http://") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                       >
                         {link.name}
                       </a>

@@ -1,16 +1,19 @@
 .summary {
   padding: 24px 28px;
-  border-radius: 14px;
-  background: var(--pb-muted-bg, #eef0f2);
-  border-left: 4px solid var(--pb-accent, #c8102e);
+  background: #f9f9f9;
+  border-left: 4px solid var(--pb-accent, #bb0014);
+  border-top: 1px solid var(--pb-border, #e8e8e8);
+  border-bottom: 1px solid var(--pb-border, #e8e8e8);
 }
 
 .heading {
-  margin: 0 0 16px;
-  font-family: var(--pb-heading-font, inherit);
-  font-size: 23px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
+  margin: 0 0 14px;
+  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--pb-accent, #bb0014);
 }
 
 .list {
@@ -18,14 +21,14 @@
   padding-left: 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .item {
-  font-size: 18px;
-  line-height: 1.7;
-  color: var(--pb-text, #15171a);
+  font-size: 16px;
+  line-height: 1.65;
+  color: #222;
 }
 .item::marker {
-  color: var(--pb-accent, #c8102e);
+  color: var(--pb-accent, #bb0014);
 }

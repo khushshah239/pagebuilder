@@ -1,48 +1,74 @@
+/* Dark navy "Latest Video" rail (CHRONICLE style) */
 .section {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 18px;
-  background: #fff;
-  border: 1px solid var(--pb-border, #e3e6e9);
-  border-top: 4px solid var(--pb-accent, #c8102e);
+  gap: 24px;
+  padding: clamp(24px, 3vw, 36px);
+  background: #16203a;
+  border-radius: 12px;
 }
 
 .head {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .heading {
   margin: 0;
-  font-family: var(--pb-heading-font, inherit);
-  font-size: 22px;
-  font-weight: 950;
+  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+  color: #fff;
 }
 
-/* Horizontal scroll rail — shows ~4 cards and scrolls when there are more. */
+/* Prev / next circular arrow buttons */
+.nav {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.navBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.navBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
 .track {
   display: flex;
-  gap: 18px;
+  gap: 20px;
   overflow-x: auto;
   scroll-snap-type: x proximity;
   scrollbar-width: none;
-  padding-bottom: 4px;
+  padding-bottom: 2px;
 }
-.track::-webkit-scrollbar {
-  display: none;
-}
+.track::-webkit-scrollbar { display: none; }
 
-/* Borderless editorial card — same width as the old 4-up grid (1/4). */
 .card {
   position: relative;
-  flex: 0 0 max(220px, calc((100% - 54px) / 4));
+  flex: 0 0 max(240px, calc((100% - 60px) / 4));
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
-  gap: 11px;
-  color: inherit;
+  gap: 12px;
+  color: #fff;
+  cursor: pointer;
 }
 
 .cardLink {
@@ -57,86 +83,66 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  border-radius: 0;
-  background: #11151c;
+  border-radius: 8px;
+  background: #0d1426;
 }
 
 .thumb {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.4s ease;
 }
+.card:hover .thumb { transform: scale(1.05); }
 
+/* Centered play circle — white outline, translucent fill */
 .play {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 40px;
-  height: 40px;
+  width: 52px;
+  height: 52px;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.35);
+  border: 2px solid rgba(255, 255, 255, 0.9);
   color: #fff;
-  font-size: 16px;
-  padding-left: 3px;
+  padding-left: 2px;
+  backdrop-filter: blur(2px);
+  transition: background 0.15s, transform 0.15s;
+}
+.card:hover .play {
+  background: rgba(0, 0, 0, 0.55);
+  transform: translate(-50%, -50%) scale(1.06);
 }
 
 .duration {
   position: absolute;
-  right: 8px;
-  bottom: 8px;
+  right: 10px;
+  bottom: 10px;
   font-size: 11px;
   font-weight: 700;
   color: #fff;
-  background: rgba(0, 0, 0, 0.72);
-  padding: 3px 7px;
-  border-radius: 0;
-}
-
-.text {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.category {
-  display: inline-flex;
-  align-self: flex-start;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #fff;
-  background: var(--pb-accent, #c8102e);
-  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.78);
+  padding: 3px 8px;
   border-radius: 3px;
-  text-decoration: none;
-  position: relative;
-  z-index: 2;
-}
-.category:hover {
-  background: var(--pb-accent-dark, #a50d23);
-}
-
-.byline {
-  position: relative;
-  z-index: 2;
+  letter-spacing: 0.03em;
 }
 
 .title {
   margin: 0;
-  font-size: 18px;
-  font-weight: 850;
-  line-height: 1.25;
-  color: var(--pb-text, #15171a);
+  font-family: var(--pb-font, Inter, sans-serif);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #fff;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  transition: color 0.15s;
 }
-.card:hover .title {
-  color: var(--pb-accent, #c8102e);
-}
+.card:hover .title { color: rgba(255, 255, 255, 0.75); }

@@ -58,6 +58,10 @@ export function HomepageRenderer({ data }: { data: HomepageCustomEntity }) {
         const props = buildOrganismProps(node, template, data);
         if (!props) return null;
 
+        // Pass all props (including `heading`) straight to the organism — each
+        // organism renders its own heading inline within its row (in the same
+        // header row as its left/right scroll buttons where present), using the
+        // `heading` value from the CDS homepage response.
         return <Component key={organismId(node) || index} {...props} />;
       })}
     </>

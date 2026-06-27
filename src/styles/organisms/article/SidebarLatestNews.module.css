@@ -1,34 +1,26 @@
 .panel {
-  /* Fill the full-height sticky aside as a column: heading on top, list below. */
   min-height: 100%;
   display: flex;
   flex-direction: column;
   background: #fff;
-  border: 1px solid var(--pb-border, #e7e9ec);
-  border-top: 4px solid var(--pb-accent, #c8102e);
-  border-radius: 0;
-  padding: 16px 18px;
-  box-shadow: none;
+  border-top: 3px solid var(--pb-accent, #bb0014);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+  padding: 18px 16px;
+  animation: pb-sln-fade 0.4s ease both;
 }
 
 .heading {
   flex: 0 0 auto;
-  margin: 0 0 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--pb-heading-font, inherit);
+  margin: 0 0 16px;
+  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
   font-size: 18px;
-  font-weight: 950;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--pb-text, #15171a);
-}
-.heading::before {
-  content: none;
+  font-weight: 700;
+  color: #000;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #000;
+  letter-spacing: -0.01em;
 }
 
-/* Items share the full panel height equally — works for any binding count. */
 .list {
   list-style: none;
   margin: 0;
@@ -44,95 +36,153 @@
   display: flex;
   gap: 12px;
   align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--pb-border, #e7e9ec);
-  min-height: 170px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--pb-border, #e8e8e8);
+  min-height: 130px;
   overflow: hidden;
+  transition: background 0.25s ease, padding-left 0.25s ease;
+  /* Staggered slide-in on load (delays set per nth-child below). */
+  animation: pb-sln-in 0.45s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
-.item:last-child {
-  border-bottom: none;
+.item:hover {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--pb-accent, #bb0014) 7%, #fff),
+    transparent 65%
+  );
+  padding-left: 10px;
 }
+.item:last-child { border-bottom: none; }
 
-/* White empty placeholder — same height as a real card, reserved for future articles. */
+/* Accent bar that wipes down the left edge on hover. */
+.item:not(.itemEmpty)::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--pb-accent, #bb0014);
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 0.28s ease;
+  z-index: 2;
+}
+.item:not(.itemEmpty):hover::before { transform: scaleY(1); }
+
+.item:nth-child(1) { animation-delay: 0.03s; }
+.item:nth-child(2) { animation-delay: 0.09s; }
+.item:nth-child(3) { animation-delay: 0.15s; }
+.item:nth-child(4) { animation-delay: 0.21s; }
+.item:nth-child(5) { animation-delay: 0.27s; }
+.item:nth-child(6) { animation-delay: 0.33s; }
+
 .itemEmpty {
-  min-height: 110px;
-  background: #fff;
+  min-height: 100px;
 }
 
-/* Stretched link covering the item → article; category above it → section. */
 .link {
   position: absolute;
   inset: 0;
   z-index: 1;
 }
 
-/* Big left-side thumbnail matching the screenshot layout. */
 .thumbEmpty {
-  flex: 0 0 260px;
-  width: 260px;
-  height: 160px;
+  flex: 0 0 160px;
+  width: 160px;
+  height: 110px;
   align-self: center;
-  border-radius: 4px;
-  background: var(--pb-muted-bg, #eef0f2);
+  background: transparent;
 }
 
 .thumb {
-  flex: 0 0 260px;
-  width: 260px;
-  height: 160px;
+  flex: 0 0 160px;
+  width: 160px;
+  height: 110px;
   align-self: center;
   object-fit: cover;
-  border-radius: 4px;
-  background: var(--pb-muted-bg, #eef0f2);
+  object-position: center;
+  background: var(--pb-muted-bg, #f1f1f3);
+  border-radius: 8px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.35s ease, box-shadow 0.35s ease, filter 0.35s ease;
+}
+.item:hover .thumb {
+  transform: scale(1.05);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+  filter: saturate(1.06);
 }
 
 .text {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 5px;
   min-width: 0;
+  flex: 1;
 }
 
-/* Filled red pill badge, matching the homepage rows and article header. */
 .category {
   position: relative;
   z-index: 2;
   align-self: flex-start;
   text-decoration: none;
-  font-size: 11px;
-  font-weight: 800;
+  font-size: 9px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 5px 9px;
-  border-radius: 3px;
-  background: var(--pb-accent, #c8102e);
+  letter-spacing: 0.1em;
+  padding: 3px 7px;
+  background: var(--pb-accent, #bb0014);
   color: #fff;
-  transition: background 0.15s ease;
+  transition: background 0.15s;
 }
-.category:hover {
-  background: var(--pb-accent-dark, #a50d23);
-}
+.category:hover { background: #8b000f; }
 
 .title {
   margin: 0;
-  font-size: 16px;
-  font-weight: 850;
-  line-height: 1.28;
-  color: var(--pb-text, #15171a);
+  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #111;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  transition: color 0.15s ease;
+  transition: color 0.15s;
 }
-.item:hover .title {
-  color: var(--pb-accent, #c8102e);
-}
+.item:hover .title { color: var(--pb-accent, #bb0014); }
 
 .time {
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.01em;
+  font-size: 11px;
+  color: #999;
   font-variant-numeric: tabular-nums;
-  color: var(--pb-muted, #6b7280);
+}
+
+@keyframes pb-sln-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pb-sln-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Respect users who prefer reduced motion — show everything, no movement. */
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .item {
+    animation: none;
+  }
+  .item,
+  .item:not(.itemEmpty)::before,
+  .thumb {
+    transition: none;
+  }
 }

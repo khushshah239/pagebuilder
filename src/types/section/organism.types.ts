@@ -4,7 +4,6 @@
 export interface SectionHeroBannerProps {
   identifier: string;
   section_name?: string;
-  heading?: string; // fallback when section_name is absent
 }
 
 // ─── InfiniteArticleFeed ─────────────────────────────────────────────────────

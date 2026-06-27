@@ -2,6 +2,7 @@ import { cdnImageSrcSet } from "@/lib/media";
 import Link from "next/link";
 import { ArticleByline } from "@/components/ArticleByline";
 import { CategoryLink } from "@/components/CategoryLink";
+import { ScrollRail } from "@/components/ScrollRail";
 import type { MoreFromAuthorRowProps } from "@/types/article/organism.types";
 import styles from "@/styles/organisms/article/MoreFromAuthorRow.module.css";
 
@@ -20,7 +21,7 @@ export function MoreFromAuthorRow({
           <h2 className={styles.heading}>{heading}</h2>
         </header>
       ) : null}
-      <div className={styles.grid}>
+      <ScrollRail trackClassName={styles.grid}>
         {author_articles.map((card, index) => {
           const key = `${identifier}-author-${index}`;
           return (
@@ -29,10 +30,11 @@ export function MoreFromAuthorRow({
                 <Link href={card.url_slug} className={styles.cardLink} aria-label={card.title} prefetch={false} />
               ) : null}
               {card.thumbnail ? (
+                // alt="" — the overlay link already announces the title to screen readers.
                 <img
                   className={styles.thumb}
                   {...cdnImageSrcSet(card.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
-                  alt={card.title}
+                  alt=""
                   loading="lazy"
                 />
               ) : null}
@@ -52,7 +54,7 @@ export function MoreFromAuthorRow({
             </article>
           );
         })}
-      </div>
+      </ScrollRail>
     </section>
   );
 }

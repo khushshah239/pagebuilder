@@ -18,6 +18,8 @@ export interface PublisherConfig {
   key: string;
   name: string;
   tagline: string;
+  /** BCP-47 language tag for the <html lang> attribute. Defaults to "en". */
+  lang?: string;
   cdsPublisherId: string;
   longLogo?: string;
   shortLogo?: string;
