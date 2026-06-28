@@ -18,6 +18,7 @@ export const MEDIA_KEYS = new Set([
   "background_image",
   "cover_image",
   "avatar",
+  "author_avatar",
   "logo",
   "icon",
 ]);

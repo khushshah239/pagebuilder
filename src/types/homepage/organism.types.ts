@@ -52,14 +52,6 @@ export interface BreakingNewsStripProps {
   headlines: BreakingHeadline[];
 }
 
-// ─── LiveTVBanner ───────────────────────────────────────────────────────────
-export interface LiveTVBannerProps {
-  identifier: string;
-  channel_name: string;
-  thumbnail?: string;
-  live_label?: string;
-}
-
 // ─── FeaturedArticles ───────────────────────────────────────────────────────
 export interface FeaturedCard {
   title: string;

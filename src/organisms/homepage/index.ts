@@ -5,7 +5,6 @@
 export { HeroCarousel } from "./HeroCarousel";
 export { PostGrid } from "./PostGrid";
 export { BreakingNewsStrip } from "./BreakingNewsStrip";
-export { LiveTVBanner } from "./LiveTVBanner";
 export { FeaturedArticles } from "./FeaturedArticles";
 export { SectionRow } from "./SectionRow";
 export { TopStoriesList } from "./TopStoriesList";
