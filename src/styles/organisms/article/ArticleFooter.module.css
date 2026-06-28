@@ -7,7 +7,7 @@
   gap: 10px;
   padding: 28px 0;
   text-align: center;
-  border-top: 1px solid var(--pb-border, #e7e9ec);
+  border-top: 1px solid var(--pb-border);
 }
 
 .logo {
@@ -19,11 +19,11 @@
 .publisher {
   font-family: var(--pb-heading-font, inherit);
   font-size: 17px;
-  font-weight: 800;
-  color: var(--pb-text, #15171a);
+  font-weight: 700;
+  color: var(--pb-text);
 }
 
 .copyright {
   font-size: 13px;
-  color: var(--pb-muted, #6b7280);
+  color: var(--pb-muted);
 }

@@ -17,7 +17,17 @@ export const fetchNavigation = unstable_cache(
   async (): Promise<NavItem[]> => {
     try {
       const res = await cdsFetch<NavResponse>("/navbar/");
-      return Array.isArray(res.data) ? res.data : [];
+      const items = Array.isArray(res.data) ? res.data : [];
+      // Drop blank entries and de-duplicate by name+link.
+      const seen = new Set<string>();
+      return items.filter((item) => {
+        const name = item.name?.trim();
+        if (!name) return false;
+        const key = `${name.toLowerCase()}|${item.link ?? ""}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
     } catch (err) {
       console.error("[CDS] fetchNavigation failed:", err);
       return [];

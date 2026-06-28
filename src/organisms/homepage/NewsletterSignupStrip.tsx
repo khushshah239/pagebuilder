@@ -1,3 +1,4 @@
+import { PbImage } from "@/components/PbImage";
 import type { NewsletterSignupStripProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/NewsletterSignupStrip.module.css";
 
@@ -16,13 +17,16 @@ export function NewsletterSignupStrip({
   return (
     <section className={styles.strip} data-organism={identifier}>
       {background_image ? (
-        <img
-          className={styles.bg}
-          src={background_image}
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-        />
+        <span className={styles.bg}>
+          <PbImage
+            src={background_image}
+            alt=""
+            aria-hidden
+            fillParent
+            placeholder="none"
+            sizes="100vw"
+          />
+        </span>
       ) : null}
       <span className={styles.overlay} aria-hidden="true" />
       <div className={styles.content}>

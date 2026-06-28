@@ -10,7 +10,9 @@ export function themeToCssVariables(theme: ThemeTokens): CSSProperties {
   return {
     "--pb-accent": theme.accent,
     "--pb-accent-dark": theme.accentDark,
+    "--pb-accent-soft": theme.accentSoft,
     "--pb-text": theme.text,
+    "--pb-ink-2": theme.ink2,
     "--pb-muted": theme.muted,
     "--pb-muted-bg": theme.mutedBg,
     "--pb-border": theme.border,

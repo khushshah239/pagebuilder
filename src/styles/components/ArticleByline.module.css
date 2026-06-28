@@ -37,7 +37,7 @@ a.author {
   transition: color 0.15s ease;
 }
 a.author:hover {
-  color: var(--pb-accent, #c8102e);
+  color: var(--pb-accent);
   text-decoration: underline;
   text-underline-offset: 2px;
 }

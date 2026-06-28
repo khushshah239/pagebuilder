@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { AuthorLink } from "@/components/AuthorLink";
 import { CategoryLink } from "@/components/CategoryLink";
+import { PbImage } from "@/components/PbImage";
 import { formatPublishedDateTime } from "@/lib/date";
-import { cdnImageSrcSet } from "@/lib/media";
 import type { InfiniteArticleFeedProps } from "@/types/section/organism.types";
 import styles from "@/styles/organisms/section/InfiniteArticleFeed.module.css";
 
@@ -42,12 +42,12 @@ export function InfiniteArticleFeed({
               />
             ) : null}
             {article.thumbnail ? (
-              <img
+              <PbImage
                 className={styles.thumb}
-                {...cdnImageSrcSet(article.thumbnail)}
-                sizes="(max-width: 400px) 360px, 568px"
+                src={article.thumbnail}
                 alt={article.title}
-                loading="lazy"
+                aspectRatio={16 / 10}
+                sizes="(max-width: 600px) 45vw, 300px"
               />
             ) : null}
             <div className={styles.text}>

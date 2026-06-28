@@ -1,3 +1,4 @@
+import { PbImage } from "@/components/PbImage";
 import type { AuthorProfileHeaderProps } from "@/types/author/organism.types";
 import styles from "@/styles/organisms/author/AuthorProfileHeader.module.css";
 
@@ -18,7 +19,13 @@ export function AuthorProfileHeader({
     <header className={styles.header} data-organism={identifier}>
       <div className={styles.top}>
         {avatar ? (
-          <img className={styles.avatar} src={avatar} alt={author_name} />
+          <PbImage
+            className={styles.avatar}
+            src={avatar}
+            alt={author_name}
+            fixed={{ width: 96, height: 96 }}
+            placeholder="none"
+          />
         ) : (
           <span className={styles.avatarFallback} aria-hidden="true">
             {author_name.charAt(0)}

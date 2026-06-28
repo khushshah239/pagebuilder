@@ -9,9 +9,9 @@
   position: relative;
   display: block;
   aspect-ratio: 16 / 9;
-  border-radius: 12px;
+  border-radius: var(--pb-radius-md);
   overflow: hidden;
-  background: var(--pb-muted-bg, #eef0f2);
+  background: var(--pb-muted-bg);
 }
 
 .poster,
@@ -34,10 +34,10 @@
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.55);
   color: #ffffff;
-  transition: background 0.15s ease;
+  transition: background var(--pb-dur) var(--pb-ease);
 }
 .frame:hover .play {
-  background: var(--pb-accent, #c8102e);
+  background: var(--pb-accent);
 }
 
 .playIcon {
@@ -48,6 +48,6 @@
 
 .caption {
   margin: 0;
-  font-size: 13px;
-  color: var(--pb-muted, #6b7280);
+  font-size: var(--pb-fs-sm);
+  color: var(--pb-muted);
 }

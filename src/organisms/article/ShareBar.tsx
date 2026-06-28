@@ -1,5 +1,6 @@
 "use client";
 
+import { PbImage } from "@/components/PbImage";
 import type { ShareBarProps } from "@/types/article/organism.types";
 import styles from "@/styles/organisms/article/ShareBar.module.css";
 
@@ -47,7 +48,13 @@ export function ShareBar({ identifier, label, share_buttons = [] }: ShareBarProp
           const href = buildHref(button.url ?? "", articleUrl);
           const key = `${identifier}-share-${index}`;
           const content = button.icon ? (
-            <img className={styles.icon} src={button.icon} alt={button.platform_name} />
+            <PbImage
+              className={styles.icon}
+              src={button.icon}
+              alt={button.platform_name}
+              fixed={{ width: 20, height: 20 }}
+              placeholder="none"
+            />
           ) : (
             <span className={styles.fallbackInitial}>
               {button.platform_name?.[0]?.toUpperCase() ?? "S"}

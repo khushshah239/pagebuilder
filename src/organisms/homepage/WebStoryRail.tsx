@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { cdnImageSrcSet } from "@/lib/media";
+import { PbImage } from "@/components/PbImage";
 import type { WebStoryRailProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/WebStoryRail.module.css";
 
@@ -87,11 +87,12 @@ export function WebStoryRail({ identifier, heading, stories }: WebStoryRailProps
             const body = (
               <>
                 {story.thumbnail ? (
-                  <img
+                  <PbImage
                     className={styles.image}
-                    {...cdnImageSrcSet(story.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
-                    alt={story.title}
-                    loading="lazy"
+                    src={story.thumbnail}
+                    alt={story.title ?? ""}
+                    fillParent
+                    sizes="(max-width: 600px) 40vw, 220px"
                   />
                 ) : null}
                 <StoryBadge />

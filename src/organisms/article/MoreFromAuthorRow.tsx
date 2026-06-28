@@ -1,4 +1,4 @@
-import { cdnImageSrcSet } from "@/lib/media";
+import { PbImage } from "@/components/PbImage";
 import Link from "next/link";
 import { ArticleByline } from "@/components/ArticleByline";
 import { CategoryLink } from "@/components/CategoryLink";
@@ -31,11 +31,12 @@ export function MoreFromAuthorRow({
               ) : null}
               {card.thumbnail ? (
                 // alt="" — the overlay link already announces the title to screen readers.
-                <img
+                <PbImage
                   className={styles.thumb}
-                  {...cdnImageSrcSet(card.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
+                  src={card.thumbnail}
                   alt=""
-                  loading="lazy"
+                  aspectRatio={16 / 9}
+                  sizes="(max-width: 600px) 80vw, 300px"
                 />
               ) : null}
               <div className={styles.text}>

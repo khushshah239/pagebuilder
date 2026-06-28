@@ -1,4 +1,4 @@
-import { cdnImageSrcSet } from "@/lib/media";
+import { PbImage } from "@/components/PbImage";
 import Link from "next/link";
 import { ArticleByline } from "@/components/ArticleByline";
 import { ScrollRail } from "@/components/ScrollRail";
@@ -38,20 +38,22 @@ export function TrendingArticlesRow({
                 <Link href={articleHref} className={styles.imgWrap} tabIndex={-1} prefetch={false}>
                   {/* alt="" — image and title link go to the same URL; screen readers
                       would announce the headline twice if alt duplicated it. */}
-                  <img
+                  <PbImage
                     className={styles.thumb}
-                    {...cdnImageSrcSet(card.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
+                    src={card.thumbnail}
                     alt=""
-                    loading="lazy"
+                    fillParent
+                    sizes="(max-width: 600px) 80vw, 300px"
                   />
                 </Link>
               ) : card.thumbnail ? (
                 <div className={styles.imgWrap}>
-                  <img
+                  <PbImage
                     className={styles.thumb}
-                    {...cdnImageSrcSet(card.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
+                    src={card.thumbnail}
                     alt={card.title}
-                    loading="lazy"
+                    fillParent
+                    sizes="(max-width: 600px) 80vw, 300px"
                   />
                 </div>
               ) : null}

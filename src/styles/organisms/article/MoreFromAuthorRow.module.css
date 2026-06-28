@@ -5,30 +5,17 @@
 }
 
 .head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-bottom: 14px;
-  border-bottom: 3px solid #000;
+  padding-bottom: var(--pb-space-3);
+  border-bottom: 1px solid var(--pb-border);
 }
 
 .heading {
-  position: relative;
   margin: 0;
-  padding-left: 14px;
   font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
-  font-size: 22px;
-  font-weight: 700;
-  color: #000;
-}
-.heading::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 4px;
-  bottom: 4px;
-  width: 4px;
-  background: var(--pb-accent, #bb0014);
+  font-size: var(--pb-fs-lg);
+  font-weight: var(--pb-heading-weight);
+  letter-spacing: -0.01em;
+  color: var(--pb-text);
 }
 
 /* Horizontal scroll rail */
@@ -48,16 +35,19 @@
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
-  background: var(--pb-surface-bg, #fff);
-  border: 1px solid var(--pb-border, #c6c6cd);
-  border-radius: 8px;
+  background: var(--pb-surface-bg);
+  border: 1px solid var(--pb-border);
+  border-radius: var(--pb-radius-md);
   overflow: hidden;
   color: inherit;
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  transition: box-shadow var(--pb-dur) var(--pb-ease),
+    transform var(--pb-dur) var(--pb-ease),
+    border-color var(--pb-dur) var(--pb-ease);
 }
 .card:hover {
-  box-shadow: var(--pb-shadow, 0 4px 12px rgba(15, 23, 42, 0.05));
-  transform: scale(1.01);
+  border-color: transparent;
+  box-shadow: var(--pb-shadow-hover);
+  transform: translateY(-3px);
 }
 
 .cardLink {
@@ -71,48 +61,48 @@
   aspect-ratio: 16 / 9;
   object-fit: cover;
   display: block;
-  background: var(--pb-muted-bg, #eee);
-  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.4s ease;
+  background: var(--pb-muted-bg);
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
   flex-shrink: 0;
 }
-.card:hover .thumb { transform: scale(1.07); filter: brightness(1.03); }
+.card:hover .thumb { transform: scale(1.04); }
 
 .text {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 16px 16px 18px;
+  gap: var(--pb-space-3);
+  padding: var(--pb-space-4) 16px 18px;
   flex: 1;
 }
 
-/* ET-style text kicker — small red uppercase label, no background */
 .category {
   position: relative;
   z-index: 2;
   align-self: flex-start;
   text-decoration: none;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--pb-accent, #d4111e);
-  transition: color 0.2s;
+  letter-spacing: 0.05em;
+  color: var(--pb-accent);
+  transition: color var(--pb-dur);
 }
-.category:hover { color: var(--pb-accent-dark, #a60d17); text-decoration: underline; }
+.category:hover { color: var(--pb-accent-dark); }
 
 .title {
   position: relative;
   margin: 0;
   font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
-  font-size: 18px;
-  font-weight: 700;
+  font-size: var(--pb-fs-md);
+  font-weight: var(--pb-heading-weight);
   line-height: 1.3;
-  color: #111;
+  letter-spacing: -0.01em;
+  color: var(--pb-text);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  transition: color 0.2s;
+  transition: color var(--pb-dur);
 }
-.card:hover .title { color: var(--pb-accent, #bb0014); }
+.card:hover .title { color: var(--pb-accent); }

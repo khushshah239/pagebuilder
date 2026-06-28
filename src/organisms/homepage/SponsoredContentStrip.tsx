@@ -1,4 +1,4 @@
-import { cdnImageSrcSet } from "@/lib/media";
+import { PbImage } from "@/components/PbImage";
 import Link from "next/link";
 import type { SponsoredContentStripProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/SponsoredContentStrip.module.css";
@@ -23,11 +23,12 @@ export function SponsoredContentStrip({
           const body = (
             <>
               {card.thumbnail ? (
-                <img
+                <PbImage
                   className={styles.thumb}
-                  {...cdnImageSrcSet(card.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
+                  src={card.thumbnail}
                   alt={card.title}
-                  loading="lazy"
+                  aspectRatio={16 / 10}
+                  sizes="(max-width: 600px) 45vw, 300px"
                 />
               ) : null}
               <div className={styles.text}>

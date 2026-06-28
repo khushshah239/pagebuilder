@@ -60,9 +60,6 @@ function hasSidebarOrganisms(post: ArticleData): boolean {
 /** Content type the CDS assigns to video posts. */
 const VIDEO_TYPE = "Video";
 
-// ISR: pages are cached for REVALIDATE_SECONDS then regenerated on next request.
-// Set REVALIDATE_SECONDS=0 in dev to always fetch fresh from CDS.
-
 type RouteParams = { params: Promise<{ slug: string[] }> };
 
 
@@ -121,15 +118,11 @@ export async function generateMetadata({ params }: RouteParams): Promise<Metadat
  *   - `tag`      (via `identify_url`)  → TagPage.
  *   - any other post                   → article or video.
  */
-// Cache key prefix scoped to publisher — prevents cross-publisher cache bleed
-// on multi-tenant deployments.
-const PUB = CDS_PUBLISHER_ID;
-
-// Cache ALL data for each page type including identifyUrl — every wave of CDS
-// calls is cached so second request to same URL is near-instant.
+// Cache each page type's CDS calls (including identifyUrl) so a repeat request
+// to the same URL is served from memory.
 const getIdentifiedUrl = unstable_cache(
   async (legacyUrl: string) => identifyUrl(legacyUrl),
-  [`${PUB}-identify-url`],
+  [`${CDS_PUBLISHER_ID}-identify-url`],
   { revalidate: 60 }
 );
 
@@ -145,7 +138,7 @@ const getCategoryPageData = unstable_cache(
       return null;
     }
   },
-  [`${PUB}-category-page`],
+  [`${CDS_PUBLISHER_ID}-category-page`],
   { revalidate: 60 }
 );
 
@@ -162,7 +155,7 @@ const getTagPageData = unstable_cache(
       return null;
     }
   },
-  [`${PUB}-tag-page`],
+  [`${CDS_PUBLISHER_ID}-tag-page`],
   { revalidate: 60 }
 );
 
@@ -178,7 +171,7 @@ const getAuthorPageData = unstable_cache(
       return null;
     }
   },
-  [`${PUB}-author-page`],
+  [`${CDS_PUBLISHER_ID}-author-page`],
   { revalidate: 60 }
 );
 

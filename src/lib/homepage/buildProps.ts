@@ -121,6 +121,9 @@ export function buildOrganismProps(
     }
   }
 
+  // Skip a list organism with no items so it never renders an empty block.
+  if (items.length === 0) return null;
+
   const props: Record<string, unknown> = {
     identifier: id,
     [spec.itemsProp]: items,

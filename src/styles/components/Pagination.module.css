@@ -21,12 +21,14 @@
   min-width: 40px;
   height: 40px;
   padding: 0 16px;
-  border-radius: 6px;
-  border: 1.5px solid var(--pb-border, #e2e5e9);
-  background: var(--pb-surface-bg, #fff);
-  color: var(--pb-text, #15171a);
+  border-radius: var(--pb-radius-sm);
+  border: 1px solid var(--pb-border);
+  background: var(--pb-surface-bg);
+  color: var(--pb-text);
   text-decoration: none;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition: background var(--pb-dur) var(--pb-ease),
+    color var(--pb-dur) var(--pb-ease),
+    border-color var(--pb-dur) var(--pb-ease);
   white-space: nowrap;
 }
 
@@ -37,14 +39,14 @@
 
 .page:hover:not(.disabled),
 .nav:hover:not(.disabled) {
-  border-color: var(--pb-accent, #c8102e);
-  color: var(--pb-accent, #c8102e);
-  background: var(--pb-surface-bg, #fff);
+  border-color: var(--pb-accent);
+  color: var(--pb-accent);
+  background: var(--pb-surface-bg);
 }
 
 .active {
-  background: var(--pb-accent, #c8102e);
-  border-color: var(--pb-accent, #c8102e);
+  background: var(--pb-accent);
+  border-color: var(--pb-accent);
   color: #fff !important;
   pointer-events: none;
 }

@@ -1,4 +1,4 @@
-import { cdnImageSrcSet } from "@/lib/media";
+import { PbImage } from "@/components/PbImage";
 import Link from "next/link";
 import type { PhotoGalleryTeaserRailProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/PhotoGalleryTeaserRail.module.css";
@@ -23,11 +23,12 @@ export function PhotoGalleryTeaserRail({
           const body = (
             <>
               {teaser.thumbnail ? (
-                <img
+                <PbImage
                   className={styles.thumb}
-                  {...cdnImageSrcSet(teaser.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
+                  src={teaser.thumbnail}
                   alt={teaser.title}
-                  loading="lazy"
+                  fillParent
+                  sizes="(max-width: 600px) 45vw, 300px"
                 />
               ) : null}
               <span className={styles.overlay}>

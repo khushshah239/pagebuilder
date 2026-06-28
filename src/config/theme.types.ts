@@ -2,7 +2,9 @@
 export interface ThemeTokens {
   accent: string;
   accentDark: string;
+  accentSoft: string;
   text: string;
+  ink2: string;
   muted: string;
   mutedBg: string;
   border: string;

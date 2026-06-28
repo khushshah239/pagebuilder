@@ -1,7 +1,7 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 24px;
+  gap: var(--pb-space-5);
   align-items: stretch;
 }
 @media (max-width: 1100px) {
@@ -11,24 +11,27 @@
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 }
 @media (max-width: 480px) {
-  .grid { grid-template-columns: 1fr; gap: 16px; }
+  .grid { grid-template-columns: 1fr; gap: var(--pb-space-4); }
 }
 
 .card {
   position: relative;
   display: flex;
   flex-direction: column;
-  background: var(--pb-surface-bg, #fff);
-  border: 1px solid var(--pb-border, #c6c6cd);
-  border-radius: 8px;
+  background: var(--pb-surface-bg);
+  border: 1px solid var(--pb-border);
+  border-radius: var(--pb-radius-md);
   overflow: hidden;
   text-decoration: none;
   color: inherit;
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  transition: box-shadow var(--pb-dur) var(--pb-ease),
+    transform var(--pb-dur) var(--pb-ease),
+    border-color var(--pb-dur) var(--pb-ease);
 }
 .card:hover {
-  box-shadow: var(--pb-shadow, 0 4px 12px rgba(15, 23, 42, 0.05));
-  transform: scale(1.01);
+  border-color: transparent;
+  box-shadow: var(--pb-shadow-hover);
+  transform: translateY(-3px);
 }
 
 .cardLink {
@@ -37,70 +40,71 @@
   z-index: 1;
 }
 
-/* Image wrapper effect — img is a direct child; parent overflow:hidden clips zoom */
 .thumb {
   width: 100%;
   aspect-ratio: 16 / 10;
   object-fit: cover;
   display: block;
-  background: var(--pb-muted-bg, #eee);
-  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.4s ease;
+  background: var(--pb-muted-bg);
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
   flex-shrink: 0;
 }
-.card:hover .thumb { transform: scale(1.07); filter: brightness(1.03); }
+.card:hover .thumb { transform: scale(1.04); }
 
 .text {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 16px 16px 18px;
+  gap: var(--pb-space-3);
+  padding: var(--pb-space-4) var(--pb-space-4) 18px;
   flex: 1;
 }
 
-/* ET-style text kicker — small red uppercase label, no background */
 .category {
   align-self: flex-start;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--pb-accent, #d4111e);
+  letter-spacing: 0.05em;
+  color: var(--pb-accent);
 }
 
 a.category {
   position: relative;
   z-index: 2;
   text-decoration: none;
-  transition: color 0.2s;
+  transition: color var(--pb-dur);
 }
-a.category:hover { color: var(--pb-accent-dark, #a60d17); text-decoration: underline; }
+a.category:hover { color: var(--pb-accent-dark); }
 
 .title {
   position: relative;
   margin: 0;
   font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
-  font-size: 17px;
-  font-weight: 700;
+  font-size: var(--pb-fs-md);
+  font-weight: var(--pb-heading-weight);
   line-height: 1.32;
-  color: #111;
+  letter-spacing: -0.01em;
+  color: var(--pb-text);
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  transition: color 0.2s;
+  transition: color var(--pb-dur);
 }
-.card:hover .title { color: var(--pb-accent, #bb0014); }
+.card:hover .title { color: var(--pb-accent); }
 
 .meta {
   margin-top: auto;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 12px;
-  color: #888;
-  padding-top: 10px;
-  border-top: 1px solid #f0f0f0;
+  font-size: var(--pb-fs-xs);
+  color: var(--pb-muted);
+  padding-top: var(--pb-space-3);
+  border-top: 1px solid var(--pb-border);
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 /* Top line: author (may wrap to 2 lines) on the left, "Read →" pinned right. */
@@ -116,7 +120,7 @@ a.category:hover { color: var(--pb-accent-dark, #a60d17); text-decoration: under
 .time {
   text-align: left;
   white-space: nowrap;
-  color: #888;
+  color: var(--pb-muted);
   font-variant-numeric: tabular-nums;
 }
 
@@ -124,12 +128,12 @@ a.author {
   position: relative;
   z-index: 2;
   min-width: 0;
-  color: #555;
+  color: var(--pb-muted);
   font-weight: 600;
   text-decoration: none;
-  transition: color 0.15s;
+  transition: color var(--pb-dur);
 }
-a.author:hover { color: var(--pb-accent, #bb0014); }
+a.author:hover { color: var(--pb-accent); }
 
 /* "Read story →" affordance that slides up on hover */
 .metaTop::after {
@@ -138,21 +142,26 @@ a.author:hover { color: var(--pb-accent, #bb0014); }
   flex-shrink: 0;
   white-space: nowrap;
   font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 11px;
   letter-spacing: 0.04em;
-  color: var(--pb-accent, #bb0014);
+  color: var(--pb-muted);
   opacity: 0;
   transform: translateX(-6px);
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition: opacity var(--pb-dur) var(--pb-ease),
+    transform var(--pb-dur) var(--pb-ease), color var(--pb-dur);
 }
-.card:hover .metaTop::after { opacity: 1; transform: translateX(0); }
+.card:hover .metaTop::after {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--pb-accent);
+}
 
 .empty {
   margin: 0;
   padding: 60px 0;
   text-align: center;
   font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
-  font-size: 20px;
-  color: #aaa;
+  font-size: var(--pb-fs-lg);
+  color: var(--pb-muted);
 }

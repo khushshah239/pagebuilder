@@ -1,4 +1,5 @@
 import { formatPublishedDateTime } from "@/lib/date";
+import { PbImage } from "@/components/PbImage";
 import { CategoryLink } from "@/components/CategoryLink";
 import { AuthorLink } from "@/components/AuthorLink";
 import type { VideoHeaderProps } from "@/types/video/organism.types";
@@ -35,7 +36,13 @@ export function VideoHeader({
       {author_name ? (
         <div className={styles.author}>
           {author_avatar ? (
-            <img className={styles.avatar} src={author_avatar} alt={author_name} />
+            <PbImage
+              className={styles.avatar}
+              src={author_avatar}
+              alt={author_name}
+              fixed={{ width: 48, height: 48 }}
+              placeholder="none"
+            />
           ) : (
             <span className={styles.avatarFallback} aria-hidden="true">
               {author_name.charAt(0)}

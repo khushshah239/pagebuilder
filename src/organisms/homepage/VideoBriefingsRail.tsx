@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Link from "next/link";
-import { cdnImageSrcSet } from "@/lib/media";
+import { PbImage } from "@/components/PbImage";
 import type { VideoBriefingsRailProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/VideoBriefingsRail.module.css";
 
@@ -54,11 +54,12 @@ export function VideoBriefingsRail({
               ) : null}
               <span className={styles.media}>
                 {video.thumbnail ? (
-                  <img
+                  <PbImage
                     className={styles.thumb}
-                    {...cdnImageSrcSet(video.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
+                    src={video.thumbnail}
                     alt={video.title}
-                    loading="lazy"
+                    fillParent
+                    sizes="(max-width: 600px) 45vw, 300px"
                   />
                 ) : null}
                 <span className={styles.play} aria-hidden="true">

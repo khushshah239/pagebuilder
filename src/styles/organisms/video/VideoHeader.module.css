@@ -7,32 +7,34 @@
 .category {
   display: inline-block;
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--pb-accent, #c8102e);
+  color: var(--pb-accent);
   text-decoration: none;
   position: relative;
   z-index: 1;
+  transition: color var(--pb-dur);
 }
 
 .category:hover {
-  text-decoration: underline;
+  color: var(--pb-accent-dark);
 }
 
 .title {
   margin: 0;
   font-family: var(--pb-heading-font, inherit);
   font-size: clamp(22px, 3vw, 34px);
-  font-weight: 800;
+  font-weight: var(--pb-heading-weight);
   line-height: 1.2;
-  color: var(--pb-text, #15171a);
+  letter-spacing: -0.015em;
+  color: var(--pb-text);
 }
 
 .date {
   margin: 0;
-  font-size: 13px;
-  color: var(--pb-muted, #6b7280);
+  font-size: var(--pb-fs-xs);
+  color: var(--pb-muted);
 }
 
 .author {
@@ -53,8 +55,8 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: var(--pb-accent, #c8102e);
-  color: #fff;
+  background: var(--pb-accent);
+  color: var(--pb-on-dark);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -64,14 +66,15 @@
 }
 
 .authorName {
-  font-size: 14px;
+  font-size: var(--pb-fs-sm);
   font-weight: 600;
-  color: var(--pb-text, #15171a);
+  color: var(--pb-text);
   text-decoration: none;
   position: relative;
   z-index: 1;
+  transition: color var(--pb-dur);
 }
 
 .authorName:hover {
-  color: var(--pb-accent, #c8102e);
+  color: var(--pb-accent);
 }

@@ -1,4 +1,4 @@
-import { widenCdnImage } from "@/lib/media";
+import { PbImage } from "@/components/PbImage";
 import type { VideoHeroProps } from "@/types/video/organism.types";
 import styles from "@/styles/organisms/video/VideoHero.module.css";
 
@@ -33,13 +33,13 @@ export function VideoHero({ identifier, video_embed, video_url, thumbnail }: Vid
           aria-label="Play video"
         >
           {thumbnail ? (
-            <img
+            <PbImage
               className={styles.poster}
-              src={widenCdnImage(thumbnail, "1200x675")}
-              srcSet={`${widenCdnImage(thumbnail, "768x432")} 768w, ${widenCdnImage(thumbnail, "1200x675")} 1200w`}
-              sizes="(max-width: 768px) 768px, 1200px"
+              src={thumbnail}
               alt="Video thumbnail"
-              loading="eager"
+              fillParent
+              priority
+              sizes="(max-width: 768px) 100vw, min(1200px, 100vw)"
             />
           ) : (
             <span className={styles.posterFallback} aria-hidden="true" />

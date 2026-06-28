@@ -5,16 +5,16 @@
   flex-wrap: wrap;
   gap: 12px;
   padding: 16px 0;
-  border-top: 1px solid var(--pb-border, #e8e8e8);
-  border-bottom: 1px solid var(--pb-border, #e8e8e8);
+  border-top: 1px solid var(--pb-border);
+  border-bottom: 1px solid var(--pb-border);
 }
 
 .label {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #888;
+  letter-spacing: 0.05em;
+  color: var(--pb-muted);
 }
 
 .buttons {
@@ -30,14 +30,15 @@
   width: 40px;
   height: 40px;
   border: none;
+  border-radius: var(--pb-radius-sm);
   cursor: pointer;
   text-decoration: none;
-  background: #f0f0f0;
-  color: #333;
-  transition: background 0.15s, color 0.15s, transform 0.1s;
+  background: var(--pb-muted-bg);
+  color: var(--pb-ink-2);
+  transition: background var(--pb-dur), color var(--pb-dur), transform var(--pb-dur);
 }
 .button:hover {
-  background: var(--pb-accent, #bb0014);
+  background: var(--pb-accent);
   color: #fff;
   transform: translateY(-2px);
 }

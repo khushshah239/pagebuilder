@@ -2,7 +2,7 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--pb-space-3);
   overflow: hidden;
 }
 
@@ -11,16 +11,17 @@
   aspect-ratio: 16 / 9;
   object-fit: cover;
   display: block;
-  background: var(--pb-muted-bg, #eee);
+  border-radius: var(--pb-radius-md);
+  background: var(--pb-muted-bg);
 }
 
 .caption {
   margin: 0;
-  font-size: 12px;
-  color: #888;
+  font-size: var(--pb-fs-xs);
+  color: var(--pb-muted);
   font-style: italic;
-  border-left: 3px solid var(--pb-border, #e8e8e8);
-  padding-left: 10px;
+  border-left: 3px solid var(--pb-border);
+  padding-left: var(--pb-space-3);
 }
 
 .excerpt {
@@ -30,7 +31,7 @@
   line-height: 1.55;
   font-weight: 400;
   font-style: italic;
-  color: #333;
-  border-left: 4px solid var(--pb-accent, #bb0014);
+  color: var(--pb-ink-2);
+  border-left: 4px solid var(--pb-accent);
   padding-left: 18px;
 }

@@ -9,8 +9,8 @@
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: #000;
-  border-radius: 8px;
+  background: var(--pb-muted-bg);
+  border-radius: var(--pb-radius-md);
   overflow: hidden;
 }
 
@@ -31,9 +31,9 @@
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
-  border-radius: 8px;
+  border-radius: var(--pb-radius-md);
   overflow: hidden;
-  background: var(--pb-muted-bg, #eef0f2);
+  background: var(--pb-muted-bg);
   text-decoration: none;
   color: inherit;
 }
@@ -49,7 +49,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  background: var(--pb-muted-bg, #eef0f2);
+  background: var(--pb-muted-bg);
 }
 
 .playBadge {

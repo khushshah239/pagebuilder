@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PbImage } from "@/components/PbImage";
 import type { LiveBlogFeedProps, LiveUpdate } from "@/types/article/organism.types";
 import styles from "@/styles/organisms/article/LiveBlogFeed.module.css";
 
@@ -60,10 +61,22 @@ export function LiveBlogFeed({
                 {(update.thumbnail || update.image) ? (
                   articleHref ? (
                     <Link href={articleHref}>
-                      <img className={styles.cardThumb} src={update.thumbnail ?? update.image} alt="" loading="lazy" />
+                      <PbImage
+                        className={styles.cardThumb}
+                        src={update.thumbnail ?? update.image ?? ""}
+                        alt=""
+                        aspectRatio={16 / 9}
+                        sizes="(max-width: 600px) 80vw, 300px"
+                      />
                     </Link>
                   ) : (
-                    <img className={styles.cardThumb} src={update.thumbnail ?? update.image} alt="" loading="lazy" />
+                    <PbImage
+                      className={styles.cardThumb}
+                      src={update.thumbnail ?? update.image ?? ""}
+                      alt=""
+                      aspectRatio={16 / 9}
+                      sizes="(max-width: 600px) 80vw, 300px"
+                    />
                   )
                 ) : null}
                 <div className={styles.cardBody}>
@@ -136,7 +149,13 @@ export function LiveBlogFeed({
                 />
               ) : null}
               {update.image ? (
-                <img className={styles.image} src={update.image} alt="" loading="lazy" />
+                <PbImage
+                  className={styles.image}
+                  src={update.image}
+                  alt=""
+                  aspectRatio={16 / 9}
+                  sizes="(max-width: 768px) 100vw, 680px"
+                />
               ) : null}
             </li>
           );

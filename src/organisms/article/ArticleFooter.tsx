@@ -1,3 +1,4 @@
+import { PbImage } from "@/components/PbImage";
 import type { ArticleFooterProps } from "@/types/article/organism.types";
 import styles from "@/styles/organisms/article/ArticleFooter.module.css";
 
@@ -12,7 +13,15 @@ export function ArticleFooter({
 
   return (
     <footer className={styles.footer} data-organism={identifier}>
-      {logo ? <img className={styles.logo} src={logo} alt={publisher_name || ""} /> : null}
+      {logo ? (
+        <PbImage
+          className={styles.logo}
+          src={logo}
+          alt={publisher_name || ""}
+          fixed={{ width: 140, height: 36 }}
+          placeholder="none"
+        />
+      ) : null}
       {publisher_name ? (
         <span className={styles.publisher}>{publisher_name}</span>
       ) : null}

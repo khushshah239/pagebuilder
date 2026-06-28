@@ -43,6 +43,3 @@ const SOCIAL_ICONS_MAP: Record<string, ReactElement> = {
 export function getSocialIcon(title: string): ReactElement | undefined {
   return SOCIAL_ICONS_MAP[title.toLowerCase()];
 }
-
-// Keep named export for any direct key access still in use
-export const SOCIAL_ICONS = SOCIAL_ICONS_MAP;

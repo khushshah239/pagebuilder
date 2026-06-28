@@ -2,9 +2,9 @@
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  background: #fff;
-  border-top: 3px solid var(--pb-accent, #bb0014);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+  background: var(--pb-surface-bg);
+  border: 1px solid var(--pb-border);
+  border-radius: var(--pb-radius-md);
   padding: 18px 16px;
   animation: pb-sln-fade 0.4s ease both;
 }
@@ -13,11 +13,11 @@
   flex: 0 0 auto;
   margin: 0 0 16px;
   font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
-  font-size: 18px;
-  font-weight: 700;
-  color: #000;
-  padding-bottom: 12px;
-  border-bottom: 2px solid #000;
+  font-size: var(--pb-fs-md);
+  font-weight: var(--pb-heading-weight);
+  color: var(--pb-text);
+  padding-bottom: var(--pb-space-3);
+  border-bottom: 1px solid var(--pb-border);
   letter-spacing: -0.01em;
 }
 
@@ -37,38 +37,17 @@
   gap: 12px;
   align-items: center;
   padding: 14px 0;
-  border-bottom: 1px solid var(--pb-border, #e8e8e8);
+  border-bottom: 1px solid var(--pb-border);
   min-height: 130px;
   overflow: hidden;
-  transition: background 0.25s ease, padding-left 0.25s ease;
+  transition: background 0.25s ease;
   /* Staggered slide-in on load (delays set per nth-child below). */
   animation: pb-sln-in 0.45s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 .item:hover {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--pb-accent, #bb0014) 7%, #fff),
-    transparent 65%
-  );
-  padding-left: 10px;
+  background: var(--pb-muted-bg);
 }
 .item:last-child { border-bottom: none; }
-
-/* Accent bar that wipes down the left edge on hover. */
-.item:not(.itemEmpty)::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--pb-accent, #bb0014);
-  transform: scaleY(0);
-  transform-origin: top center;
-  transition: transform 0.28s ease;
-  z-index: 2;
-}
-.item:not(.itemEmpty):hover::before { transform: scaleY(1); }
 
 .item:nth-child(1) { animation-delay: 0.03s; }
 .item:nth-child(2) { animation-delay: 0.09s; }
@@ -88,29 +67,25 @@
 }
 
 .thumbEmpty {
-  flex: 0 0 160px;
-  width: 160px;
-  height: 110px;
+  flex: 0 0 120px;
+  width: 120px;
+  height: 75px;
   align-self: center;
   background: transparent;
 }
 
 .thumb {
-  flex: 0 0 160px;
-  width: 160px;
-  height: 110px;
+  flex: 0 0 120px;
+  width: 120px;
   align-self: center;
   object-fit: cover;
   object-position: center;
-  background: var(--pb-muted-bg, #f1f1f3);
-  border-radius: 8px;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.35s ease, box-shadow 0.35s ease, filter 0.35s ease;
+  background: var(--pb-muted-bg);
+  border-radius: var(--pb-radius-sm);
+  transition: transform 0.35s ease;
 }
 .item:hover .thumb {
-  transform: scale(1.05);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
-  filter: saturate(1.06);
+  transform: scale(1.04);
 }
 
 .text {
@@ -126,16 +101,14 @@
   z-index: 2;
   align-self: flex-start;
   text-decoration: none;
-  font-size: 9px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 3px 7px;
-  background: var(--pb-accent, #bb0014);
-  color: #fff;
-  transition: background 0.15s;
+  letter-spacing: 0.05em;
+  color: var(--pb-accent);
+  transition: color var(--pb-dur);
 }
-.category:hover { background: #8b000f; }
+.category:hover { color: var(--pb-accent-dark); }
 
 .title {
   margin: 0;
@@ -143,18 +116,18 @@
   font-size: 14px;
   font-weight: 600;
   line-height: 1.35;
-  color: #111;
+  color: var(--pb-text);
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  transition: color 0.15s;
+  transition: color var(--pb-dur);
 }
-.item:hover .title { color: var(--pb-accent, #bb0014); }
+.item:hover .title { color: var(--pb-accent); }
 
 .time {
   font-size: 11px;
-  color: #999;
+  color: var(--pb-muted);
   font-variant-numeric: tabular-nums;
 }
 
@@ -181,7 +154,6 @@
     animation: none;
   }
   .item,
-  .item:not(.itemEmpty)::before,
   .thumb {
     transition: none;
   }

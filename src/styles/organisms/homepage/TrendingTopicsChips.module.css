@@ -48,6 +48,6 @@
   transition: background 0.16s ease, color 0.16s ease;
 }
 .chip:hover {
-  background: #0b0b0d;
+  background: var(--pb-text);
   color: #fff;
 }

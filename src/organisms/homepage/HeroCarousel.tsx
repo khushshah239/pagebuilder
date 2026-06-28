@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { widenCdnImage } from "@/lib/media";
+import { PbImage } from "@/components/PbImage";
 import { CategoryLink } from "@/components/CategoryLink";
 import type { HeroCarouselProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/HeroCarousel.module.css";
@@ -48,8 +48,6 @@ export function HeroCarousel({ identifier, slides }: HeroCarouselProps) {
     >
       <div className={styles.track} ref={trackRef} onScroll={handleScroll}>
         {slides.map((slide, index) => {
-          const imageSrc = widenCdnImage(slide.image, "1200x675");
-          const imageSrcSet = `${widenCdnImage(slide.image, "768x432")} 768w, ${widenCdnImage(slide.image, "1200x675")} 1200w`;
           const key = `${identifier}-slide-${index}`;
           // The whole slide links to the article via a stretched overlay link;
           // the overlay is click-through (pointer-events: none) except the
@@ -63,30 +61,15 @@ export function HeroCarousel({ identifier, slides }: HeroCarouselProps) {
                   aria-label={slide.title}
                 />
               ) : null}
-              {/* Only render images when a URL resolved — an empty `src` makes
-                  the browser re-request the current page. */}
-              {imageSrc ? (
-                <>
-                  {/* Blurred fill behind the contained image so any aspect ratio
-                      fills the hero without cropping or empty letterbox bars. */}
-                  <img
-                    className={styles.backdrop}
-                    src={imageSrc}
-                    srcSet={imageSrcSet}
-                    sizes="100vw"
-                    alt=""
-                    aria-hidden="true"
-                    loading={index === 0 ? "eager" : "lazy"}
-                  />
-                  <img
-                    className={styles.image}
-                    src={imageSrc}
-                    srcSet={imageSrcSet}
-                    sizes="100vw"
-                    alt={slide.title}
-                    loading={index === 0 ? "eager" : "lazy"}
-                  />
-                </>
+              {slide.image ? (
+                <PbImage
+                  className={styles.image}
+                  src={slide.image}
+                  alt={slide.title}
+                  fillParent
+                  priority={index === 0}
+                  sizes="100vw"
+                />
               ) : null}
               <div className={styles.overlay}>
                 <CategoryLink

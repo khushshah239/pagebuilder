@@ -10,10 +10,10 @@ export default function NotFound() {
     <main className="pb-page">
       <div className="pb-stack" style={{ textAlign: "center", maxWidth: 560, margin: "0 auto" }}>
         <h1 style={{ fontSize: 28, margin: 0 }}>Page not found</h1>
-        <p style={{ color: "var(--pb-muted, #6b7280)", margin: 0 }}>
+        <p style={{ color: "var(--pb-muted, #6b6a64)", margin: 0 }}>
           The page you’re looking for doesn’t exist or has moved.
         </p>
-        <Link href="/" style={{ color: "var(--pb-accent, #c8102e)", fontWeight: 700 }}>
+        <Link href="/" style={{ color: "var(--pb-accent, #1f6f54)", fontWeight: 600 }}>
           ← Back to home
         </Link>
       </div>

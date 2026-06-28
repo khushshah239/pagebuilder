@@ -1,13 +1,13 @@
 .hero {
-  padding-bottom: 16px;
-  border-bottom: 3px solid var(--pb-accent, #c8102e);
+  padding-bottom: var(--pb-space-4);
+  border-bottom: 2px solid var(--pb-accent);
 }
 
 .title {
   margin: 0;
   font-family: var(--pb-heading-font, inherit);
-  font-size: clamp(30px, 4vw, 46px);
-  font-weight: 900;
+  font-size: var(--pb-fs-2xl);
+  font-weight: var(--pb-heading-weight);
   letter-spacing: -0.015em;
-  color: var(--pb-text, #15171a);
+  color: var(--pb-text);
 }

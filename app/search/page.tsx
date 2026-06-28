@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
+import { PbImage } from "@/components/PbImage";
 import { fetchSearchResults } from "@/api/searchApi";
 
 type SearchPageProps = {
@@ -66,8 +67,13 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               <article key={article.url_slug ?? i} className="pb-search-card">
                 {article.thumbnail && (
                   <Link href={article.url_slug ?? "#"} prefetch={false} className="pb-search-card-img-wrap" tabIndex={-1}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={article.thumbnail} alt="" className="pb-search-card-img" loading="lazy" />
+                    <PbImage
+                      src={article.thumbnail}
+                      alt=""
+                      className="pb-search-card-img"
+                      fillParent
+                      sizes="(max-width: 600px) 90vw, 360px"
+                    />
                   </Link>
                 )}
                 <div className="pb-search-card-body">

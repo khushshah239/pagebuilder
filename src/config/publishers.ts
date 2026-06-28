@@ -2,12 +2,10 @@
 import { ACTIVE_PUBLISHER_KEY } from "./env";
 import type { PublisherConfig } from "./theme.types";
 
-// var(--font-inter) / var(--font-playfair) are injected by next/font/google at build time
-// (self-hosted, no external request). The named families are retained as fallbacks.
+// var(--font-inter) is injected by next/font/google at build time (self-hosted,
+// no external request). The named families are retained as fallbacks.
 const SANS_STACK =
   'var(--font-inter), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-const SERIF_STACK =
-  'var(--font-playfair), "Playfair Display", Georgia, "Times New Roman", serif';
 
 const CRICTODAY: PublisherConfig = {
   key: "crictoday",
@@ -18,19 +16,21 @@ const CRICTODAY: PublisherConfig = {
   longLogo: "https://img-cdn.publive.online/crictoday/media/agency_attachments/2026/05/15/2026-05-15t051127404z-crictoday-dark-2048-2026-05-15-10-41-27.png",
   shortLogo: "https://img-cdn.publive.online/crictoday/media/agency_attachments/2026/01/08/2026-01-08t095049450z-ct-640x480-logo-sq-photoroom-cric-today-2026-01-08-15-20-49.png",
   theme: {
-    // CHRONICLE "Standard Sentinel" design system (Design/DESIGN.md):
-    // dark header, soft off-white canvas, red reserved for urgent signals.
-    accent: "#ba0035",
-    accentDark: "#920028",
-    text: "#1b1b1d",
-    muted: "#45464d",
-    mutedBg: "#f0edef",
-    border: "#c6c6cd",
-    pageBg: "#fcf8fa",
+    // Modern Editorial: warm-neutral paper, deep pitch-green accent.
+    // Red is reserved for genuine urgency only (--pb-urgent).
+    accent: "#1f6f54",
+    accentDark: "#14533d",
+    accentSoft: "#eaf2ee",
+    text: "#1a1a18",
+    ink2: "#3d3d39",
+    muted: "#6b6a64",
+    mutedBg: "#f3f1ec",
+    border: "#e7e3db",
+    pageBg: "#faf8f4",
     surfaceBg: "#ffffff",
-    shadow: "0 4px 12px rgba(15, 23, 42, 0.05)",
+    shadow: "0 4px 12px rgba(26, 26, 24, 0.06), 0 2px 4px rgba(26, 26, 24, 0.04)",
     fontFamily: SANS_STACK,
-    headingFamily: SERIF_STACK,
+    headingFamily: SANS_STACK,
   },
 };
 
@@ -43,17 +43,20 @@ const METROPOST: PublisherConfig = {
   // Crictoday content. Replace with the real CDS publisher ID before enabling.
   cdsPublisherId: "4027",
   theme: {
-    accent: "#1a4fd6",
-    accentDark: "#143ca8",
-    text: "#101418",
+    // Modern Editorial: ink-navy accent on warm-neutral paper.
+    accent: "#1c2a3a",
+    accentDark: "#14202e",
+    accentSoft: "#eef1f6",
+    text: "#15171b",
+    ink2: "#3a3f47",
     muted: "#5f6873",
-    mutedBg: "#eef1f6",
-    border: "#dce1e9",
-    pageBg: "#f7f8fa",
+    mutedBg: "#f0f2f6",
+    border: "#e3e6ec",
+    pageBg: "#fafbfc",
     surfaceBg: "#ffffff",
-    shadow: "0 16px 34px rgba(16, 32, 78, 0.10)",
+    shadow: "0 4px 12px rgba(16, 32, 78, 0.06), 0 2px 4px rgba(16, 32, 78, 0.04)",
     fontFamily: SANS_STACK,
-    headingFamily: SERIF_STACK,
+    headingFamily: SANS_STACK,
   },
 };
 

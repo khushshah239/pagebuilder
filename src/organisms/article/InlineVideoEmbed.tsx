@@ -1,4 +1,4 @@
-import { widenCdnImage } from "@/lib/media";
+import { PbImage } from "@/components/PbImage";
 import type { InlineVideoEmbedProps } from "@/types/article/organism.types";
 import styles from "@/styles/organisms/article/InlineVideoEmbed.module.css";
 
@@ -33,11 +33,12 @@ export function InlineVideoEmbed({
         aria-label={caption || "Play video"}
       >
         {thumbnail ? (
-          <img
+          <PbImage
             className={styles.poster}
-            src={widenCdnImage(thumbnail)}
+            src={thumbnail}
             alt={caption || ""}
-            loading="lazy"
+            fillParent
+            sizes="(max-width: 768px) 100vw, 720px"
           />
         ) : (
           <span className={styles.posterFallback} aria-hidden="true" />

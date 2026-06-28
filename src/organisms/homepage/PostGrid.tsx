@@ -1,4 +1,4 @@
-import { cdnImageSrcSet } from "@/lib/media";
+import { PbImage } from "@/components/PbImage";
 import Link from "next/link";
 import { CategoryLink } from "@/components/CategoryLink";
 import { ArticleByline } from "@/components/ArticleByline";
@@ -30,7 +30,14 @@ export function PostGrid({ identifier, items }: PostGridProps) {
         ) : null}
         <div className={styles.leadMedia}>
           {lead.image ? (
-            <img className={styles.leadImage} {...cdnImageSrcSet(lead.image)} sizes="(max-width: 900px) 100vw, 568px" alt={lead.title} loading="lazy" />
+            <PbImage
+              className={styles.leadImage}
+              src={lead.image}
+              alt={lead.title}
+              fillParent
+              priority
+              sizes="(max-width: 900px) 100vw, 600px"
+            />
           ) : null}
         </div>
         <div className={styles.leadBody}>
@@ -60,11 +67,12 @@ export function PostGrid({ identifier, items }: PostGridProps) {
                   <Link href={card.url_slug} className={styles.cardLink} aria-label={card.title} />
                 ) : null}
                 {card.thumbnail ? (
-                  <img
+                  <PbImage
                     className={styles.cardThumb}
-                    {...cdnImageSrcSet(card.thumbnail)} sizes="(max-width: 760px) 50vw, 280px"
+                    src={card.thumbnail}
                     alt={card.title}
-                    loading="lazy"
+                    aspectRatio={16 / 10}
+                    sizes="(max-width: 760px) 50vw, 280px"
                   />
                 ) : null}
                 <div className={styles.cardText}>

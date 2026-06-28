@@ -1,34 +1,33 @@
-/* Dark navy "Latest Video" rail (CHRONICLE style) */
+/* Dark immersive "Latest Video" rail */
 .section {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--pb-space-5);
   padding: clamp(24px, 3vw, 36px);
-  background: #16203a;
-  border-radius: 12px;
+  background: var(--pb-header-bg);
+  border-radius: var(--pb-radius-md);
 }
 
 .head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--pb-space-4);
 }
 
 .heading {
   margin: 0;
   font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
-  font-size: clamp(22px, 2.4vw, 28px);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #fff;
+  font-size: var(--pb-fs-lg);
+  font-weight: var(--pb-heading-weight);
+  letter-spacing: -0.015em;
+  color: var(--pb-on-dark);
 }
 
-/* Prev / next circular arrow buttons */
+/* Prev / next arrow buttons */
 .nav {
   display: flex;
-  gap: 10px;
+  gap: var(--pb-space-2);
   flex-shrink: 0;
 }
 
@@ -38,21 +37,22 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--pb-radius-sm);
+  border: 1px solid var(--pb-border-dark);
   background: transparent;
-  color: #fff;
+  color: var(--pb-on-dark);
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  transition: background var(--pb-dur) var(--pb-ease),
+    border-color var(--pb-dur) var(--pb-ease);
 }
 .navBtn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(245, 242, 236, 0.08);
+  border-color: rgba(245, 242, 236, 0.32);
 }
 
 .track {
   display: flex;
-  gap: 20px;
+  gap: var(--pb-space-5);
   overflow-x: auto;
   scroll-snap-type: x proximity;
   scrollbar-width: none;
@@ -66,8 +66,8 @@
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  color: #fff;
+  gap: var(--pb-space-3);
+  color: var(--pb-on-dark);
   cursor: pointer;
 }
 
@@ -83,17 +83,17 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  border-radius: 8px;
-  background: #0d1426;
+  border-radius: var(--pb-radius-sm);
+  background: var(--pb-muted-bg);
 }
 
 .thumb {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
-.card:hover .thumb { transform: scale(1.05); }
+.card:hover .thumb { transform: scale(1.04); }
 
 /* Centered play circle — white outline, translucent fill */
 .play {
@@ -111,7 +111,8 @@
   color: #fff;
   padding-left: 2px;
   backdrop-filter: blur(2px);
-  transition: background 0.15s, transform 0.15s;
+  transition: background var(--pb-dur) var(--pb-ease),
+    transform var(--pb-dur) var(--pb-ease);
 }
 .card:hover .play {
   background: rgba(0, 0, 0, 0.55);
@@ -122,27 +123,27 @@
   position: absolute;
   right: 10px;
   bottom: 10px;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: var(--pb-fs-xs);
+  font-weight: 600;
   color: #fff;
   background: rgba(0, 0, 0, 0.78);
   padding: 3px 8px;
-  border-radius: 3px;
+  border-radius: var(--pb-radius-sm);
   letter-spacing: 0.03em;
 }
 
 .title {
   margin: 0;
   font-family: var(--pb-font, Inter, sans-serif);
-  font-size: 15px;
-  font-weight: 700;
+  font-size: var(--pb-fs-sm);
+  font-weight: 600;
   line-height: 1.35;
-  color: #fff;
+  color: var(--pb-on-dark);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  transition: color 0.15s;
+  transition: color var(--pb-dur);
 }
-.card:hover .title { color: rgba(255, 255, 255, 0.75); }
+.card:hover .title { color: var(--pb-on-dark-muted); }

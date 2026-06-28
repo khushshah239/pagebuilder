@@ -1,9 +1,9 @@
 .header {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--pb-space-5);
   padding-bottom: 22px;
-  border-bottom: 2px solid var(--pb-accent, #c8102e);
+  border-bottom: 1px solid var(--pb-border);
 }
 
 .top {
@@ -17,9 +17,9 @@
   flex: 0 0 100px;
   width: 100px;
   height: 100px;
-  border-radius: 999px;
+  border-radius: var(--pb-radius-pill);
   object-fit: cover;
-  background: var(--pb-muted-bg, #eef0f2);
+  background: var(--pb-muted-bg);
 }
 
 .avatarFallback {
@@ -28,39 +28,40 @@
   justify-content: center;
   font-family: var(--pb-heading-font, inherit);
   font-size: 42px;
-  font-weight: 800;
+  font-weight: var(--pb-heading-weight);
   text-transform: uppercase;
-  color: var(--pb-accent, #c8102e);
+  color: var(--pb-accent);
 }
 
 .identity {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--pb-space-2);
   min-width: 0;
 }
 
 .name {
   margin: 0;
   font-family: var(--pb-heading-font, inherit);
-  font-size: clamp(28px, 3.4vw, 40px);
-  font-weight: 800;
+  font-size: var(--pb-fs-2xl);
+  font-weight: var(--pb-heading-weight);
   line-height: 1.1;
-  color: var(--pb-text, #15171a);
+  letter-spacing: -0.015em;
+  color: var(--pb-text);
 }
 
 .bio {
   margin: 0;
-  font-size: 16px;
+  font-size: var(--pb-fs-base);
   line-height: 1.5;
-  color: var(--pb-muted, #6b7280);
+  color: var(--pb-muted);
   max-width: 720px;
 }
 
 .socials {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--pb-space-3);
   margin-top: 2px;
 }
 
@@ -70,14 +71,15 @@
   justify-content: center;
   width: 34px;
   height: 34px;
-  border-radius: 999px;
-  color: var(--pb-muted, #6b7280);
-  background: var(--pb-muted-bg, #eef0f2);
-  transition: color 0.15s ease, background 0.15s ease;
+  border-radius: var(--pb-radius-pill);
+  color: var(--pb-muted);
+  background: var(--pb-muted-bg);
+  transition: color var(--pb-dur) var(--pb-ease),
+    background var(--pb-dur) var(--pb-ease);
 }
 .social:hover {
   color: #fff;
-  background: var(--pb-accent, #c8102e);
+  background: var(--pb-accent);
 }
 .social svg {
   width: 17px;

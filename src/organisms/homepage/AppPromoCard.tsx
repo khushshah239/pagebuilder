@@ -1,3 +1,4 @@
+import { PbImage } from "@/components/PbImage";
 import type { AppPromoCardProps } from "@/types/homepage/organism.types";
 import { fetchFooter } from "@/api/footerApi";
 import styles from "@/styles/organisms/homepage/AppPromoCard.module.css";
@@ -33,7 +34,16 @@ export async function AppPromoCard(props: AppPromoCardProps) {
   return (
     <section className={styles.card} data-organism={identifier}>
       {background_image ? (
-        <img className={styles.bg} src={background_image} alt="" aria-hidden="true" loading="lazy" />
+        <span className={styles.bg}>
+          <PbImage
+            src={background_image}
+            alt=""
+            aria-hidden
+            fillParent
+            placeholder="none"
+            sizes="100vw"
+          />
+        </span>
       ) : null}
       <span className={background_image ? styles.overlay : styles.overlayLight} aria-hidden="true" />
 

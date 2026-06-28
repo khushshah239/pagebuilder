@@ -2,7 +2,7 @@
   font-family: Charter, "Iowan Old Style", "Source Serif 4", Georgia, "Times New Roman", serif;
   font-size: 20px;
   line-height: 1.75;
-  color: #1a1c1c;
+  color: var(--pb-text);
 }
 
 .body :global(p) {
@@ -21,7 +21,7 @@
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
-  color: #000;
+  color: var(--pb-text);
   margin: 44px 0 16px;
 }
 
@@ -30,14 +30,14 @@
 .body :global(h4) { font-size: 18px; }
 
 .body :global(a) {
-  color: var(--pb-accent, #bb0014);
+  color: var(--pb-accent);
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
-  transition: color 0.15s;
+  transition: color var(--pb-dur);
 }
 .body :global(a:hover) {
-  color: #8b000f;
+  color: var(--pb-accent-dark);
 }
 
 .body :global(strong),
@@ -63,11 +63,11 @@
   margin-top: 10px;
   font-size: 13px;
   line-height: 1.5;
-  color: #888;
+  color: var(--pb-muted);
   font-style: italic;
   text-align: left;
-  border-left: 3px solid var(--pb-border, #e8e8e8);
-  padding-left: 10px;
+  border-left: 3px solid var(--pb-border);
+  padding-left: var(--pb-space-3);
 }
 
 .body :global(ul),
@@ -80,35 +80,35 @@
   margin-bottom: 10px;
 }
 .body :global(li)::marker {
-  color: var(--pb-accent, #bb0014);
+  color: var(--pb-accent);
 }
 
 /* Pull quote — editorial blockquote style */
 .body :global(blockquote) {
   margin: 36px 0;
   padding: 24px 28px;
-  border-left: 4px solid var(--pb-accent, #bb0014);
-  background: #f9f6f3;
+  border-left: 4px solid var(--pb-accent);
+  background: var(--pb-muted-bg);
   font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
   font-size: 22px;
   line-height: 1.55;
   font-style: italic;
   font-weight: 400;
-  color: #222;
+  color: var(--pb-ink-2);
 }
 
 .body :global(hr) {
   margin: 40px 0;
   border: none;
-  border-top: 1px solid var(--pb-border, #e8e8e8);
+  border-top: 1px solid var(--pb-border);
 }
 
 .body :global(code) {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.86em;
   padding: 2px 6px;
-  background: #f0f0f0;
-  color: #333;
+  background: var(--pb-muted-bg);
+  color: var(--pb-ink-2);
 }
 
 /* ─── "Read more" collapse ────────────────────────────────────────────────── */
@@ -121,7 +121,7 @@
   position: absolute;
   inset: auto 0 0 0;
   height: 140px;
-  background: linear-gradient(to bottom, transparent, #fff);
+  background: linear-gradient(to bottom, transparent, var(--pb-surface-bg));
   pointer-events: none;
 }
 
@@ -136,16 +136,16 @@
   cursor: pointer;
   font-family: inherit;
   font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   padding: 12px 32px;
-  border: 1.5px solid #000;
+  border: 1px solid var(--pb-border-strong);
+  border-radius: var(--pb-radius-sm);
   background: transparent;
-  color: #000;
-  transition: background 0.15s, color 0.15s;
+  color: var(--pb-text);
+  transition: background var(--pb-dur), color var(--pb-dur), border-color var(--pb-dur);
 }
 .toggle:hover {
-  background: #000;
-  color: #fff;
+  border-color: var(--pb-accent);
+  color: var(--pb-accent);
 }

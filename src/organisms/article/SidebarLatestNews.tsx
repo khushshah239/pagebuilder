@@ -1,4 +1,4 @@
-import { cdnImageSrcSet } from "@/lib/media";
+import { PbImage } from "@/components/PbImage";
 import Link from "next/link";
 import { CategoryLink } from "@/components/CategoryLink";
 import { ArticleByline } from "@/components/ArticleByline";
@@ -49,11 +49,12 @@ export function SidebarLatestNews({
                 />
               ) : null}
               {item.thumbnail ? (
-                <img
+                <PbImage
                   className={styles.thumb}
-                  {...cdnImageSrcSet(item.thumbnail)} sizes="(max-width: 400px) 360px, 568px"
+                  src={item.thumbnail}
                   alt={item.title}
-                  loading="lazy"
+                  aspectRatio={16 / 10}
+                  sizes="120px"
                 />
               ) : <div className={styles.thumbEmpty} />}
               <div className={styles.text}>
