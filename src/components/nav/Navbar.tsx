@@ -6,24 +6,20 @@ import { getActivePublisher } from "@/config/publishers";
 import { safeSocialHref } from "@/components/SocialIcons";
 import { NavSearchBar } from "./NavSearchBar";
 
-/** Server component — single CHRONICLE-style bar: logo, links, search. */
+/** Server component — main navigation bar only (no top utility bar). */
 export async function Navbar() {
   const [navItems, publisherData] = await Promise.all([
     fetchNavigation(),
     fetchPublisherData(),
   ]);
   const publisher = getActivePublisher();
-  // Header is dark — prefer the dark-mode logo, then long logo, then config fallback.
-  const logoUrl =
-    publisherData.dark_mode_logo ??
-    publisherData.long_logo ??
-    publisher.longLogo;
+  const logoUrl = publisherData.logo;
 
   return (
     <nav className="pb-main-nav" aria-label="Primary navigation">
       <div className="pb-shell pb-nav-inner">
 
-        {/* Logo (from publisher API) — falls back to the text wordmark */}
+        {/* Logo */}
         <Link className="pb-brand" href="/" aria-label={`${publisher.name} home`}>
           {logoUrl ? (
             <Image
@@ -39,7 +35,7 @@ export async function Navbar() {
           )}
         </Link>
 
-        {/* Nav links — from /navbar/ API */}
+        {/* Nav links */}
         <div className="pb-nav-links">
           {navItems.map((item) => (
             <Link
@@ -52,7 +48,7 @@ export async function Navbar() {
           ))}
         </div>
 
-        {/* Right cluster: search pill */}
+        {/* Right cluster: search */}
         <div className="pb-nav-right">
           <NavSearchBar />
         </div>

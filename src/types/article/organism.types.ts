@@ -9,7 +9,6 @@ export interface ArticleHeaderProps {
   author_name?: string;
   author_url?: string;
   published_at?: string;
-  read_time?: string;
 }
 
 // ─── ArticleHero ─────────────────────────────────────────────────────────────
@@ -96,14 +95,6 @@ export interface MoreFromAuthorRowProps {
   identifier: string;
   heading?: string;
   author_articles: AuthorArticle[];
-}
-
-// ─── ArticleFooter ───────────────────────────────────────────────────────────
-export interface ArticleFooterProps {
-  identifier: string;
-  publisher_name?: string;
-  logo?: string;
-  copyright_text?: string;
 }
 
 // ─── InlineVideoEmbed ────────────────────────────────────────────────────────

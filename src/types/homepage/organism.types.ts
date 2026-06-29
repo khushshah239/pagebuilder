@@ -7,7 +7,6 @@ export interface HeroCarouselSlide {
   category_label?: string;
   category_url?: string;
   excerpt?: string;
-  read_time?: string;
   author_name?: string;
   author_url?: string;
   published_at?: string;
@@ -91,6 +90,8 @@ export interface SectionRowProps {
 // ─── TopStoriesList ─────────────────────────────────────────────────────────
 export interface TopStory {
   title: string;
+  category_label?: string;
+  category_url?: string;
   author_name?: string;
   author_url?: string;
   published_at?: string;
@@ -155,20 +156,6 @@ export interface VideoBriefingsRailProps {
   videos: VideoBriefingCard[];
 }
 
-// ─── PhotoGalleryTeaserRail ─────────────────────────────────────────────────
-export interface GalleryTeaser {
-  title: string;
-  thumbnail: string;
-  category_label?: string;
-  url_slug?: string;
-}
-
-export interface PhotoGalleryTeaserRailProps {
-  identifier: string;
-  heading?: string;
-  gallery_teasers: GalleryTeaser[];
-}
-
 // ─── TrendingTopicsChips ────────────────────────────────────────────────────
 export interface TrendingChip {
   label: string;
@@ -181,20 +168,6 @@ export interface TrendingTopicsChipsProps {
   identifier: string;
   heading?: string;
   chips: TrendingChip[];
-}
-
-// ─── SponsoredContentStrip ──────────────────────────────────────────────────
-export interface SponsoredCard {
-  title: string;
-  thumbnail: string;
-  brand_name?: string;
-  url_slug?: string;
-}
-
-export interface SponsoredContentStripProps {
-  identifier: string;
-  sponsor_label?: string;
-  sponsored_cards: SponsoredCard[];
 }
 
 // ─── NewsletterSignupStrip ──────────────────────────────────────────────────

@@ -3,12 +3,12 @@ import {
   bindingFor,
   defaultItems,
   firstDynamicField,
+  headingFromId,
   isBlank,
   organismId,
 } from "@/lib/cds/organism";
 import { flattenMedia, flattenMediaFields } from "@/lib/media";
 import type {
-  CdsFieldMapEntry,
   CdsLayoutOrganism,
   CdsTemplate,
   HomepageCustomEntity,
@@ -25,7 +25,6 @@ type ListSpec = {
   singletons?: string[];
   // When true, lead item lives at the template default's top level (e.g. PostGrid).
   leadFromDefault?: boolean;
-  defaultHeading?: string;
 };
 type StaticSpec = { kind: "static"; props: string[] };
 type OrganismSpec = ListSpec | StaticSpec;
@@ -34,15 +33,13 @@ type OrganismSpec = ListSpec | StaticSpec;
 const ORGANISM_SPECS: Record<string, OrganismSpec> = {
   breakingnewsstrip:        { kind: "list",   itemsProp: "headlines",       defaultSlot: "ticker_headline",  singletons: ["label"] },
   herocarousel:             { kind: "list",   itemsProp: "slides",          defaultSlot: "slides" },
-  featuredarticles:         { kind: "list",   itemsProp: "cards",           defaultSlot: "featured_card" },
-  sectionrow:               { kind: "list",   itemsProp: "cards",           defaultSlot: "row_cards" },
+  featuredarticles:         { kind: "list",   itemsProp: "cards",           defaultSlot: "featured_cards" },
+  sectionrow:               { kind: "list",   itemsProp: "cards",           defaultSlot: "section_cards" },
   topstorieslist:           { kind: "list",   itemsProp: "stories",         defaultSlot: "ranked_stories" },
   videobriefingsrail:       { kind: "list",   itemsProp: "videos",          defaultSlot: "video_cards" },
   webstoryrail:             { kind: "list",   itemsProp: "stories",         defaultSlot: "story_bubbles" },
-  trendingtopicschips:      { kind: "list",   itemsProp: "chips",           defaultSlot: "topic_chips",      defaultHeading: "Trending Topics" },
-  opinioneditorialrow:      { kind: "list",   itemsProp: "items",           defaultSlot: null },
-  photogalleryteaserrail:   { kind: "list",   itemsProp: "gallery_teasers", defaultSlot: "gallery_teasers" },
-  sponsoredcontentstrip:    { kind: "list",   itemsProp: "sponsored_cards", defaultSlot: "sponsored_cards",  singletons: ["sponsor_label"] },
+  trendingtopicschips:      { kind: "list",   itemsProp: "chips",           defaultSlot: "topic_chips" },
+  opinioneditorialrow:      { kind: "list",   itemsProp: "items",           defaultSlot: "opinion_cards" },
   postgrid_with_hero_image: { kind: "list",   itemsProp: "items",           defaultSlot: "sidecards",        leadFromDefault: true },
   apppromocard:             { kind: "static", props: ["title", "cta(Android)", "cta(iphone)", "background_image"] },
   newslettersignupstrip:    { kind: "static", props: ["title", "cta_label", "background_image"] },
@@ -57,19 +54,6 @@ function homepageSlotFields(
     | { dynamic_fields?: Record<string, unknown>[] }
     | undefined;
   return slot?.dynamic_fields?.[0] ?? {};
-}
-
-/** Reads the heading from the data slot that feeds this organism (its first binding source). */
-function slotHeading(
-  fieldMap: CdsFieldMapEntry[],
-  data: HomepageCustomEntity
-): string {
-  const slot = data[fieldMap[0]?.source.split(".")[0] ?? ""];
-  if (slot && typeof slot === "object" && !Array.isArray(slot)) {
-    const heading = (slot as Record<string, unknown>).heading;
-    if (typeof heading === "string") return heading;
-  }
-  return "";
 }
 
 /** Builds the lead item from top-level template default fields (for the PostGrid hero). */
@@ -127,11 +111,8 @@ export function buildOrganismProps(
   const props: Record<string, unknown> = {
     identifier: id,
     [spec.itemsProp]: items,
-    // heading priority: data-slot heading → template default → spec default.
-    heading:
-      slotHeading(fieldMap, data) ||
-      (typeof defaults.heading === "string" ? defaults.heading : "") ||
-      (spec.defaultHeading ?? ""),
+    // heading is derived from the organism id (e.g. "sports-row" → "Sports Row").
+    heading: headingFromId(id),
   };
 
   // Singletons (e.g. label, sponsor_label): live slot value wins over template default.

@@ -37,24 +37,21 @@ function mapPost(post: RawPost): SectionFeedArticle {
 
 export interface SearchResult {
   articles: SectionFeedArticle[];
-  hasMore: boolean;
 }
 
-export async function fetchSearchResults(
-  query: string,
-  page: number
-): Promise<SearchResult> {
-  if (!query.trim()) return { articles: [], hasMore: false };
+// Search shows a single page of results — no pagination.
+export async function fetchSearchResults(query: string): Promise<SearchResult> {
+  if (!query.trim()) return { articles: [] };
 
   const q = encodeURIComponent(query.trim());
 
   try {
     const res = await cdsFetch<SearchResponse>(
-      `/posts/?type__eq=Article&title__contains=${q}&page=${page}&limit=${SEARCH_PAGE_SIZE}`
+      `/posts/?type__eq=Article&title__contains=${q}&page=1&limit=${SEARCH_PAGE_SIZE}`
     );
     const articles = Array.isArray(res.data) ? res.data.map(mapPost) : [];
-    return { articles, hasMore: articles.length === SEARCH_PAGE_SIZE };
+    return { articles };
   } catch {
-    return { articles: [], hasMore: false };
+    return { articles: [] };
   }
 }

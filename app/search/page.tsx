@@ -22,7 +22,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const query = q.trim();
 
   const { articles } = query
-    ? await fetchSearchResults(query, 1)
+    ? await fetchSearchResults(query)
     : { articles: [] };
 
   return (
@@ -62,37 +62,37 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         ) : articles.length === 0 ? (
           <p className="pb-search-empty">No articles found for &ldquo;{query}&rdquo;.</p>
         ) : (
-          <div className="pb-search-results">
+          <div className="pb-search-results pb-search-results--rows">
             {articles.map((article, i) => (
-              <article key={article.url_slug ?? i} className="pb-search-card">
+              <article key={article.url_slug ?? i} className="pb-search-row">
                 {article.thumbnail && (
-                  <Link href={article.url_slug ?? "#"} prefetch={false} className="pb-search-card-img-wrap" tabIndex={-1}>
+                  <Link href={article.url_slug ?? "#"} prefetch={false} className="pb-search-row-thumb-wrap" tabIndex={-1}>
                     <PbImage
                       src={article.thumbnail}
                       alt=""
-                      className="pb-search-card-img"
+                      className="pb-search-row-thumb"
                       fillParent
-                      sizes="(max-width: 600px) 90vw, 360px"
+                      sizes="90px"
                     />
                   </Link>
                 )}
-                <div className="pb-search-card-body">
-                  {article.category_label && (
-                    <Link href={article.category_url ?? "#"} prefetch={false} className="pb-search-card-category">
-                      {article.category_label}
-                    </Link>
-                  )}
-                  <Link href={article.url_slug ?? "#"} prefetch={false} className="pb-search-card-title-link">
-                    <h2 className="pb-search-card-title">{article.title}</h2>
+                <div className="pb-search-row-body">
+                  <Link href={article.url_slug ?? "#"} prefetch={false} className="pb-search-row-title-link">
+                    <h2 className="pb-search-row-title">{article.title}</h2>
                   </Link>
-                  <div className="pb-search-card-meta">
+                  <div className="pb-search-row-meta">
+                    {article.category_label && (
+                      <Link href={article.category_url ?? "#"} prefetch={false} className="pb-search-row-category">
+                        {article.category_label}
+                      </Link>
+                    )}
                     {article.author_name && (
-                      <Link href={article.author_url ?? "#"} prefetch={false} className="pb-search-card-author">
+                      <Link href={article.author_url ?? "#"} prefetch={false} className="pb-search-row-author">
                         By {article.author_name}
                       </Link>
                     )}
                     {article.published_at && (
-                      <span className="pb-search-card-date">{formatDate(article.published_at)}</span>
+                      <span className="pb-search-row-date">{formatDate(article.published_at)}</span>
                     )}
                   </div>
                 </div>

@@ -39,13 +39,15 @@ export function PostGrid({ identifier, items }: PostGridProps) {
               sizes="(max-width: 900px) 100vw, 600px"
             />
           ) : null}
+          {lead.category_label ? (
+            <CategoryLink
+              label={lead.category_label}
+              url={lead.category_url}
+              className={styles.leadCategory}
+            />
+          ) : null}
         </div>
         <div className={styles.leadBody}>
-          <CategoryLink
-            label={lead.category_label}
-            url={lead.category_url}
-            className={styles.leadCategory}
-          />
           <h2 className={styles.leadTitle}>{lead.title}</h2>
           {lead.excerpt ? <p className={styles.leadExcerpt}>{lead.excerpt}</p> : null}
           <ArticleByline
@@ -67,20 +69,24 @@ export function PostGrid({ identifier, items }: PostGridProps) {
                   <Link href={card.url_slug} className={styles.cardLink} aria-label={card.title} />
                 ) : null}
                 {card.thumbnail ? (
-                  <PbImage
-                    className={styles.cardThumb}
-                    src={card.thumbnail}
-                    alt={card.title}
-                    aspectRatio={16 / 10}
-                    sizes="(max-width: 760px) 50vw, 280px"
-                  />
+                  <div className={styles.cardMedia}>
+                    <PbImage
+                      className={styles.cardThumb}
+                      src={card.thumbnail}
+                      alt={card.title}
+                      aspectRatio={16 / 9}
+                      sizes="(max-width: 760px) 50vw, 280px"
+                    />
+                    {card.category_label ? (
+                      <CategoryLink
+                        label={card.category_label}
+                        url={card.category_url}
+                        className={styles.cardCategory}
+                      />
+                    ) : null}
+                  </div>
                 ) : null}
                 <div className={styles.cardText}>
-                  <CategoryLink
-                    label={card.category_label}
-                    url={card.category_url}
-                    className={styles.cardCategory}
-                  />
                   <h3 className={styles.cardTitle}>{card.title}</h3>
                   <ArticleByline
                     authorName={card.author_name}

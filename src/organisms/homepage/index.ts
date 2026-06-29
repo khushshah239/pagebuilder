@@ -11,8 +11,6 @@ export { TopStoriesList } from "./TopStoriesList";
 export { OpinionEditorialRow } from "./OpinionEditorialRow";
 export { WebStoryRail } from "./WebStoryRail";
 export { VideoBriefingsRail } from "./VideoBriefingsRail";
-export { PhotoGalleryTeaserRail } from "./PhotoGalleryTeaserRail";
 export { TrendingTopicsChips } from "./TrendingTopicsChips";
-export { SponsoredContentStrip } from "./SponsoredContentStrip";
 export { NewsletterSignupStrip } from "./NewsletterSignupStrip";
 export { AppPromoCard } from "./AppPromoCard";

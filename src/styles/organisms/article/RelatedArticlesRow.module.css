@@ -11,7 +11,7 @@
 
 .heading {
   margin: 0;
-  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-family: var(--pb-heading-font, Inter, sans-serif);
   font-size: var(--pb-fs-lg);
   font-weight: var(--pb-heading-weight);
   letter-spacing: -0.01em;
@@ -57,14 +57,20 @@
   z-index: 1;
 }
 
+.media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  flex-shrink: 0;
+  background: var(--pb-muted-bg);
+}
+
 .thumb {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: 100%;
   object-fit: cover;
   display: block;
-  background: var(--pb-muted-bg);
   transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
-  flex-shrink: 0;
 }
 .card:hover .thumb { transform: scale(1.04); }
 
@@ -77,23 +83,27 @@
 }
 
 .category {
-  position: relative;
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
   z-index: 2;
-  align-self: flex-start;
-  text-decoration: none;
-  font-size: 11px;
-  font-weight: 600;
+  background: var(--pb-urgent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--pb-accent);
-  transition: color var(--pb-dur);
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: background var(--pb-dur);
 }
-.category:hover { color: var(--pb-accent-dark); }
+.category:hover { background: var(--pb-accent-dark); }
 
 .title {
   position: relative;
   margin: 0;
-  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-family: var(--pb-heading-font, Inter, sans-serif);
   font-size: var(--pb-fs-md);
   font-weight: var(--pb-heading-weight);
   line-height: 1.3;

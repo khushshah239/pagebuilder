@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Inter } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import { getActivePublisher } from "@/config/publishers";
 import { themeToCssVariables } from "@/theme/cssVariables";
 import { fetchPublisherData } from "@/api/publisherApi";
@@ -16,6 +16,15 @@ const inter = Inter({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-inter",
+  display: "swap",
+});
+
+// High-contrast Didone serif — used for editorial display numerals (e.g. the
+// Top Stories rank), where Georgia can't render the heavy thick/thin strokes.
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["700", "800", "900"],
+  variable: "--font-playfair",
   display: "swap",
 });
 
@@ -35,7 +44,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   ]);
 
   return (
-    <html lang={publisher.lang ?? "en"} className={inter.variable}>
+    <html lang={publisher.lang ?? "en"} className={`${inter.variable} ${playfair.variable}`}>
       <body>
         <div className="pb-root" style={themeToCssVariables(publisher.theme)}>
           <header className="pb-site-header">

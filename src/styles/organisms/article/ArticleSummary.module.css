@@ -9,7 +9,7 @@
 
 .heading {
   margin: 0 0 14px;
-  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-family: var(--pb-heading-font, Inter, sans-serif);
   font-size: 16px;
   font-weight: 600;
   letter-spacing: 0.05em;

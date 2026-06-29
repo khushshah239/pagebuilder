@@ -5,12 +5,6 @@ import { ArticleByline } from "@/components/ArticleByline";
 import type { SidebarLatestNewsProps } from "@/types/article/organism.types";
 import styles from "@/styles/organisms/article/SidebarLatestNews.module.css";
 
-/**
- * Right-column "Latest News" panel on the article page. A compact vertical list
- * of recent stories (thumbnail + headline + meta), each linking to its article.
- * Items resolve from the `laterst_news_right` relation via the binding, falling
- * back to the template's inline defaults when empty.
- */
 export function SidebarLatestNews({
   identifier,
   heading,
@@ -18,61 +12,53 @@ export function SidebarLatestNews({
 }: SidebarLatestNewsProps) {
   const filled = items.filter((item) => item.title).slice(0, 6);
   if (filled.length === 0) return null;
-  const slots: (typeof filled[number] | null)[] = [
-    ...filled,
-    ...Array(Math.max(0, 6 - filled.length)).fill(null),
-  ];
 
   return (
     <section className={styles.panel} data-organism={identifier}>
       {heading ? <h2 className={styles.heading}>{heading}</h2> : null}
       <ol className={styles.list}>
-        {slots.map((item, index) => {
-          if (!item) {
-            return (
-              <li
-                key={`${identifier}-empty-${index}`}
-                className={`${styles.item} ${styles.itemEmpty}`}
-                aria-hidden="true"
+        {filled.map((item, index) => (
+          <li key={`${identifier}-latest-${index}`} className={styles.item}>
+            {item.url_slug ? (
+              <Link href={item.url_slug} className={styles.link} aria-label={item.title} prefetch={false} />
+            ) : null}
+
+            {/* Rank number */}
+            <span className={styles.rank}>{index + 1}</span>
+
+            {/* Title + meta */}
+            <div className={styles.text}>
+              <h3 className={styles.title}>{item.title}</h3>
+              <ArticleByline
+                authorName={item.author_name}
+                authorUrl={item.author_url}
+                publishedAt={item.published_at}
               />
-            );
-          }
-          const key = `${identifier}-latest-${index}`;
-          // Stretched overlay link → article; category link above → section.
-          return (
-            <li key={key} className={styles.item}>
-              {item.url_slug ? (
-                <Link
-                  href={item.url_slug}
-                  className={styles.link}
-                  aria-label={item.title}
-                />
-              ) : null}
+            </div>
+
+            {/* Thumbnail right */}
+            <div className={styles.thumbWrap}>
               {item.thumbnail ? (
                 <PbImage
                   className={styles.thumb}
                   src={item.thumbnail}
                   alt={item.title}
-                  aspectRatio={16 / 10}
-                  sizes="120px"
+                  fillParent
+                  sizes="100px"
                 />
-              ) : <div className={styles.thumbEmpty} />}
-              <div className={styles.text}>
+              ) : (
+                <div className={styles.thumbEmpty} />
+              )}
+              {item.category_label ? (
                 <CategoryLink
                   label={item.category_label}
                   url={item.category_url}
                   className={styles.category}
                 />
-                <h3 className={styles.title}>{item.title}</h3>
-                <ArticleByline
-                  authorName={item.author_name}
-                  authorUrl={item.author_url}
-                  publishedAt={item.published_at}
-                />
-              </div>
-            </li>
-          );
-        })}
+              ) : null}
+            </div>
+          </li>
+        ))}
       </ol>
     </section>
   );

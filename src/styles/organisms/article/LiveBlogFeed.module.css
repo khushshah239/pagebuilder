@@ -94,6 +94,8 @@
 .image {
   margin-top: 10px;
   width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
   border-radius: var(--pb-radius-md);
   display: block;
   background: var(--pb-muted-bg);
@@ -105,8 +107,8 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 12px;
 }
 
@@ -131,7 +133,6 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  object-position: center top;
   display: block;
   background: var(--pb-muted-bg);
   flex: 0 0 auto;
@@ -208,12 +209,6 @@
 }
 .cardAuthor:hover {
   color: var(--pb-accent);
-}
-
-@media (max-width: 640px) {
-  .cardList {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* ── Live badge pulse animation ───────────────────────────────────────────── */

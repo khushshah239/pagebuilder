@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import { buildVideoOrganismProps } from "@/lib/video/buildProps";
+import { excludeCurrentArticle } from "@/lib/article/excludeCurrent";
 import { organismId } from "@/lib/cds/organism";
 import { NoTemplateToast } from "@/components/NoTemplateToast";
 import type { ArticleData, CdsLayoutOrganism } from "@/types/article/cds.types";
@@ -54,8 +55,13 @@ function renderOrganisms(
       const Component = VIDEO_ORGANISM_COMPONENTS[node.schema_slug];
       if (!Component) return null;
 
-      const props = buildVideoOrganismProps(node, template, root);
+      let props = buildVideoOrganismProps(node, template, root);
       if (!props) return null;
+      // Never let the current video list itself in related / more-from-author / trending.
+      props = excludeCurrentArticle(node.schema_slug, props, [
+        data.legacy_url as string | undefined,
+        data.absolute_url as string | undefined,
+      ]);
 
       return <Component key={organismId(node) || key || index} {...props} />;
     });

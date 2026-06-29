@@ -1,7 +1,10 @@
 .section {
   display: flex;
   flex-direction: column;
-  gap: var(--pb-space-4);
+  gap: 20px;
+  background: #fce4ec;
+  border-radius: var(--pb-radius-md);
+  padding: 24px 20px 28px;
 }
 
 .head {
@@ -11,51 +14,49 @@
 
 .heading {
   margin: 0;
-  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
-  font-size: var(--pb-fs-lg);
-  font-weight: var(--pb-heading-weight);
-  letter-spacing: -0.015em;
-  color: var(--pb-text);
+  font-family: var(--pb-heading-font, Inter, sans-serif);
+  font-size: 20px;
+  font-weight: 800;
+  color: #222;
+  line-height: 1.2;
 }
 
-/* Positioning context for the overlaid scroll buttons. */
 .viewport {
   position: relative;
 }
 
-/* Single scrollable row — ~5.5 cards visible so the next peeks in. */
+/* Horizontal scroll rail */
 .track {
   display: flex;
-  flex-direction: row;
-  gap: var(--pb-space-3);
+  gap: 14px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  padding-bottom: 2px;
+  padding-bottom: 4px;
 }
+.track::-webkit-scrollbar { display: none; }
 
-.track::-webkit-scrollbar {
-  display: none;
-}
-
-/* Portrait story card — ~5.5 per viewport, 9:16 ratio. */
+/* Portrait cards — 9:16, ~240px wide */
 .card {
   position: relative;
-  flex: 0 0 calc((100% - 66px) / 5.5);   /* 5.5 cards + gaps */
-  aspect-ratio: 9 / 16;
-  border-radius: var(--pb-radius-md);
+  flex: 0 0 220px;
+  height: 420px;
+  scroll-snap-align: start;
+  border-radius: 16px;
   overflow: hidden;
   text-decoration: none;
-  background: var(--pb-muted-bg);
-  scroll-snap-align: start;
-  transition: transform var(--pb-dur) var(--pb-ease),
-    box-shadow var(--pb-dur) var(--pb-ease);
+  background: #222;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  flex-shrink: 0;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
 }
 
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--pb-shadow-hover);
+@media (max-width: 640px) {
+  .card { flex: 0 0 160px; height: 255px; border-radius: 12px; }
 }
 
 .image {
@@ -67,7 +68,7 @@
   display: block;
 }
 
-/* "web story" pill badge, top-left. */
+/* "Web Story" pill badge — top left */
 .badge {
   position: absolute;
   top: 10px;
@@ -75,13 +76,14 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 9px;
-  border-radius: var(--pb-radius-sm);
+  padding: 4px 10px;
+  border-radius: 20px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   color: #fff;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(2px);
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 2;
 }
 
 .icon {
@@ -89,69 +91,57 @@
   height: 13px;
 }
 
-/* Bottom gradient + title. */
+/* Bottom gradient + title */
 .overlay {
   position: absolute;
   inset: auto 0 0 0;
-  padding: 30px 12px 12px;
+  padding: 40px 12px 14px;
   background: linear-gradient(
     to top,
-    rgba(0, 0, 0, 0.9) 0%,
-    rgba(0, 0, 0, 0.55) 45%,
-    rgba(0, 0, 0, 0) 100%
+    rgba(0, 0, 0, 0.88) 0%,
+    rgba(0, 0, 0, 0.5) 55%,
+    transparent 100%
   );
+  z-index: 1;
 }
 
 .title {
   margin: 0;
-  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
-  font-size: var(--pb-fs-sm);
+  font-family: var(--pb-heading-font, Inter, sans-serif);
+  font-size: 14px;
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1.35;
   color: #fff;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.4);
   display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* Circular scroll buttons, vertically centred on the rail edges. */
+/* Scroll arrows */
 .arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 2;
-  display: flex;
+  z-index: 3;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: none;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--pb-surface-bg);
-  color: var(--pb-text);
+  border: none;
+  background: #fff;
+  color: #222;
   cursor: pointer;
-  box-shadow: var(--pb-shadow-lg);
-  transition: transform var(--pb-dur) var(--pb-ease),
-    box-shadow var(--pb-dur) var(--pb-ease);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  transition: box-shadow 0.2s, transform 0.2s;
 }
-
-.arrow:hover {
-  transform: translateY(-50%) scale(1.06);
-  box-shadow: var(--pb-shadow-hover);
-}
-
-.arrow svg {
-  width: 22px;
-  height: 22px;
-}
-
-.arrowPrev {
-  left: -12px;
-}
-
-.arrowNext {
-  right: -12px;
-}
+.arrow svg { width: 18px; height: 18px; }
+.arrow:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+.arrowPrev { left: -18px; }
+.arrowNext { right: -18px; }
+.arrowPrev:hover { transform: translateY(-50%) translateX(-1px); }
+.arrowNext:hover { transform: translateY(-50%) translateX(1px); }

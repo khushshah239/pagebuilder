@@ -1,5 +1,5 @@
 import { resolveBoundItems } from "@/lib/bindings";
-import { firstDynamicField, isBlank, organismId } from "@/lib/cds/organism";
+import { firstDynamicField, headingFromId, isBlank, organismId } from "@/lib/cds/organism";
 import { MEDIA_KEYS, flattenMedia, flattenMediaFields } from "@/lib/media";
 import { getByPath } from "@/lib/path";
 import type { CdsFieldMapEntry, CdsLayoutOrganism } from "@/types/article/cds.types";
@@ -7,7 +7,7 @@ import type { CdsFieldMapEntry, CdsLayoutOrganism } from "@/types/article/cds.ty
 export type OrganismSpec =
   | { kind: "single" }
   | { kind: "static" }
-  | { kind: "list"; itemsProp: string; defaultHeading?: string };
+  | { kind: "list"; itemsProp: string };
 
 function coerce(key: string, value: unknown): unknown {
   return MEDIA_KEYS.has(key) ? flattenMedia(value) : value;
@@ -20,11 +20,6 @@ function defaultProps(node: CdsLayoutOrganism): Record<string, unknown> {
     out[key] = coerce(key, value);
   }
   return out;
-}
-
-function templateHeading(node: CdsLayoutOrganism): string {
-  const h = firstDynamicField(node).heading;
-  return typeof h === "string" ? h : "";
 }
 
 function nestedItems(node: CdsLayoutOrganism): Record<string, unknown>[] {
@@ -71,8 +66,6 @@ export function buildOrganismProps(
 
   if (spec.kind === "static") {
     const liveItems = resolveBoundItems(fieldMap, data);
-    const summaryCoveredByStandfirst =
-      node.schema_slug === "articlesummary" && !isBlank(data.summary);
     const props: Record<string, unknown> = { identifier: id };
     for (const [key, value] of Object.entries(firstDynamicField(node))) {
       if (key === "id") continue;
@@ -80,7 +73,7 @@ export function buildOrganismProps(
       if (Array.isArray(container?.dynamic_fields)) {
         props[key] = liveItems.length > 0
           ? liveItems.map(flattenMediaFields)
-          : summaryCoveredByStandfirst ? [] : container.dynamic_fields.map(flattenMediaFields);
+          : container.dynamic_fields.map(flattenMediaFields);
       } else {
         props[key] = coerce(key, value);
       }
@@ -103,7 +96,8 @@ export function buildOrganismProps(
   const result: Record<string, unknown> = {
     identifier: id,
     [spec.itemsProp]: items,
-    heading: templateHeading(node) || (spec.defaultHeading ?? ""),
+    // heading is derived from the organism id (e.g. "related-articles" → "Related Articles").
+    heading: headingFromId(id),
   };
   for (const [key, val] of Object.entries(firstDynamicField(node))) {
     if (key === "id" || key in result) continue;

@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import { buildArticleOrganismProps } from "@/lib/article/buildProps";
+import { excludeCurrentArticle } from "@/lib/article/excludeCurrent";
 import { organismId } from "@/lib/cds/organism";
 import { NoTemplateToast } from "@/components/NoTemplateToast";
 import type {
@@ -9,7 +10,6 @@ import type {
 } from "@/types/article/cds.types";
 import {
   ArticleBody,
-  ArticleFooter,
   ArticleHeader,
   ArticleHero,
   ArticleSummary,
@@ -35,17 +35,17 @@ const ARTICLE_ORGANISM_COMPONENTS: Record<string, ComponentType<any>> = {
   relatedarticlesrow: RelatedArticlesRow,
   morefromauthorrow: MoreFromAuthorRow,
   trendingarticlesrow: TrendingArticlesRow,
-  liveblogfeed: LiveBlogFeed,
   live_blog: LiveBlogFeed,
-  sidebarlatestnews: SidebarLatestNews,
   "sidebar-latest-news": SidebarLatestNews,
-  articlefooter: ArticleFooter,
 };
 
 // Organisms whose slug starts with this prefix are rendered in the aside.
 const SIDEBAR_SLUG_PREFIX = "sidebar";
+// Organisms always rendered in the aside regardless of slug naming (live blog
+// reads better narrow — full-width images there end up oversized).
+const FORCED_SIDEBAR_SLUGS = new Set(["live_blog"]);
 function isSidebarOrganism(schemaSlug: string): boolean {
-  return schemaSlug.startsWith(SIDEBAR_SLUG_PREFIX);
+  return schemaSlug.startsWith(SIDEBAR_SLUG_PREFIX) || FORCED_SIDEBAR_SLUGS.has(schemaSlug);
 }
 
 /** Returns true if a template key/value pair represents an organism node. */
@@ -76,8 +76,13 @@ function renderOrganisms(
       const Component = ARTICLE_ORGANISM_COMPONENTS[node.schema_slug];
       if (!Component) return null;
 
-      const props = buildArticleOrganismProps(node, template, root);
+      let props = buildArticleOrganismProps(node, template, root);
       if (!props) return null;
+      // Never let an article list itself in related / more-from-author / trending.
+      props = excludeCurrentArticle(node.schema_slug, props, [
+        data.legacy_url as string | undefined,
+        data.absolute_url as string | undefined,
+      ]);
 
       return <Component key={organismId(node) || key || index} {...props} />;
     });

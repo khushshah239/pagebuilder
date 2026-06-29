@@ -30,21 +30,24 @@ export function MoreFromAuthorRow({
                 <Link href={card.url_slug} className={styles.cardLink} aria-label={card.title} prefetch={false} />
               ) : null}
               {card.thumbnail ? (
-                // alt="" — the overlay link already announces the title to screen readers.
-                <PbImage
-                  className={styles.thumb}
-                  src={card.thumbnail}
-                  alt=""
-                  aspectRatio={16 / 9}
-                  sizes="(max-width: 600px) 80vw, 300px"
-                />
+                <div className={styles.media}>
+                  <PbImage
+                    className={styles.thumb}
+                    src={card.thumbnail}
+                    alt=""
+                    aspectRatio={16 / 9}
+                    sizes="(max-width: 600px) 80vw, 300px"
+                  />
+                  {card.category_label ? (
+                    <CategoryLink
+                      label={card.category_label}
+                      url={card.category_url}
+                      className={styles.category}
+                    />
+                  ) : null}
+                </div>
               ) : null}
               <div className={styles.text}>
-                <CategoryLink
-                  label={card.category_label}
-                  url={card.category_url}
-                  className={styles.category}
-                />
                 <h3 className={styles.title}>{card.title}</h3>
                 <ArticleByline
                   authorName={card.author_name}

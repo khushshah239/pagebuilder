@@ -10,21 +10,16 @@ import {
   HeroCarousel,
   NewsletterSignupStrip,
   OpinionEditorialRow,
-  PhotoGalleryTeaserRail,
   PostGrid,
   SectionRow,
-  SponsoredContentStrip,
   TopStoriesList,
   TrendingTopicsChips,
   VideoBriefingsRail,
   WebStoryRail,
 } from "@/organisms/homepage";
 
-// Covers both sync and async server components (React 19 supports both).
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyComponent = (props: any) => any;
 
-/** Maps schema_slug to its organism component. */
 const ORGANISM_COMPONENTS: Record<string, AnyComponent> = {
   herocarousel: HeroCarousel,
   postgrid_with_hero_image: PostGrid,
@@ -34,34 +29,100 @@ const ORGANISM_COMPONENTS: Record<string, AnyComponent> = {
   topstorieslist: TopStoriesList,
   opinioneditorialrow: OpinionEditorialRow,
   webstoryrail: WebStoryRail,
+  web_story_rail: WebStoryRail,
   videobriefingsrail: VideoBriefingsRail,
-  photogalleryteaserrail: PhotoGalleryTeaserRail,
   trendingtopicschips: TrendingTopicsChips,
-  sponsoredcontentstrip: SponsoredContentStrip,
   newslettersignupstrip: NewsletterSignupStrip,
   apppromocard: AppPromoCard,
 };
 
-/** Renders homepage organisms in template layout order. */
+type Zone = "full" | "right" | "main";
+
+// Slugs that render as a full-bleed / page-width band rather than inside a
+// column. This is a layout-band concern, NOT a left/right decision — left vs
+// right is read entirely from the organism name (see `zoneOf`).
+const FULL_WIDTH_SLUGS = new Set([
+  "breakingnewsstrip",
+  "herocarousel",
+  "trendingtopicschips",
+]);
+
+// Default column for organisms whose name carries no explicit zone prefix —
+// applied only as a fallback. An explicit "left-*"/"main-*"/"right-*" name on
+// the organism always overrides this, so editors stay in control.
+const DEFAULT_RIGHT_SLUGS = new Set([
+  "topstorieslist",
+  "videobriefingsrail",
+  "apppromocard",
+]);
+
+/** Resolve an organism's placement zone primarily from its name (the CDS `id`).
+ *  - id "right-*" / "sidebar-*"  → right column
+ *  - id "left-*"  / "main-*"     → main (left) column
+ *  - id "full-*"                 → full-width band
+ *  Editors control left/right by naming the organism. When the name has no zone
+ *  prefix, the slug-based fallbacks (FULL_WIDTH_SLUGS / DEFAULT_RIGHT_SLUGS)
+ *  preserve each organism's conventional placement. */
+function zoneOf(node: CdsLayoutOrganism): Zone {
+  const id = organismId(node);
+  if (id.startsWith("right-") || id.startsWith("sidebar-")) return "right";
+  if (id.startsWith("left-") || id.startsWith("main-")) return "main";
+  if (id.startsWith("full-")) return "full";
+  if (FULL_WIDTH_SLUGS.has(node.schema_slug)) return "full";
+  if (DEFAULT_RIGHT_SLUGS.has(node.schema_slug)) return "right";
+  return "main";
+}
+
+/** Dynamic-zone homepage. Walks the template layout in order, routing each
+ *  organism to a full-width band, the main column, or the right column based on
+ *  its name. Reordering the template layout reflects directly on the page. */
 export function HomepageRenderer({ data }: { data: HomepageCustomEntity }) {
   const template = data.template?.[0];
   if (!template) return null;
 
+  // Preserve template layout order within every zone.
+  const fullNodes: CdsLayoutOrganism[] = [];
+  const mainNodes: CdsLayoutOrganism[] = [];
+  const sidebarNodes: CdsLayoutOrganism[] = [];
+
+  for (const node of template.layout) {
+    const zone = zoneOf(node);
+    if (zone === "full") fullNodes.push(node);
+    else if (zone === "right") sidebarNodes.push(node);
+    else mainNodes.push(node);
+  }
+
+  function renderNode(node: CdsLayoutOrganism, index: number) {
+    const Component = ORGANISM_COMPONENTS[node.schema_slug];
+    if (!Component) return null;
+    const props = buildOrganismProps(node, template!, data);
+    if (!props) return null;
+    return <Component key={organismId(node) || index} {...props} />;
+  }
+
   return (
     <>
-      {template.layout.map((node: CdsLayoutOrganism, index: number) => {
-        const Component = ORGANISM_COMPONENTS[node.schema_slug];
-        if (!Component) return null;
+      {fullNodes.length > 0 && (
+        <div className="pb-shell pb-homepage-hero">
+          {fullNodes.map(renderNode)}
+        </div>
+      )}
 
-        const props = buildOrganismProps(node, template, data);
-        if (!props) return null;
+      <div className={`pb-shell pb-homepage-body${sidebarNodes.length === 0 ? " pb-homepage-body--full" : ""}`}>
+        <div className="pb-homepage-main">
+          {mainNodes.map(renderNode)}
+        </div>
 
-        // Pass all props (including `heading`) straight to the organism — each
-        // organism renders its own heading inline within its row (in the same
-        // header row as its left/right scroll buttons where present), using the
-        // `heading` value from the CDS homepage response.
-        return <Component key={organismId(node) || index} {...props} />;
-      })}
+        {sidebarNodes.length > 0 && (
+          <aside className="pb-homepage-sidebar">
+            {sidebarNodes.map((node, index) => (
+              <div key={organismId(node) || index} className="pb-sidebar-block">
+                {renderNode(node, index)}
+              </div>
+            ))}
+          </aside>
+        )}
+      </div>
     </>
   );
 }

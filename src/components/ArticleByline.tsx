@@ -22,29 +22,10 @@ function CalendarIcon() {
   );
 }
 
-function ClockIcon() {
-  return (
-    <svg
-      className={styles.icon}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="9" />
-      <polyline points="12 7 12 12 15 14" />
-    </svg>
-  );
-}
-
 /**
  * Article byline: "By {author}" followed by a meta line with a calendar icon +
- * published date/time and (when present) a clock icon + read time. Colours
- * inherit from context (white on the hero overlay, dark on white cards). Renders
- * nothing when there is no author, date, or read time.
+ * published date/time. Colours inherit from context (white on the hero overlay,
+ * dark on white cards). Renders nothing when there is no author or date.
  *
  * The author name links to the author page when `authorUrl` is supplied (the
  * contributor's `absolute_url`, resolved to an internal path). Cards must use
@@ -56,18 +37,16 @@ export function ArticleByline({
   authorName,
   authorUrl,
   publishedAt,
-  readTime,
 }: {
   authorName?: string;
   authorUrl?: string;
   publishedAt?: string;
-  readTime?: string;
 }) {
   // CDS may send an ISO timestamp (formatted to "Mar 07, 2026 11:23 IST") or an
   // already-display-ready string (e.g. "17/06/2026 15:58"); fall back to the raw
   // value when it isn't ISO so a pre-formatted date still shows.
   const dateTime = formatPublishedDateTime(publishedAt) || publishedAt || "";
-  if (!authorName && !dateTime && !readTime) return null;
+  if (!authorName && !dateTime) return null;
 
   return (
     <div className={styles.byline}>
@@ -82,20 +61,12 @@ export function ArticleByline({
         </div>
       ) : null}
 
-      {dateTime || readTime ? (
+      {dateTime ? (
         <div className={styles.metaLine}>
-          {dateTime ? (
-            <span className={styles.metaItem}>
-              <CalendarIcon />
-              {dateTime}
-            </span>
-          ) : null}
-          {readTime ? (
-            <span className={styles.metaItem}>
-              <ClockIcon />
-              {readTime}
-            </span>
-          ) : null}
+          <span className={styles.metaItem}>
+            <CalendarIcon />
+            {dateTime}
+          </span>
         </div>
       ) : null}
     </div>

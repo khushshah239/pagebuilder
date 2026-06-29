@@ -14,4 +14,3 @@ export { MoreFromAuthorRow } from "./MoreFromAuthorRow";
 export { TrendingArticlesRow } from "./TrendingArticlesRow";
 export { LiveBlogFeed } from "./LiveBlogFeed";
 export { SidebarLatestNews } from "./SidebarLatestNews";
-export { ArticleFooter } from "./ArticleFooter";

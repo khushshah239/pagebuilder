@@ -12,7 +12,6 @@ export function ArticleHeader({
   author_name,
   author_url,
   published_at,
-  read_time,
 }: ArticleHeaderProps) {
   if (!title) return null;
 
@@ -28,7 +27,6 @@ export function ArticleHeader({
         authorName={author_name}
         authorUrl={author_url}
         publishedAt={published_at}
-        readTime={read_time}
       />
     </header>
   );

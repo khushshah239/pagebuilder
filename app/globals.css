@@ -1,29 +1,28 @@
 /* ══════════════════════════════════════════════════════════════════════════════
-   CricToday — Modern Editorial Design System
-   Headings: Playfair Display · Body/UI: Inter
-   Accent: deep pitch green (per-publisher --pb-accent) · red reserved for urgency.
-   Per-publisher colours/fonts arrive as --pb-* variables (see cssVariables.ts);
-   the invariant radius/space/type/shadow scales live in :root below.
+   Broadcast News Design System — clean, professional, high-contrast.
+   Inter everywhere · Red primary accent · Navy header.
+   Per-publisher colours arrive as --pb-* variables (see cssVariables.ts);
+   invariant scales live in :root below.
    ══════════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Dark chrome — warm near-black, not dead #000 */
-  --pb-header-bg: #14130f;
-  --pb-footer-bg: #14130f;
-  --pb-on-dark: #f5f2ec;
-  --pb-on-dark-muted: rgba(245, 242, 236, 0.62);
+  /* Dark navy header — professional broadcast news */
+  --pb-header-bg: #0D1B2A;
+  --pb-footer-bg: #0D1B2A;
+  --pb-on-dark: #ffffff;
+  --pb-on-dark-muted: rgba(255, 255, 255, 0.7);
 
   /* Borders / hairlines */
-  --pb-border-strong: #d6d1c7;
-  --pb-border-dark: rgba(245, 242, 236, 0.14);
+  --pb-border-strong: #cccccc;
+  --pb-border-dark: rgba(255, 255, 255, 0.12);
 
-  /* Urgency — the only place red survives */
-  --pb-urgent: #c8102e;
+  /* Urgency / live badges */
+  --pb-urgent: #CC0000;
 
-  /* Radius */
-  --pb-radius-sm: 6px;
-  --pb-radius-md: 10px;
-  --pb-radius-lg: 16px;
+  /* Radius — tighter for news site feel */
+  --pb-radius-sm: 4px;
+  --pb-radius-md: 6px;
+  --pb-radius-lg: 8px;
   --pb-radius-pill: 999px;
 
   /* Shadow scale (soft, warm-tinted) */
@@ -69,7 +68,7 @@ body {
   font-family: var(--pb-font, var(--font-inter), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
   font-size: var(--pb-fs-base);
   line-height: var(--pb-lh-base);
-  background: #faf8f4;
+  background: #f2f2f2;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -85,6 +84,23 @@ img {
   max-width: 100%;
 }
 
+/* Small touches that read as "designed", not default. */
+::selection {
+  background: var(--pb-accent, #1f6f54);
+  color: #fff;
+}
+:focus-visible {
+  outline: 2px solid var(--pb-accent, #1f6f54);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* Headings use sans-serif — bold, clean, broadcast news style. */
+h1, h2, h3, h4 {
+  font-family: var(--pb-heading-font, var(--font-inter), Inter, -apple-system, sans-serif);
+  letter-spacing: -0.02em;
+}
+
 /* ── Root wrapper ─────────────────────────────────────────────────────────── */
 .pb-root {
   min-height: 100vh;
@@ -92,8 +108,8 @@ img {
   flex-direction: column;
   position: relative;
   overflow-x: clip;
-  background: var(--pb-page-bg, #faf8f4);
-  color: var(--pb-text, #1a1a18);
+  background: var(--pb-page-bg, #f2f2f2);
+  color: var(--pb-text, #111111);
 }
 
 .pb-shell {
@@ -103,27 +119,100 @@ img {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   SITE HEADER — sticky editorial masthead
+   SITE HEADER — broadcast news masthead
    ══════════════════════════════════════════════════════════════════════════════ */
 .pb-site-header {
   z-index: 20;
   background: var(--pb-header-bg);
 }
 
+/* Top utility bar — live tv badge, date, social links */
+.pb-top-bar {
+  background: #060f1a;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0;
+}
+
+.pb-top-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 36px;
+  gap: 16px;
+}
+
+.pb-top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pb-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--pb-urgent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px 3px 8px;
+  border-radius: 2px;
+  text-decoration: none;
+}
+.pb-live-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  animation: pb-live-pulse 1.6s ease-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pb-live-pulse {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+.pb-top-bar-date {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.02em;
+}
+
+.pb-top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pb-top-social-link {
+  display: inline-flex;
+  align-items: center;
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  font-size: 12px;
+  transition: color var(--pb-dur);
+}
+.pb-top-social-link:hover { color: #fff; }
+
 .pb-main-nav {
   position: sticky;
   top: 0;
   z-index: 30;
   background: var(--pb-header-bg);
-  border-bottom: 1px solid var(--pb-border-dark);
-  box-shadow: var(--pb-shadow-sm);
+  border-bottom: 3px solid var(--pb-urgent);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 .pb-nav-inner {
   display: flex;
   align-items: center;
   gap: var(--pb-space-5);
-  min-height: 68px;
+  min-height: 64px;
 }
 
 .pb-brand {
@@ -138,25 +227,26 @@ img {
 
 .pb-brand-logo {
   display: block;
-  height: 40px;
+  height: 38px;
   width: auto;
   max-width: 200px;
   object-fit: contain;
 }
 
 .pb-brand-name {
-  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-family: var(--pb-heading-font, Inter, sans-serif);
   color: var(--pb-on-dark);
-  font-size: var(--pb-fs-xl);
+  font-size: 22px;
   line-height: 1;
-  font-weight: var(--pb-heading-weight);
-  letter-spacing: -0.01em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
 }
 
 .pb-nav-links {
   display: flex;
   align-items: center;
-  gap: var(--pb-space-1);
+  gap: 0;
   overflow-x: auto;
   scrollbar-width: none;
   flex: 0 1 auto;
@@ -170,19 +260,22 @@ img {
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
-  padding: 4px 12px;
-  color: var(--pb-on-dark-muted);
-  font-size: var(--pb-fs-sm);
-  font-weight: 500;
+  padding: 6px 14px;
+  color: rgba(255,255,255,0.82);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   line-height: 1.4;
   white-space: nowrap;
   text-decoration: none;
-  border-bottom: 2px solid transparent;
+  text-transform: uppercase;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
   transition: color var(--pb-dur), border-color var(--pb-dur);
 }
 .pb-main-nav a:hover {
-  color: var(--pb-on-dark);
-  border-bottom-color: var(--pb-accent);
+  color: #fff;
+  border-bottom-color: var(--pb-urgent);
 }
 
 /* Right cluster — search pill */
@@ -200,25 +293,26 @@ img {
   align-items: center;
   gap: var(--pb-space-2);
   cursor: pointer;
-  height: 38px;
-  padding: 0 16px;
+  height: 34px;
+  padding: 0 14px;
   border-radius: var(--pb-radius-sm);
-  background: rgba(245, 242, 236, 0.08);
-  border: 1px solid var(--pb-border-dark);
-  color: var(--pb-on-dark-muted);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.75);
   transition: background var(--pb-dur), border-color var(--pb-dur);
 }
 .pb-nav-search-btn:hover {
-  background: rgba(245, 242, 236, 0.14);
-  border-color: rgba(245, 242, 236, 0.3);
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.3);
 }
 .pb-nav-search-placeholder {
   font-size: var(--pb-fs-sm);
   font-weight: 400;
-  color: var(--pb-on-dark-muted);
+  color: rgba(255,255,255,0.6);
 }
 @media (max-width: 720px) {
   .pb-nav-search-placeholder { display: none; }
+  .pb-top-bar-date { display: none; }
 }
 
 /* ── Search overlay (NavSearchBar) ─────────────────────────────────────────── */
@@ -377,32 +471,34 @@ img {
   gap: 28px;
 }
 
-.pb-search-card {
+.pb-search-row {
   display: flex;
-  gap: 20px;
-  align-items: flex-start;
+  gap: 16px;
+  align-items: center;
   border-bottom: 1px solid var(--pb-border, #e7e3db);
-  padding-bottom: 28px;
+  padding-bottom: 20px;
 }
 
-.pb-search-card-img-wrap {
-  flex: 0 0 180px;
-  width: 180px;
-  height: 120px;
+.pb-search-row-thumb-wrap {
+  position: relative;
+  flex: 0 0 90px;
+  width: 90px;
+  height: 60px;
   border-radius: var(--pb-radius-sm);
   overflow: hidden;
+  display: block;
 }
-.pb-search-card-img {
+.pb-search-row-thumb {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
-.pb-search-card:hover .pb-search-card-img {
+.pb-search-row:hover .pb-search-row-thumb {
   transform: scale(1.04);
 }
 
-.pb-search-card-body {
+.pb-search-row-body {
   flex: 1 1 0;
   min-width: 0;
   display: flex;
@@ -410,22 +506,11 @@ img {
   gap: 6px;
 }
 
-.pb-search-card-category {
-  align-self: flex-start;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--pb-accent);
-  text-decoration: none;
-}
-.pb-search-card-category:hover { color: var(--pb-accent-dark); }
-
-.pb-search-card-title-link {
+.pb-search-row-title-link {
   text-decoration: none;
   color: inherit;
 }
-.pb-search-card-title {
+.pb-search-row-title {
   margin: 0;
   font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
   font-size: var(--pb-fs-md);
@@ -434,48 +519,88 @@ img {
   letter-spacing: -0.01em;
   color: var(--pb-text, #1a1a18);
 }
-.pb-search-card-title-link:hover .pb-search-card-title {
+.pb-search-row-title-link:hover .pb-search-row-title {
   color: var(--pb-accent);
 }
 
-.pb-search-card-meta {
+.pb-search-row-meta {
   display: flex;
   align-items: center;
   gap: 12px;
   font-size: var(--pb-fs-xs);
   color: var(--pb-muted, #6b6a64);
-  margin-top: 4px;
 }
-.pb-search-card-author {
+.pb-search-row-category {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--pb-accent);
+  text-decoration: none;
+}
+.pb-search-row-category:hover { color: var(--pb-accent-dark); }
+.pb-search-row-author {
   color: var(--pb-muted, #6b6a64);
   text-decoration: none;
   font-weight: 500;
 }
-.pb-search-card-author:hover { color: var(--pb-accent); }
-.pb-search-card-date { color: var(--pb-muted, #6b6a64); }
-
-@media (max-width: 600px) {
-  .pb-search-card { flex-direction: column; }
-  .pb-search-card-img-wrap { width: 100%; height: 200px; flex: none; }
-}
+.pb-search-row-author:hover { color: var(--pb-accent); }
+.pb-search-row-date { color: var(--pb-muted, #6b6a64); }
 
 /* ══════════════════════════════════════════════════════════════════════════════
    PAGE CONTAINERS
    ══════════════════════════════════════════════════════════════════════════════ */
 .pb-page {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Full-width homepage zones (hero, breaking) need no horizontal padding */
+.pb-homepage-fullwidth {
+  /* handled below */
+}
+
+/* Article/section/tag pages keep the shell container */
+.pb-page > .pb-article,
+.pb-page > .pb-article-layout,
+.pb-page > .pb-stack {
   width: calc(100% - var(--pb-gutter) * 2);
   max-width: 1500px;
   margin: 0 auto;
-  flex: 1;
   padding: var(--pb-space-8) 0 var(--pb-space-9);
 }
-/* Homepage: leading full-bleed bars sit flush under the nav. */
-.pb-page:has(> .pb-stack) {
-  padding-top: 0;
+
+/* Article & video reading pages: the card needs inner padding on ALL sides so
+   text never touches the border. The shared shell rule above zeroes horizontal
+   padding (fine for plain containers, wrong for this bordered card), so we
+   restore full inner padding here and push the page spacing to margin instead. */
+.pb-page > .pb-article-layout {
+  max-width: 1500px;
+  margin: var(--pb-space-8) auto var(--pb-space-9);
+  padding: clamp(18px, 2vw, 36px);
+}
+/* Single-column (no sidebar) reading width — keep the line length comfortable. */
+.pb-page > .pb-article-layout.pb-article-layout--full {
+  max-width: 1140px;
+}
+
+/* ── News section divider headings (used in article sidebar, etc.) ─────────── */
+.pb-section-label {
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--pb-text);
+  padding-left: 10px;
+  border-left: 3px solid var(--pb-accent);
+  margin: 0 0 16px;
+  line-height: 1.2;
 }
 
 .pb-page-section {
+  width: 100%;
   max-width: 1600px;
+  margin: 0 auto;
 }
 
 .pb-stack {
@@ -484,7 +609,7 @@ img {
   gap: 0;
 }
 .pb-stack > * + * {
-  margin-top: var(--pb-space-6);
+  margin-top: var(--pb-space-7);
 }
 .pb-stack > *:nth-child(2) {
   margin-top: 0;
@@ -496,6 +621,86 @@ img {
   .pb-stack > *:nth-child(2) {
     margin-top: 0;
   }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   HOMEPAGE — 2-column newspaper layout
+   Breaking strip → full bleed
+   Hero carousel → pb-shell (page max-width)
+   Body → pb-shell 2-col grid
+   Full-width zones (hero, breaking) → above the grid
+   Main column (65%) + Sidebar (35%) → newspaper split
+   ══════════════════════════════════════════════════════════════════════════════ */
+/* Full-bleed (no shell): only breaking news strip */
+.pb-homepage-breaking {
+  width: 100%;
+}
+
+/* Page-width hero zone */
+.pb-homepage-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-bottom: 0;
+}
+
+.pb-homepage-body {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+  padding: 28px 0 64px;
+}
+
+/* No right-column organisms → main column spans the full width. */
+.pb-homepage-body--full {
+  grid-template-columns: 1fr;
+}
+
+.pb-homepage-main {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  min-width: 0;
+}
+
+.pb-homepage-sidebar {
+  position: sticky;
+  top: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  min-width: 0;
+}
+
+/* Sidebar organism container — white card background */
+.pb-sidebar-block {
+  background: var(--pb-surface-bg, #fff);
+  border-radius: var(--pb-radius-sm);
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+
+@media (max-width: 1024px) {
+  .pb-homepage-body {
+    grid-template-columns: 1fr;
+  }
+  .pb-homepage-sidebar {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+@media (max-width: 640px) {
+  .pb-homepage-sidebar {
+    grid-template-columns: 1fr;
+  }
+  .pb-homepage-body {
+    padding: 16px 0 40px;
+    gap: 20px;
+  }
+  .pb-homepage-main { gap: 24px; }
 }
 
 /* ── Article layout ───────────────────────────────────────────────────────── */
@@ -512,18 +717,23 @@ img {
   gap: var(--pb-space-6);
   align-items: start;
   background: var(--pb-surface-bg, #fff);
-  border: 1px solid var(--pb-border, #e7e3db);
-  border-radius: var(--pb-radius-md);
-  padding: clamp(20px, 2.5vw, 36px);
+  border: 1px solid var(--pb-border, #e0e0e0);
+  border-radius: 14px;
+  padding: clamp(28px, 3.5vw, 64px);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 
 .pb-article-aside {
   position: sticky;
-  top: 24px;
+  top: 80px;
   align-self: start;
-  height: calc(100vh - 48px);
+  height: calc(100vh - 100px);
   overflow-y: auto;
   scrollbar-width: thin;
+  scrollbar-color: var(--pb-border) transparent;
+  border-radius: var(--pb-radius-md);
+  display: flex;
+  flex-direction: column;
 }
 
 .pb-article-layout--full {
@@ -584,12 +794,13 @@ img {
 }
 
 .pb-footer-brand-name {
-  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-family: var(--pb-heading-font, Inter, sans-serif);
   color: var(--pb-on-dark);
   font-size: var(--pb-fs-xl);
-  font-weight: var(--pb-heading-weight);
+  font-weight: 800;
   line-height: 1;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
 }
 
 .pb-footer-bio {

@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { ArticleByline } from "@/components/ArticleByline";
+import { CategoryLink } from "@/components/CategoryLink";
 import type { TopStoriesListProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/TopStoriesList.module.css";
 
-/** Ranked vertical list of top stories — numbered, no thumbnails. */
+/** Ranked grid of top stories — big rank numeral, category kicker, headline. */
 export function TopStoriesList({
   identifier,
   heading,
@@ -21,8 +21,8 @@ export function TopStoriesList({
       <ol className={styles.list}>
         {stories.map((story, index) => {
           const key = `${identifier}-story-${index}`;
-          // Stretched overlay link → article; the author byline above it links
-          // to the author page (its own stacking context, no nested anchors).
+          // Stretched overlay link → article; the category link above it sits in
+          // its own stacking context (z-index) so it stays clickable, no nested <a>.
           return (
             <li key={key} className={styles.item}>
               {story.url_slug ? (
@@ -32,14 +32,16 @@ export function TopStoriesList({
                   aria-label={story.title}
                 />
               ) : null}
-              <span className={styles.rank}>{index + 1}</span>
+              <span className={styles.rank}>{String(index + 1).padStart(2, "0")}</span>
               <span className={styles.body}>
+                {story.category_label ? (
+                  <CategoryLink
+                    label={story.category_label}
+                    url={story.category_url}
+                    className={styles.category}
+                  />
+                ) : null}
                 <span className={styles.title}>{story.title}</span>
-                <ArticleByline
-                  authorName={story.author_name}
-                  authorUrl={story.author_url}
-                  publishedAt={story.published_at}
-                />
               </span>
             </li>
           );

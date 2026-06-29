@@ -34,10 +34,8 @@ export function TrendingArticlesRow({
           const key = `${identifier}-trending-${index}`;
           return (
             <article key={key} className={styles.card}>
-              {card.thumbnail && card.url_slug ? (
-                <Link href={articleHref} className={styles.imgWrap} tabIndex={-1} prefetch={false}>
-                  {/* alt="" — image and title link go to the same URL; screen readers
-                      would announce the headline twice if alt duplicated it. */}
+              <div className={styles.imgWrap}>
+                {card.thumbnail ? (
                   <PbImage
                     className={styles.thumb}
                     src={card.thumbnail}
@@ -45,19 +43,10 @@ export function TrendingArticlesRow({
                     fillParent
                     sizes="(max-width: 600px) 80vw, 300px"
                   />
-                </Link>
-              ) : card.thumbnail ? (
-                <div className={styles.imgWrap}>
-                  <PbImage
-                    className={styles.thumb}
-                    src={card.thumbnail}
-                    alt={card.title}
-                    fillParent
-                    sizes="(max-width: 600px) 80vw, 300px"
-                  />
-                </div>
-              ) : null}
-              <div className={styles.text}>
+                ) : null}
+                {card.url_slug ? (
+                  <Link href={articleHref} className={styles.imgLink} tabIndex={-1} prefetch={false} aria-hidden="true" />
+                ) : null}
                 {card.category_label ? (
                   card.category_url ? (
                     <Link href={categoryHref} className={styles.category} prefetch={false}>
@@ -67,6 +56,8 @@ export function TrendingArticlesRow({
                     <span className={styles.category}>{card.category_label}</span>
                   )
                 ) : null}
+              </div>
+              <div className={styles.text}>
                 {card.url_slug ? (
                   <Link href={articleHref} className={styles.titleLink} prefetch={false}>
                     <h3 className={styles.title}>{card.title}</h3>

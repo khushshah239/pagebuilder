@@ -9,14 +9,12 @@ const ARTICLE_ORGANISM_SPECS: Record<string, OrganismSpec> = {
   inlinevideoembed:      { kind: "single" },
   articlesummary:        { kind: "static" },
   sharebar:              { kind: "static" },
-  articlefooter:         { kind: "static" },
-  relatedarticlesrow:    { kind: "list", itemsProp: "related_cards",   defaultHeading: "Related Articles" },
-  morefromauthorrow:     { kind: "list", itemsProp: "author_articles", defaultHeading: "More from the author" },
+  relatedarticlesrow:    { kind: "list", itemsProp: "related_cards" },
+  morefromauthorrow:     { kind: "list", itemsProp: "author_articles" },
   tagsrow:               { kind: "list", itemsProp: "article_tags" },
-  trendingarticlesrow:   { kind: "list", itemsProp: "trending_cards",  defaultHeading: "Trending Now" },
-  liveblogfeed:          { kind: "list", itemsProp: "live_updates" },
+  trendingarticlesrow:   { kind: "list", itemsProp: "trending_cards" },
   live_blog:             { kind: "list", itemsProp: "live_updates" },
-  "sidebar-latest-news": { kind: "list", itemsProp: "items",           defaultHeading: "Latest News" },
+  "sidebar-latest-news": { kind: "list", itemsProp: "items" },
 };
 
 function getBinding(template: CdsArticleTemplate, id: string) {

@@ -18,12 +18,24 @@ export interface PbImageProps {
   fixed?: Fixed;
   /** Fill a parent that already reserves space (must be position:relative). */
   fillParent?: boolean;
+  /** "cover" (default) crops to fill the box; "contain" shows the full image, letterboxed. */
+  objectFit?: "cover" | "contain";
+  /** Renders at the image's own aspect ratio (read from its CDN /fit-in/ box) — full width, no crop, no letterbox. */
+  natural?: boolean;
   placeholder?: "blur" | "none";
   className?: string;
   "aria-hidden"?: boolean;
 }
 
 const DEFAULT_SIZES = "(max-width: 600px) 90vw, (max-width: 1024px) 45vw, 320px";
+const FIT_IN_RE = /\/fit-in\/(\d+)x(\d+)\//;
+
+/** Reads the source image's own box ratio (height/width) from its CDN /fit-in/ box. */
+function sourceRatio(src: string): number {
+  const match = src.match(FIT_IN_RE);
+  if (!match) return 9 / 16;
+  return Number(match[2]) / Number(match[1]) || 9 / 16;
+}
 
 /**
  * The one image primitive for CDS content. Wraps next/image with the CDN loader,
@@ -39,6 +51,8 @@ export function PbImage({
   priority = false,
   fixed,
   fillParent = false,
+  objectFit = "cover",
+  natural = false,
   placeholder = "blur",
   className,
   ...rest
@@ -49,6 +63,26 @@ export function PbImage({
     placeholder === "blur"
       ? { placeholder: "blur" as const, blurDataURL: makeBlurDataUrl(src) }
       : {};
+
+  if (natural) {
+    const ratio = sourceRatio(src);
+    return (
+      <Image
+        loader={cdnLoader}
+        src={src}
+        alt={alt}
+        width={1200}
+        height={Math.round(1200 * ratio)}
+        className={className}
+        style={{ width: "100%", height: "auto", display: "block" }}
+        sizes={sizes ?? DEFAULT_SIZES}
+        loading={priority ? undefined : "lazy"}
+        priority={priority}
+        {...blur}
+        {...rest}
+      />
+    );
+  }
 
   if (fixed) {
     return (
@@ -76,7 +110,7 @@ export function PbImage({
         fill
         sizes={sizes ?? DEFAULT_SIZES}
         className={className}
-        style={{ objectFit: "cover" }}
+        style={{ objectFit }}
         loading={priority ? undefined : "lazy"}
         priority={priority}
         {...blur}
@@ -91,6 +125,7 @@ export function PbImage({
     width: "100%",
     aspectRatio: String(aspectRatio),
     overflow: "hidden",
+    background: objectFit === "contain" ? "var(--pb-muted-bg, #ececec)" : undefined,
   };
 
   return (
@@ -101,7 +136,7 @@ export function PbImage({
         alt={alt}
         fill
         sizes={sizes ?? DEFAULT_SIZES}
-        style={{ objectFit: "cover" }}
+        style={{ objectFit }}
         loading={priority ? undefined : "lazy"}
         priority={priority}
         {...blur}

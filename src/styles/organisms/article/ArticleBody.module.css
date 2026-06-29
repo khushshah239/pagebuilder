@@ -1,6 +1,6 @@
 .body {
-  font-family: Charter, "Iowan Old Style", "Source Serif 4", Georgia, "Times New Roman", serif;
-  font-size: 20px;
+  font-family: var(--pb-font, Inter, -apple-system, sans-serif);
+  font-size: 17px;
   line-height: 1.75;
   color: var(--pb-text);
 }
@@ -17,7 +17,7 @@
 .body :global(h2),
 .body :global(h3),
 .body :global(h4) {
-  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-family: var(--pb-heading-font, Inter, sans-serif);
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
@@ -89,7 +89,7 @@
   padding: 24px 28px;
   border-left: 4px solid var(--pb-accent);
   background: var(--pb-muted-bg);
-  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-family: var(--pb-heading-font, Inter, sans-serif);
   font-size: 22px;
   line-height: 1.55;
   font-style: italic;

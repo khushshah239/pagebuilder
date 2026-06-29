@@ -22,6 +22,7 @@ import { TagRenderer } from "@/components/tag/TagRenderer";
 import { WebStoryPlayer } from "@/components/webstory/WebStoryPlayer";
 import { VideoRenderer, VideoSidebar } from "@/components/video/VideoRenderer";
 import { articleFeedSize } from "@/lib/article/buildProps";
+import { dropCurrentFromResults } from "@/lib/article/excludeCurrent";
 import { resolveBoundItems } from "@/lib/bindings";
 import { sectionFeedSize } from "@/lib/section/buildProps";
 import { tagFeedSize } from "@/lib/tag/buildProps";
@@ -38,6 +39,9 @@ export const revalidate = 60;
 
 const WEB_STORY_TYPE = "Web Story";
 
+// Mirrors ArticleRenderer's FORCED_SIDEBAR_SLUGS — organisms always routed to the aside.
+const FORCED_SIDEBAR_SLUGS = new Set(["live_blog"]);
+
 /** Returns true only when a sidebar organism has live (non-default) data to show. */
 function hasSidebarOrganisms(post: ArticleData): boolean {
   const template = post.custom_entity?.template?.[0];
@@ -50,8 +54,15 @@ function hasSidebarOrganisms(post: ArticleData): boolean {
   return Object.values(template).some((v) => {
     if (!v || typeof v !== "object" || Array.isArray(v)) return false;
     const node = v as { schema_slug?: string; id?: string; dynamic_fields?: unknown[] };
-    if (!node.schema_slug?.startsWith("sidebar") || !Array.isArray(node.dynamic_fields)) return false;
+    if (!Array.isArray(node.dynamic_fields)) return false;
 
+    // live_blog's content is authored inline (no field-map binding) — its
+    // presence in the template is enough to show the sidebar.
+    if (node.schema_slug && FORCED_SIDEBAR_SLUGS.has(node.schema_slug)) {
+      return node.dynamic_fields.length > 0;
+    }
+
+    if (!node.schema_slug?.startsWith("sidebar")) return false;
     const orgId = node.id ?? node.schema_slug;
     const binding = allBindings.find((b) => b.organism_id === orgId);
     return resolveBoundItems(binding?.field_map?.dynamic_fields ?? [], root).length > 0;
@@ -278,15 +289,25 @@ export default async function CatchAllPage({ params }: RouteParams) {
     const authorRootField  = videoBindingRootField(videoTemplate, "morefromauthorrow")  || "more_from_author";
     const sidebarRootField = videoBindingRootField(videoTemplate, "sidebar-latest-news") || "latest_news_right";
 
+    // Identity of the current video — drop it from every "other articles" list.
+    const videoCurrentUrls = [post.legacy_url as string | undefined, post.absolute_url as string | undefined];
+
     const existing: Record<string, unknown> = { ...(post.custom_entity ?? {}) };
-    const existingRelated  = ((existing[relatedRootField]  as { results?: Record<string, unknown>[] } | null)?.results ?? []);
-    const existingAuthor   = ((existing[authorRootField]   as { results?: Record<string, unknown>[] } | null)?.results ?? []);
+    const existingRelated  = dropCurrentFromResults(
+      ((existing[relatedRootField] as { results?: Record<string, unknown>[] } | null)?.results ?? []),
+      videoPostId, videoCurrentUrls
+    );
+    const existingAuthor   = dropCurrentFromResults(
+      ((existing[authorRootField] as { results?: Record<string, unknown>[] } | null)?.results ?? []),
+      videoPostId, videoCurrentUrls
+    );
     // Sidebar field lives on post root, not inside custom_entity — check both.
-    const existingSidebar: Record<string, unknown>[] = Array.isArray(post[sidebarRootField])
+    const rawSidebar: Record<string, unknown>[] = Array.isArray(post[sidebarRootField])
       ? (post[sidebarRootField] as Record<string, unknown>[])
       : Array.isArray(existing[sidebarRootField])
         ? (existing[sidebarRootField] as Record<string, unknown>[])
         : [];
+    const existingSidebar = dropCurrentFromResults(rawSidebar, videoPostId, videoCurrentUrls);
 
     const [relatedResult, authorResult, sidebarResult] = await Promise.all([
       existingRelated.length < relatedSize && videoCategorySlug
@@ -339,12 +360,22 @@ export default async function CatchAllPage({ params }: RouteParams) {
   const relatedSize = articleTemplate ? articleFeedSize(articleTemplate, "relatedarticlesrow", 4) : 4;
   const moreFromAuthorSize = articleTemplate ? articleFeedSize(articleTemplate, "morefromauthorrow", 4) : 4;
 
+  // Identity of the current article — used to drop it from every "other
+  // articles" list so a story never points to itself.
+  const currentUrls = [post.legacy_url as string | undefined, post.absolute_url as string | undefined];
+
   // CDS may already include curated related_article / more_from_author results
-  // inside custom_entity. Only fall back to a separate fetch when they're absent.
-  const cdsRelated =
-    ((post.custom_entity?.related_article as { results?: Record<string, unknown>[] } | null)?.results ?? []);
-  const cdsMoreFromAuthor =
-    ((post.custom_entity?.more_from_author as { results?: Record<string, unknown>[] } | null)?.results ?? []);
+  // inside custom_entity. Drop the current article from the curated lists FIRST
+  // (so the binding skips it and proceeds to the next item), then fall back to a
+  // separate fetch only when too few real items remain.
+  const cdsRelated = dropCurrentFromResults(
+    ((post.custom_entity?.related_article as { results?: Record<string, unknown>[] } | null)?.results ?? []),
+    postId, currentUrls
+  );
+  const cdsMoreFromAuthor = dropCurrentFromResults(
+    ((post.custom_entity?.more_from_author as { results?: Record<string, unknown>[] } | null)?.results ?? []),
+    postId, currentUrls
+  );
 
   const [relatedResult, moreFromAuthorResult] = await Promise.all([
     cdsRelated.length < relatedSize && categorySlug
@@ -355,14 +386,26 @@ export default async function CatchAllPage({ params }: RouteParams) {
       : Promise.resolve({ data: cdsMoreFromAuthor }),
   ]);
 
-  // Ensure both lists are always present under custom_entity so the binding
-  // layer can resolve related_article.results.* and more_from_author.results.*
+  // Trending + sidebar latest-news come straight from custom_entity (flat
+  // arrays) — drop the current article from those too.
+  const ce = post.custom_entity ?? {};
+  const trending = Array.isArray(ce.trending_articles)
+    ? dropCurrentFromResults(ce.trending_articles as Record<string, unknown>[], postId, currentUrls)
+    : ce.trending_articles;
+  const latestNews = Array.isArray(ce.laterst_news_right)
+    ? dropCurrentFromResults(ce.laterst_news_right as Record<string, unknown>[], postId, currentUrls)
+    : ce.laterst_news_right;
+
+  // Ensure the lists are present under custom_entity so the binding layer can
+  // resolve related_article.results.*, more_from_author.results.*, etc.
   const enrichedPost = {
     ...post,
     custom_entity: {
       ...post.custom_entity,
       related_article: { results: relatedResult.data },
       more_from_author: { results: moreFromAuthorResult.data },
+      trending_articles: trending,
+      laterst_news_right: latestNews,
     },
   };
 

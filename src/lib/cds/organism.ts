@@ -20,6 +20,23 @@ export function organismId(node: CdsLayoutOrganism): string {
   return String(firstDynamicField(node).id ?? "") || node.schema_slug;
 }
 
+// Zone prefixes used to place an organism (see HomepageRenderer) — stripped so
+// the heading reads cleanly (e.g. "right-top-stories" → "Top Stories").
+const ZONE_PREFIX = /^(right|left|main|full|sidebar)-/;
+
+/** Derives a display heading from an organism's id by stripping any zone prefix
+ *  and humanizing the kebab/snake-case remainder, e.g.:
+ *  "sports-row" → "Sports Row", "more-from-author" → "More From Author",
+ *  "right-top-stories" → "Top Stories", "sidebar-latest-news" → "Latest News". */
+export function headingFromId(id: string): string {
+  return id
+    .replace(ZONE_PREFIX, "")
+    .split(/[-_]+/)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
 /** Returns the field-map for a given organism id, or [] when none exists. */
 export function bindingFor(template: CdsTemplate, id: string): CdsFieldMapEntry[] {
   const binding = (template.bindings?.dynamic_fields ?? []).find(

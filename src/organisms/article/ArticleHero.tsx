@@ -18,7 +18,7 @@ export function ArticleHero({
           className={styles.image}
           src={cover_image}
           alt={caption || ""}
-          aspectRatio={16 / 9}
+          natural
           priority
           sizes="(max-width: 768px) 100vw, min(1200px, 100vw)"
         />

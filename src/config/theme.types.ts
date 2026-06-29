@@ -23,7 +23,5 @@ export interface PublisherConfig {
   /** BCP-47 language tag for the <html lang> attribute. Defaults to "en". */
   lang?: string;
   cdsPublisherId: string;
-  longLogo?: string;
-  shortLogo?: string;
   theme: ThemeTokens;
 }

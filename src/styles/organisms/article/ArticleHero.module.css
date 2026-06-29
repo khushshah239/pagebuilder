@@ -7,10 +7,6 @@
 }
 
 .image {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  display: block;
   border-radius: var(--pb-radius-md);
   background: var(--pb-muted-bg);
 }
@@ -26,7 +22,7 @@
 
 .excerpt {
   margin: 0;
-  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-family: var(--pb-heading-font, Inter, sans-serif);
   font-size: clamp(18px, 1.8vw, 22px);
   line-height: 1.55;
   font-weight: 400;

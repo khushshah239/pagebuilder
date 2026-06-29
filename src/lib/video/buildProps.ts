@@ -7,9 +7,9 @@ const VIDEO_ORGANISM_SPECS: Record<string, OrganismSpec> = {
   videoheader:           { kind: "single" },
   videobody:             { kind: "single" },
   tagsrow:               { kind: "list", itemsProp: "article_tags" },
-  morefromauthorrow:     { kind: "list", itemsProp: "author_articles", defaultHeading: "More from the author" },
-  relatedarticlesrow:    { kind: "list", itemsProp: "related_cards",   defaultHeading: "Related Articles" },
-  "sidebar-latest-news": { kind: "list", itemsProp: "items",           defaultHeading: "Latest News" },
+  morefromauthorrow:     { kind: "list", itemsProp: "author_articles" },
+  relatedarticlesrow:    { kind: "list", itemsProp: "related_cards" },
+  "sidebar-latest-news": { kind: "list", itemsProp: "items" },
 };
 
 function getBinding(template: Record<string, unknown>, id: string) {

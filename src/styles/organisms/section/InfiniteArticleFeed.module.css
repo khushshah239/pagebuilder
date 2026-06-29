@@ -1,17 +1,18 @@
 .grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 280px));
+  justify-content: center;
   gap: var(--pb-space-5);
   align-items: stretch;
 }
 @media (max-width: 1100px) {
-  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .grid { grid-template-columns: repeat(3, minmax(0, 300px)); }
 }
 @media (max-width: 760px) {
-  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 320px)); gap: 18px; }
 }
 @media (max-width: 480px) {
-  .grid { grid-template-columns: 1fr; gap: var(--pb-space-4); }
+  .grid { grid-template-columns: minmax(0, 360px); gap: var(--pb-space-4); }
 }
 
 .card {
@@ -79,7 +80,7 @@ a.category:hover { color: var(--pb-accent-dark); }
 .title {
   position: relative;
   margin: 0;
-  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-family: var(--pb-heading-font, Inter, sans-serif);
   font-size: var(--pb-fs-md);
   font-weight: var(--pb-heading-weight);
   line-height: 1.32;
@@ -141,7 +142,7 @@ a.author:hover { color: var(--pb-accent); }
   margin-left: auto;
   flex-shrink: 0;
   white-space: nowrap;
-  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-family: var(--pb-heading-font, Inter, sans-serif);
   font-weight: 600;
   font-size: 11px;
   letter-spacing: 0.04em;
@@ -161,7 +162,7 @@ a.author:hover { color: var(--pb-accent); }
   margin: 0;
   padding: 60px 0;
   text-align: center;
-  font-family: var(--pb-heading-font, "Playfair Display", Georgia, serif);
+  font-family: var(--pb-heading-font, Inter, sans-serif);
   font-size: var(--pb-fs-lg);
   color: var(--pb-muted);
 }
