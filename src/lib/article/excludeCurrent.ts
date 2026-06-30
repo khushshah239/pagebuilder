@@ -31,11 +31,9 @@ export function dropCurrentFromResults(
   return results.filter((item) => !isCurrentPost(item, currentId, urlSet));
 }
 
-/** nested: true → field is { results: [...] }, false → field is a plain array. */
 export type ListOrganismConfig = {
   schemaSlug: string;
   defaultField: string;
-  nested: boolean;
 };
 
 type PostWithLists = {
@@ -45,6 +43,13 @@ type PostWithLists = {
   custom_entity?: Record<string, unknown> | null;
   [key: string]: unknown;
 };
+
+/** Reads a CDS list field regardless of shape: a plain array, or { results: [...] }. */
+function readList(rawField: unknown): Record<string, unknown>[] {
+  if (Array.isArray(rawField)) return rawField as Record<string, unknown>[];
+  const wrapped = (rawField as { results?: unknown } | null)?.results;
+  return Array.isArray(wrapped) ? (wrapped as Record<string, unknown>[]) : [];
+}
 
 /** Removes the current post from each configured list (checks custom_entity, then post root). */
 export function excludeCurrentFromLists(
@@ -58,16 +63,13 @@ export function excludeCurrentFromLists(
 
   const updatedFields: Record<string, unknown> = {};
 
-  for (const { schemaSlug, defaultField, nested } of configs) {
+  for (const { schemaSlug, defaultField } of configs) {
     const fieldName = resolveFieldName(schemaSlug) || defaultField;
     const rawField = customEntity[fieldName] ?? post[fieldName];
-    const rawList = nested
-      ? ((rawField as { results?: Record<string, unknown>[] } | null)?.results ?? [])
-      : ((rawField as Record<string, unknown>[] | null) ?? []);
+    const filteredList = dropCurrentFromResults(readList(rawField), currentId, currentUrls);
 
-    updatedFields[fieldName] = nested
-      ? { results: dropCurrentFromResults(rawList, currentId, currentUrls) }
-      : dropCurrentFromResults(rawList, currentId, currentUrls);
+    // Preserve whatever shape the field arrived in — plain array or { results: [...] }.
+    updatedFields[fieldName] = Array.isArray(rawField) ? filteredList : { results: filteredList };
   }
 
   return updatedFields;

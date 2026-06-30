@@ -71,17 +71,17 @@ function hasSidebarOrganisms(post: ArticleData): boolean {
 const VIDEO_TYPE = "Video";
 
 const ARTICLE_LIST_ORGANISMS: readonly ListOrganismConfig[] = [
-  { schemaSlug: "relatedarticlesrow",  defaultField: "related_article",    nested: true },
-  { schemaSlug: "morefromauthorrow",   defaultField: "more_from_author",   nested: true },
-  { schemaSlug: "sidebar-latest-news", defaultField: "laterst_news_right", nested: false },
-  { schemaSlug: "trendingarticlesrow", defaultField: "trending_articles",  nested: false },
-  { schemaSlug: "live_blog",           defaultField: "live_blog",          nested: false },
+  { schemaSlug: "relatedarticlesrow",  defaultField: "related_article" },
+  { schemaSlug: "morefromauthorrow",   defaultField: "more_from_author" },
+  { schemaSlug: "sidebar-latest-news", defaultField: "laterst_news_right" },
+  { schemaSlug: "trendingarticlesrow", defaultField: "trending_articles" },
+  { schemaSlug: "live_blog",           defaultField: "live_blog" },
 ];
 
 const VIDEO_LIST_ORGANISMS: readonly ListOrganismConfig[] = [
-  { schemaSlug: "relatedarticlesrow",  defaultField: "related_article",    nested: true },
-  { schemaSlug: "morefromauthorrow",   defaultField: "more_from_author",   nested: true },
-  { schemaSlug: "sidebar-latest-news", defaultField: "latest_news_right",  nested: false },
+  { schemaSlug: "relatedarticlesrow",  defaultField: "related_article" },
+  { schemaSlug: "morefromauthorrow",   defaultField: "more_from_author" },
+  { schemaSlug: "sidebar-latest-news", defaultField: "latest_news_right" },
 ];
 
 type RouteParams = { params: Promise<{ slug: string[] }> };

@@ -7,14 +7,13 @@ const ARTICLE_ORGANISM_SPECS: Record<string, OrganismSpec> = {
   articleheader:         { kind: "single" },
   articlebody:           { kind: "single" },
   inlinevideoembed:      { kind: "single" },
-  articlesummary:        { kind: "static" },
   sharebar:              { kind: "static" },
-  relatedarticlesrow:    { kind: "list", itemsProp: "related_cards" },
-  morefromauthorrow:     { kind: "list", itemsProp: "author_articles" },
-  tagsrow:               { kind: "list", itemsProp: "article_tags" },
-  trendingarticlesrow:   { kind: "list", itemsProp: "trending_cards" },
-  live_blog:             { kind: "list", itemsProp: "live_updates" },
-  "sidebar-latest-news": { kind: "list", itemsProp: "items" },
+  relatedarticlesrow:    { kind: "list", itemsProp: "related_cards",   defaultSlot: "related_article" },
+  morefromauthorrow:     { kind: "list", itemsProp: "author_articles", defaultSlot: "author_cards" },
+  tagsrow:               { kind: "list", itemsProp: "article_tags",    defaultSlot: "article_tags" },
+  trendingarticlesrow:   { kind: "list", itemsProp: "trending_cards",  defaultSlot: "trending_card" },
+  live_blog:             { kind: "list", itemsProp: "live_updates",    defaultSlot: null },
+  "sidebar-latest-news": { kind: "list", itemsProp: "items",           defaultSlot: "sidebar_coloumn_card" },
 };
 
 function getBinding(template: CdsArticleTemplate, id: string) {
@@ -24,22 +23,31 @@ function getBinding(template: CdsArticleTemplate, id: string) {
   );
 }
 
+/** Finds an organism node by schema_slug and returns its own id (bindings are keyed by id, not slug). */
+function organismIdForSlug(template: CdsArticleTemplate, schemaSlug: string): string {
+  for (const value of Object.values(template)) {
+    if (!value || typeof value !== "object") continue;
+    const node = value as Partial<CdsLayoutOrganism>;
+    if (node.schema_slug === schemaSlug) return organismId(node as CdsLayoutOrganism);
+  }
+  return "";
+}
+
 export function articleFeedSize(
   template: CdsArticleTemplate,
   schemaSlug: string,
   fallback: number
 ): number {
-  return feedSize(getBinding(template, schemaSlug), fallback);
+  return feedSize(getBinding(template, organismIdForSlug(template, schemaSlug)), fallback);
 }
 
-/** Root custom_entity field a list organism's binding reads from (e.g.
- *  "related_article.results.0.title" → "related_article"). Falls back to ""
- *  when the organism has no binding, so callers can supply their own default. */
+/** Root custom_entity field a list organism's binding reads from (e.g. "related_article"). */
 export function articleBindingRootField(
   template: CdsArticleTemplate,
   schemaSlug: string
 ): string {
-  const first = getBinding(template, schemaSlug)[0] as CdsFieldMapEntry | undefined;
+  const orgId = organismIdForSlug(template, schemaSlug);
+  const first = getBinding(template, orgId)[0] as CdsFieldMapEntry | undefined;
   return first?.source.split(".")[0] ?? "";
 }
 

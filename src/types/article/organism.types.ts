@@ -15,16 +15,6 @@ export interface ArticleHeroProps {
   caption?: string;
 }
 
-export interface ArticleKeyPoint {
-  text: string;
-}
-
-export interface ArticleSummaryProps {
-  identifier: string;
-  heading?: string;
-  key_points: ArticleKeyPoint[];
-}
-
 export interface ArticleBodyProps {
   identifier: string;
   body: string; // rich-text HTML

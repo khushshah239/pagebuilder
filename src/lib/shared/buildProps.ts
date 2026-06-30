@@ -1,5 +1,5 @@
 import { resolveBoundItems } from "@/lib/bindings";
-import { firstDynamicField, headingFromId, isBlank, organismId } from "@/lib/cds/organism";
+import { defaultItems, firstDynamicField, headingFromId, isBlank, organismId } from "@/lib/cds/organism";
 import { MEDIA_KEYS, flattenMedia, flattenMediaFields } from "@/lib/media";
 import { getByPath } from "@/lib/path";
 import type { CdsFieldMapEntry, CdsLayoutOrganism } from "@/types/article/cds.types";
@@ -7,7 +7,7 @@ import type { CdsFieldMapEntry, CdsLayoutOrganism } from "@/types/article/cds.ty
 export type OrganismSpec =
   | { kind: "single" }
   | { kind: "static" }
-  | { kind: "list"; itemsProp: string };
+  | { kind: "list"; itemsProp: string; defaultSlot: string | null };
 
 function coerce(key: string, value: unknown): unknown {
   return MEDIA_KEYS.has(key) ? flattenMedia(value) : value;
@@ -22,28 +22,15 @@ function defaultProps(node: CdsLayoutOrganism): Record<string, unknown> {
   return out;
 }
 
-function nestedItems(node: CdsLayoutOrganism): Record<string, unknown>[] {
-  for (const value of Object.values(firstDynamicField(node))) {
-    const container = value as { dynamic_fields?: Record<string, unknown>[] };
-    if (container && Array.isArray(container.dynamic_fields)) {
-      return container.dynamic_fields.map(flattenMediaFields);
-    }
-  }
-  return [];
-}
-
-/** Looks up a binding by organism id, falling back to a normalized (no hyphens/underscores) match. */
+/** Looks up a binding entry by organism id. */
 export function resolveBinding(
   entries: Array<{ organism_id: string; field_map: { dynamic_fields: CdsFieldMapEntry[] } }>,
   id: string
 ): CdsFieldMapEntry[] {
-  const norm = (s: string) => s.toLowerCase().replace(/[-_]/g, "");
-  const normId = norm(id);
-  const entry =
-    entries.find((b) => b.organism_id === id) ??
-    entries.find((b) => norm(b.organism_id) === normId);
+  const entry = entries.find((b) => b.organism_id === id);
   return entry?.field_map.dynamic_fields ?? [];
 }
+
 
 /** Returns max bound index + 1 from a field map, or fallback when unconfigured. */
 export function feedSize(fieldMap: CdsFieldMapEntry[], fallback: number): number {
@@ -65,18 +52,13 @@ export function buildOrganismProps(
   const id = organismId(node);
 
   if (spec.kind === "static") {
-    const liveItems = resolveBoundItems(fieldMap, data);
     const props: Record<string, unknown> = { identifier: id };
     for (const [key, value] of Object.entries(firstDynamicField(node))) {
       if (key === "id") continue;
       const container = value as { dynamic_fields?: Record<string, unknown>[] };
-      if (Array.isArray(container?.dynamic_fields)) {
-        props[key] = liveItems.length > 0
-          ? liveItems.map(flattenMediaFields)
-          : container.dynamic_fields.map(flattenMediaFields);
-      } else {
-        props[key] = coerce(key, value);
-      }
+      props[key] = Array.isArray(container?.dynamic_fields)
+        ? container.dynamic_fields.map(flattenMediaFields)
+        : coerce(key, value);
     }
     return props;
   }
@@ -92,7 +74,7 @@ export function buildOrganismProps(
 
   // list: live binding items → template inline defaults as fallback.
   const liveItems = resolveBoundItems(fieldMap, data).map(flattenMediaFields);
-  const items = liveItems.length > 0 ? liveItems : nestedItems(node);
+  const items = liveItems.length > 0 ? liveItems : defaultItems(node, spec.defaultSlot);
   const result: Record<string, unknown> = {
     identifier: id,
     [spec.itemsProp]: items,

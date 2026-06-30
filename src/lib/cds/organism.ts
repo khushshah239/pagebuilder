@@ -19,6 +19,17 @@ export function organismId(node: CdsLayoutOrganism): string {
   return String(firstDynamicField(node).id ?? "") || node.schema_slug;
 }
 
+/** Extracts the organism nodes out of a flat template object, in declared order
+ *  (article/video templates store organisms as object keys, unlike the homepage
+ *  template's `layout` array — this gives both the same array shape to render from). */
+export function organismLayout(template: Record<string, unknown>): CdsLayoutOrganism[] {
+  return Object.values(template).filter((value): value is CdsLayoutOrganism => {
+    if (!value || typeof value !== "object") return false;
+    const node = value as Partial<CdsLayoutOrganism>;
+    return typeof node.schema_slug === "string" && Array.isArray(node.dynamic_fields);
+  });
+}
+
 // Zone prefixes used to place an organism (see HomepageRenderer) — stripped so
 // the heading reads cleanly (e.g. "right-top-stories" → "Top Stories").
 const ZONE_PREFIX = /^(right|left|main|full|sidebar)-/;

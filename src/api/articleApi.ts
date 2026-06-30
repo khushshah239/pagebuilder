@@ -9,14 +9,14 @@ function toggleTrailingSlash(legacyUrl: string): string {
   return legacyUrl.endsWith("/") ? legacyUrl.slice(0, -1) : `${legacyUrl}/`;
 }
 
-// Cross-request cache: same article URL returns instantly for 60s after first fetch.
+// Next.js strips the trailing slash from incoming URLs (308 redirect) before
+// this ever runs, but CDS legacy_urls require it — so retry with it added/removed
+// on 404 before giving up.
 const fetchArticleFromCDS = unstable_cache(
   async (legacyUrl: string): Promise<CdsArticleResponse> => {
     try {
       return await cdsFetch<CdsArticleResponse>(postByLegacyUrlPath(legacyUrl));
     } catch (err) {
-      // Only retry with a toggled trailing slash on 404 — auth errors and network
-      // failures propagate immediately to avoid masking the real problem.
       if ((err as { status?: number }).status !== 404) throw err;
       return cdsFetch<CdsArticleResponse>(
         postByLegacyUrlPath(toggleTrailingSlash(legacyUrl))

@@ -1,6 +1,5 @@
 export { ArticleHeader } from "./ArticleHeader";
 export { ArticleHero } from "./ArticleHero";
-export { ArticleSummary } from "./ArticleSummary";
 export { ArticleBody } from "./ArticleBody";
 export { InlineVideoEmbed } from "./InlineVideoEmbed";
 export { ShareBar } from "./ShareBar";

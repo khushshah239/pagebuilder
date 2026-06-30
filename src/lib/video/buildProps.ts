@@ -6,10 +6,10 @@ const VIDEO_ORGANISM_SPECS: Record<string, OrganismSpec> = {
   videohero:             { kind: "single" },
   videoheader:           { kind: "single" },
   videobody:             { kind: "single" },
-  tagsrow:               { kind: "list", itemsProp: "article_tags" },
-  morefromauthorrow:     { kind: "list", itemsProp: "author_articles" },
-  relatedarticlesrow:    { kind: "list", itemsProp: "related_cards" },
-  "sidebar-latest-news": { kind: "list", itemsProp: "items" },
+  tagsrow:               { kind: "list", itemsProp: "article_tags",    defaultSlot: "article_tags" },
+  morefromauthorrow:     { kind: "list", itemsProp: "author_articles", defaultSlot: "author_cards" },
+  relatedarticlesrow:    { kind: "list", itemsProp: "related_cards",   defaultSlot: "related_article" },
+  "sidebar-latest-news": { kind: "list", itemsProp: "items",           defaultSlot: "sidebar_coloumn_card" },
 };
 
 function getBinding(template: Record<string, unknown>, id: string) {
@@ -19,11 +19,22 @@ function getBinding(template: Record<string, unknown>, id: string) {
   return resolveBinding(block?.dynamic_fields ?? [], id);
 }
 
+/** Finds an organism node by schema_slug and returns its own id (bindings are keyed by id, not slug). */
+function organismIdForSlug(template: Record<string, unknown>, schemaSlug: string): string {
+  for (const value of Object.values(template)) {
+    if (!value || typeof value !== "object") continue;
+    const node = value as Partial<CdsLayoutOrganism>;
+    if (node.schema_slug === schemaSlug) return organismId(node as CdsLayoutOrganism);
+  }
+  return "";
+}
+
 export function videoBindingRootField(
   template: Record<string, unknown>,
   schemaSlug: string
 ): string {
-  const first = getBinding(template, schemaSlug)[0] as CdsFieldMapEntry | undefined;
+  const orgId = organismIdForSlug(template, schemaSlug);
+  const first = getBinding(template, orgId)[0] as CdsFieldMapEntry | undefined;
   return first?.source.split(".")[0] ?? "";
 }
 
@@ -32,7 +43,7 @@ export function videoFeedSize(
   schemaSlug: string,
   fallback: number
 ): number {
-  return feedSize(getBinding(template, schemaSlug), fallback);
+  return feedSize(getBinding(template, organismIdForSlug(template, schemaSlug)), fallback);
 }
 
 export function buildVideoOrganismProps(
