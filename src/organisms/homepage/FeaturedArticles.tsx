@@ -5,7 +5,6 @@ import { CategoryLink } from "@/components/CategoryLink";
 import type { FeaturedArticlesProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/FeaturedArticles.module.css";
 
-/** Curated articles: 1 large hero card + 2-column grid for the rest. */
 export function FeaturedArticles({
   identifier,
   heading,
@@ -23,7 +22,6 @@ export function FeaturedArticles({
         </header>
       ) : null}
 
-      {/* Hero card — full width */}
       <article className={styles.hero}>
         {hero.url_slug ? (
           <Link href={hero.url_slug} className={styles.cardLink} aria-label={hero.title} />
@@ -48,7 +46,6 @@ export function FeaturedArticles({
         </div>
       </article>
 
-      {/* 2-column grid for remaining cards */}
       {rest.length > 0 && (
         <div className={styles.grid}>
           {rest.map((card, index) => (

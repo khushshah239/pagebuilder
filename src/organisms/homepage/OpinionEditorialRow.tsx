@@ -5,7 +5,6 @@ import { CategoryLink } from "@/components/CategoryLink";
 import type { OpinionEditorialRowProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/OpinionEditorialRow.module.css";
 
-/** Opinion / editorial: 1 big hero card + 2-column grid for the rest. */
 export function OpinionEditorialRow({
   identifier,
   heading,
@@ -23,7 +22,6 @@ export function OpinionEditorialRow({
         </header>
       ) : null}
 
-      {/* Hero card — full width */}
       <article className={styles.hero}>
         {hero.url_slug ? (
           <Link href={hero.url_slug} className={styles.cardLink} aria-label={hero.title} />
@@ -49,7 +47,6 @@ export function OpinionEditorialRow({
         </div>
       </article>
 
-      {/* 2-column grid */}
       {rest.length > 0 && (
         <div className={styles.grid}>
           {rest.map((item, index) => (

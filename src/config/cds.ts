@@ -1,4 +1,3 @@
-// CDS routing constants — change these when onboarding a new publisher.
 /** The homepage CustomEntity legacy URL. */
 export const HOMEPAGE_LEGACY_URL = "/homepages/homepage";
 
@@ -24,6 +23,5 @@ export const TAG_PAGE_SIZE = 10;
 /** Shared VideoPage template legacy URL. */
 export const VIDEO_TEMPLATE_LEGACY_URL = "/videotemplates/videotemplate";
 
-// 0 = no-store (always fresh); raise in production for ISR.
 // 60s ISR cache — pages serve instantly after first load. Set to 0 for always-fresh during dev.
 export const REVALIDATE_SECONDS = 60;

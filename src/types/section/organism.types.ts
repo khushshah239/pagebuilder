@@ -1,12 +1,8 @@
-// Presentational prop contracts for SectionPage organisms; all values pre-resolved.
-
-// ─── SectionHeroBanner ───────────────────────────────────────────────────────
 export interface SectionHeroBannerProps {
   identifier: string;
   section_name?: string;
 }
 
-// ─── InfiniteArticleFeed ─────────────────────────────────────────────────────
 export interface SectionFeedArticle {
   title: string;
   thumbnail?: string;

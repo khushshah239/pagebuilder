@@ -1,4 +1,3 @@
-// Publisher registry — add a new entry here to onboard a new publisher.
 import { ACTIVE_PUBLISHER_KEY } from "./env";
 import type { PublisherConfig } from "./theme.types";
 

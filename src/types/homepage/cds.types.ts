@@ -6,7 +6,6 @@ export type {
   CdsTemplate,
 } from "@/types/cds.types";
 
-/** `data.custom_entity` of the homepage: embedded template plus live data slots. */
 export interface HomepageCustomEntity {
   id?: string;
   name?: string;
@@ -15,7 +14,6 @@ export interface HomepageCustomEntity {
   [slot: string]: unknown;
 }
 
-/** Full homepage CDS response. */
 export type CdsHomepageResponse = CdsEnvelope<{
   custom_entity: HomepageCustomEntity;
 }>;

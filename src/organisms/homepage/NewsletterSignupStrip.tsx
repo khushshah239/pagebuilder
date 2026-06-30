@@ -2,10 +2,8 @@ import { PbImage } from "@/components/PbImage";
 import type { NewsletterSignupStripProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/NewsletterSignupStrip.module.css";
 
-/**
- * Inline CTA banner for email newsletter subscription. Presentational only —
- * the email field is non-functional here (wired by the host page if needed).
- */
+// Presentational only — the email field is non-functional here (wired by the
+// host page if needed).
 export function NewsletterSignupStrip({
   identifier,
   title,

@@ -14,7 +14,6 @@ import type {
   HomepageCustomEntity,
 } from "@/types/homepage/cds.types";
 
-// Re-exported for renderer compatibility.
 export { organismId } from "@/lib/cds/organism";
 
 // kind: "list" = item array with live→default fallback, "static" = template-only props
@@ -23,8 +22,6 @@ type ListSpec = {
   itemsProp: string;
   defaultSlot: string | null;
   singletons?: string[];
-  // When true, lead item lives at the template default's top level (e.g. PostGrid).
-  leadFromDefault?: boolean;
 };
 type StaticSpec = { kind: "static"; props: string[] };
 type OrganismSpec = ListSpec | StaticSpec;
@@ -40,7 +37,7 @@ const ORGANISM_SPECS: Record<string, OrganismSpec> = {
   webstoryrail:             { kind: "list",   itemsProp: "stories",         defaultSlot: "story_bubbles" },
   trendingtopicschips:      { kind: "list",   itemsProp: "chips",           defaultSlot: "topic_chips" },
   opinioneditorialrow:      { kind: "list",   itemsProp: "items",           defaultSlot: "opinion_cards" },
-  postgrid_with_hero_image: { kind: "list",   itemsProp: "items",           defaultSlot: "sidecards",        leadFromDefault: true },
+  postgrid_with_hero_image: { kind: "list",   itemsProp: "items",           defaultSlot: "sidecards" },
   apppromocard:             { kind: "static", props: ["title", "cta(Android)", "cta(iphone)", "background_image"] },
   newslettersignupstrip:    { kind: "static", props: ["title", "cta_label", "background_image"] },
 };
@@ -56,18 +53,6 @@ function homepageSlotFields(
   return slot?.dynamic_fields?.[0] ?? {};
 }
 
-/** Builds the lead item from top-level template default fields (for the PostGrid hero). */
-function leadFromDefault(
-  node: CdsLayoutOrganism,
-  slot: string | null
-): Record<string, unknown> {
-  const lead: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(firstDynamicField(node))) {
-    if (key !== "id" && key !== slot) lead[key] = value;
-  }
-  return flattenMediaFields(lead);
-}
-
 /** Builds props for one homepage organism from live data, falling back to template defaults. */
 export function buildOrganismProps(
   node: CdsLayoutOrganism,
@@ -78,9 +63,8 @@ export function buildOrganismProps(
   if (!spec) return null;
 
   const id = organismId(node);
-  const defaults = firstDynamicField(node); // the organism's inline template default block
+  const defaults = firstDynamicField(node);
 
-  // ── static: single-value organisms — template defaults overlaid by the live slot ──
   if (spec.kind === "static") {
     const live = homepageSlotFields(data, node.schema_slug);
     const props: Record<string, unknown> = { identifier: id };
@@ -94,15 +78,10 @@ export function buildOrganismProps(
     return props;
   }
 
-  // ── list: array organisms — live binding items, falling back to template defaults ──
   const fieldMap = bindingFor(template, id);
   let items = resolveBoundItems(fieldMap, data).map(flattenMediaFields);
   if (items.length === 0) {
     items = defaultItems(node, spec.defaultSlot);
-    if (spec.leadFromDefault) {
-      const lead = leadFromDefault(node, spec.defaultSlot);
-      if (!isBlank(lead.title)) items = [lead, ...items];
-    }
   }
 
   // Skip a list organism with no items so it never renders an empty block.

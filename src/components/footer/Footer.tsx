@@ -3,10 +3,9 @@ import { fetchFooter } from "@/api/footerApi";
 import { getActivePublisher } from "@/config/publishers";
 import { getSocialIcon, safeSocialHref } from "@/components/SocialIcons";
 
-/** Server component — all data from CDS /footer/ API. */
 export async function Footer() {
   const publisher = getActivePublisher();
-  const footer = await fetchFooter(); // GET /publisher/4027/footer/
+  const footer = await fetchFooter();
 
   const socialLinks = (footer.socialLinks ?? []).sort((a, b) => a.pk_key - b.pk_key);
   const quickMenus = footer.addQuickMenu ?? [];
@@ -15,7 +14,6 @@ export async function Footer() {
     <footer className="pb-site-footer">
       <div className="pb-shell">
 
-        {/* Top row: logo + bio left, social icons right */}
         <div className="pb-footer-top">
           <div className="pb-footer-brand-col">
             {footer.logo ? (
@@ -46,7 +44,6 @@ export async function Footer() {
           )}
         </div>
 
-        {/* Quick menus + app links */}
         {quickMenus.length > 0 && (
           <div className="pb-footer-menus">
             {quickMenus.map((menu) => (
@@ -68,7 +65,6 @@ export async function Footer() {
               </div>
             ))}
 
-            {/* App store links — from footer API */}
             {(footer.app_links?.apple_url || footer.app_links?.android_url) && (
               <div className="pb-footer-menu-col">
                 <h3 className="pb-footer-menu-title">Download App</h3>
@@ -91,7 +87,6 @@ export async function Footer() {
           </div>
         )}
 
-        {/* Copyright */}
         <div className="pb-footer-bottom">
           <p className="pb-footer-copy">
             {footer.copyRightText ?? `© ${(new Date()).getUTCFullYear()} ${publisher.name}. All rights reserved.`}

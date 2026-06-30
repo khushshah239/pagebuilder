@@ -8,13 +8,6 @@ import styles from "@/styles/organisms/homepage/PostGrid.module.css";
 /** Number of supporting story cards shown in the row below the hero. */
 const SIDE_SLOTS = 4;
 
-/**
- * Lead story with a large hero image on the left and headline/excerpt/byline on
- * the right, followed by a row of supporting story cards.
- *
- * Uses the stretched-overlay link pattern so category and author links (which
- * are nested interactive elements) sit above the card's article link correctly.
- */
 export function PostGrid({ identifier, items }: PostGridProps) {
   const [lead, ...rest] = items;
   if (!lead?.title) return null;
@@ -23,7 +16,6 @@ export function PostGrid({ identifier, items }: PostGridProps) {
 
   return (
     <section className={styles.grid} data-organism={identifier}>
-      {/* ── Lead (hero) card: image left, text right ─────────────────── */}
       <article className={styles.lead}>
         {lead.url_slug ? (
           <Link href={lead.url_slug} className={styles.leadLink} aria-label={lead.title} />
@@ -58,7 +50,6 @@ export function PostGrid({ identifier, items }: PostGridProps) {
         </div>
       </article>
 
-      {/* ── Supporting story row ──────────────────────────────────────── */}
       {sideCards.length > 0 ? (
         <div className={styles.feed}>
           {sideCards.map((card, index) => {

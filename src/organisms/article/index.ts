@@ -1,7 +1,3 @@
-// Barrel export for all Article Page organisms.
-// Import from "@/organisms/article" instead of reaching into individual files.
-// Prop interfaces are imported directly from "@/types/article/organism.types".
-
 export { ArticleHeader } from "./ArticleHeader";
 export { ArticleHero } from "./ArticleHero";
 export { ArticleSummary } from "./ArticleSummary";

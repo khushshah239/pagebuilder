@@ -1,6 +1,3 @@
-// Presentational prop contracts for homepage organisms; all values pre-resolved.
-
-// ─── HeroCarousel ───────────────────────────────────────────────────────────
 export interface HeroCarouselSlide {
   title: string;
   image: string;
@@ -18,7 +15,6 @@ export interface HeroCarouselProps {
   slides: HeroCarouselSlide[];
 }
 
-// ─── PostGrid ───────────────────────────────────────────────────────────────
 // First item is the hero; the rest are side cards.
 export interface PostGridItem {
   title: string;
@@ -39,7 +35,6 @@ export interface PostGridProps {
   items: PostGridItem[];
 }
 
-// ─── BreakingNewsStrip ──────────────────────────────────────────────────────
 export interface BreakingHeadline {
   title: string;
   url_slug?: string;
@@ -51,7 +46,6 @@ export interface BreakingNewsStripProps {
   headlines: BreakingHeadline[];
 }
 
-// ─── FeaturedArticles ───────────────────────────────────────────────────────
 export interface FeaturedCard {
   title: string;
   thumbnail: string;
@@ -69,7 +63,6 @@ export interface FeaturedArticlesProps {
   cards: FeaturedCard[];
 }
 
-// ─── SectionRow ─────────────────────────────────────────────────────────────
 export interface SectionRowCard {
   title: string;
   thumbnail: string;
@@ -87,7 +80,6 @@ export interface SectionRowProps {
   cards: SectionRowCard[];
 }
 
-// ─── TopStoriesList ─────────────────────────────────────────────────────────
 export interface TopStory {
   title: string;
   category_label?: string;
@@ -104,7 +96,6 @@ export interface TopStoriesListProps {
   stories: TopStory[];
 }
 
-// ─── OpinionEditorialRow ────────────────────────────────────────────────────
 export interface OpinionCard {
   title: string;
   thumbnail: string;
@@ -123,7 +114,6 @@ export interface OpinionEditorialRowProps {
   items: OpinionCard[];
 }
 
-// ─── WebStoryRail ───────────────────────────────────────────────────────────
 export interface WebStoryBubble {
   title?: string;
   thumbnail: string;
@@ -136,7 +126,6 @@ export interface WebStoryRailProps {
   stories: WebStoryBubble[];
 }
 
-// ─── VideoBriefingsRail ─────────────────────────────────────────────────────
 export interface VideoBriefingCard {
   title: string;
   thumbnail: string;
@@ -156,7 +145,6 @@ export interface VideoBriefingsRailProps {
   videos: VideoBriefingCard[];
 }
 
-// ─── TrendingTopicsChips ────────────────────────────────────────────────────
 export interface TrendingChip {
   label: string;
   url_slug?: string;
@@ -170,7 +158,6 @@ export interface TrendingTopicsChipsProps {
   chips: TrendingChip[];
 }
 
-// ─── NewsletterSignupStrip ──────────────────────────────────────────────────
 export interface NewsletterSignupStripProps {
   identifier: string;
   title: string;
@@ -178,7 +165,6 @@ export interface NewsletterSignupStripProps {
   background_image?: string;
 }
 
-// ─── AppPromoCard ───────────────────────────────────────────────────────────
 export interface AppPromoCardProps {
   identifier: string;
   title: string;

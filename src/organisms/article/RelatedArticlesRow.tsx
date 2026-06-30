@@ -24,7 +24,6 @@ export function RelatedArticlesRow({
       <ScrollRail trackClassName={styles.grid}>
         {related_cards.map((card, index) => {
           const key = `${identifier}-related-${index}`;
-          // Stretched overlay link → article; category link above → section.
           return (
             <article key={key} className={styles.card}>
               {card.url_slug ? (

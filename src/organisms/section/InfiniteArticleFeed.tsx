@@ -6,11 +6,8 @@ import { formatPublishedDateTime } from "@/lib/date";
 import type { InfiniteArticleFeedProps } from "@/types/section/organism.types";
 import styles from "@/styles/organisms/section/InfiniteArticleFeed.module.css";
 
-/**
- * The category/tag/author article grid — renders real articles only (no
- * placeholders). SectionFeed paginates at 10 per page, so this always receives
- * at most 10 articles and shows pagination controls when there are more.
- */
+// SectionFeed paginates at 10 per page, so this always receives at most 10
+// articles and shows pagination controls when there are more.
 export function InfiniteArticleFeed({
   identifier,
   feed_articles,
@@ -29,8 +26,6 @@ export function InfiniteArticleFeed({
         const key = `${identifier}-feed-${index}`;
         const time =
           formatPublishedDateTime(article.published_at) || article.published_at;
-        // Stretched overlay link → article; the author in the byline above it
-        // links to the author page (its own stacking context, no nested anchor).
         return (
           <article key={key} className={styles.card}>
             {article.url_slug ? (

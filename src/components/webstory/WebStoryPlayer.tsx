@@ -99,10 +99,14 @@ export function WebStoryPlayer({ slides, animation, publisherName }: WebStoryPla
             <div className={styles.card}>
               {slide.title ? <h2 className={styles.title}>{slide.title}</h2> : null}
               {slide.description ? <p className={styles.description}>{slide.description}</p> : null}
-              {slide.cta_text && slide.cta_link ? (
-                <a className={styles.cta} href={slide.cta_link} target="_blank" rel="noopener noreferrer">
-                  {slide.cta_text}
-                </a>
+              {slide.cta_text ? (
+                slide.cta_link ? (
+                  <a className={styles.cta} href={slide.cta_link} target="_blank" rel="noopener noreferrer">
+                    {slide.cta_text}
+                  </a>
+                ) : (
+                  <span className={styles.cta}>{slide.cta_text}</span>
+                )
               ) : null}
             </div>
           ) : null}

@@ -29,7 +29,6 @@ const ORGANISM_COMPONENTS: Record<string, AnyComponent> = {
   topstorieslist: TopStoriesList,
   opinioneditorialrow: OpinionEditorialRow,
   webstoryrail: WebStoryRail,
-  web_story_rail: WebStoryRail,
   videobriefingsrail: VideoBriefingsRail,
   trendingtopicschips: TrendingTopicsChips,
   newslettersignupstrip: NewsletterSignupStrip,
@@ -43,7 +42,6 @@ type Zone = "full" | "right" | "main";
 // right is read entirely from the organism name (see `zoneOf`).
 const FULL_WIDTH_SLUGS = new Set([
   "breakingnewsstrip",
-  "herocarousel",
   "trendingtopicschips",
 ]);
 
@@ -99,6 +97,7 @@ export function HomepageRenderer({ data }: { data: HomepageCustomEntity }) {
     if (!props) return null;
     return <Component key={organismId(node) || index} {...props} />;
   }
+
 
   return (
     <>

@@ -5,7 +5,6 @@ import { CategoryLink } from "@/components/CategoryLink";
 import type { SectionRowProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/SectionRow.module.css";
 
-/** Category section: 1 big hero card + 2-column grid for the rest. */
 export function SectionRow({ identifier, heading, cards }: SectionRowProps) {
   if (cards.length === 0) return null;
 
@@ -19,7 +18,6 @@ export function SectionRow({ identifier, heading, cards }: SectionRowProps) {
         </header>
       ) : null}
 
-      {/* Hero card — full width */}
       <article className={styles.hero}>
         {hero.url_slug ? (
           <Link href={hero.url_slug} className={styles.cardLink} aria-label={hero.title} />
@@ -44,7 +42,6 @@ export function SectionRow({ identifier, heading, cards }: SectionRowProps) {
         </div>
       </article>
 
-      {/* 2-column grid */}
       {rest.length > 0 && (
         <div className={styles.track}>
           {rest.map((card, index) => (

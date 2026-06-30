@@ -3,7 +3,6 @@ import { CategoryLink } from "@/components/CategoryLink";
 import type { TopStoriesListProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/TopStoriesList.module.css";
 
-/** Ranked grid of top stories — big rank numeral, category kicker, headline. */
 export function TopStoriesList({
   identifier,
   heading,
@@ -21,8 +20,6 @@ export function TopStoriesList({
       <ol className={styles.list}>
         {stories.map((story, index) => {
           const key = `${identifier}-story-${index}`;
-          // Stretched overlay link → article; the category link above it sits in
-          // its own stacking context (z-index) so it stays clickable, no nested <a>.
           return (
             <li key={key} className={styles.item}>
               {story.url_slug ? (

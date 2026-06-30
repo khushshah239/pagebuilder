@@ -1,6 +1,6 @@
 import { buildOrganismProps, feedSize, OrganismSpec, resolveBinding } from "@/lib/shared/buildProps";
 import { organismId } from "@/lib/cds/organism";
-import type { CdsArticleTemplate, CdsBinding, CdsLayoutOrganism } from "@/types/article/cds.types";
+import type { CdsArticleTemplate, CdsBinding, CdsFieldMapEntry, CdsLayoutOrganism } from "@/types/article/cds.types";
 
 const ARTICLE_ORGANISM_SPECS: Record<string, OrganismSpec> = {
   articlehero:           { kind: "single" },
@@ -30,6 +30,17 @@ export function articleFeedSize(
   fallback: number
 ): number {
   return feedSize(getBinding(template, schemaSlug), fallback);
+}
+
+/** Root custom_entity field a list organism's binding reads from (e.g.
+ *  "related_article.results.0.title" → "related_article"). Falls back to ""
+ *  when the organism has no binding, so callers can supply their own default. */
+export function articleBindingRootField(
+  template: CdsArticleTemplate,
+  schemaSlug: string
+): string {
+  const first = getBinding(template, schemaSlug)[0] as CdsFieldMapEntry | undefined;
+  return first?.source.split(".")[0] ?? "";
 }
 
 export function buildArticleOrganismProps(

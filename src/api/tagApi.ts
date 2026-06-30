@@ -39,7 +39,6 @@ export async function fetchTagPostsBySlug(
   };
 }
 
-
 export const fetchTagTemplate = unstable_cache(
   async (): Promise<Record<string, unknown>> => {
     const response = await cdsFetch<{

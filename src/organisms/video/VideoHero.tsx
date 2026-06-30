@@ -2,18 +2,10 @@ import { PbImage } from "@/components/PbImage";
 import type { VideoHeroProps } from "@/types/video/organism.types";
 import styles from "@/styles/organisms/video/VideoHero.module.css";
 
-/**
- * Full-width YouTube video embed at the top of a video page.
- *
- * Renders the CMS-supplied iframe HTML via `dangerouslySetInnerHTML` inside a
- * 16:9 aspect-ratio wrapper so any inline width/height attributes on the iframe
- * are overridden by CSS. The iframe is trusted publisher-controlled content from
- * the Publive CDS (meta_data.meta_video_embed), mirroring how ArticleBody
- * renders content_html.
- *
- * Falls back to a thumbnail poster link when no embed HTML is present, and to a
- * blank placeholder when neither the embed nor a poster is available.
- */
+// Renders the CMS-supplied iframe HTML via `dangerouslySetInnerHTML` inside a
+// 16:9 aspect-ratio wrapper so any inline width/height attributes on the iframe
+// are overridden by CSS. The iframe is trusted publisher-controlled content from
+// the Publive CDS (meta_data.meta_video_embed).
 export function VideoHero({ identifier, video_embed, video_url, thumbnail }: VideoHeroProps) {
   if (!video_embed && !video_url && !thumbnail) return null;
 

@@ -9,7 +9,6 @@ interface TagRendererProps {
   posts: TagPostsResponse;
 }
 
-/** Renders a tag page: hero then article feed from the tag template. */
 export function TagRenderer({ template, tag, posts }: TagRendererProps) {
   const heroProps = buildTagHeroProps(template, tag, posts);
   const articles = buildTagFeedItems(template, posts);

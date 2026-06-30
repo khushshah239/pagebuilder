@@ -23,10 +23,8 @@ export function SidebarLatestNews({
               <Link href={item.url_slug} className={styles.link} aria-label={item.title} prefetch={false} />
             ) : null}
 
-            {/* Rank number */}
             <span className={styles.rank}>{index + 1}</span>
 
-            {/* Title + meta */}
             <div className={styles.text}>
               <h3 className={styles.title}>{item.title}</h3>
               <ArticleByline
@@ -36,7 +34,6 @@ export function SidebarLatestNews({
               />
             </div>
 
-            {/* Thumbnail right */}
             <div className={styles.thumbWrap}>
               {item.thumbnail ? (
                 <PbImage

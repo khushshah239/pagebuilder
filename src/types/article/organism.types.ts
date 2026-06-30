@@ -1,6 +1,3 @@
-// Presentational prop contracts for Article Page organisms; all values pre-resolved.
-
-// ─── ArticleHeader ────────────────────────────────────────────────────────────
 export interface ArticleHeaderProps {
   identifier: string;
   title: string;
@@ -11,7 +8,6 @@ export interface ArticleHeaderProps {
   published_at?: string;
 }
 
-// ─── ArticleHero ─────────────────────────────────────────────────────────────
 export interface ArticleHeroProps {
   identifier: string;
   cover_image: string;
@@ -19,7 +15,6 @@ export interface ArticleHeroProps {
   caption?: string;
 }
 
-// ─── ArticleSummary ──────────────────────────────────────────────────────────
 export interface ArticleKeyPoint {
   text: string;
 }
@@ -30,17 +25,15 @@ export interface ArticleSummaryProps {
   key_points: ArticleKeyPoint[];
 }
 
-// ─── ArticleBody ─────────────────────────────────────────────────────────────
 export interface ArticleBodyProps {
   identifier: string;
   body: string; // rich-text HTML
 }
 
-// ─── ShareBar ────────────────────────────────────────────────────────────────
 export interface ShareButton {
   platform_name: string;
   icon?: string;
-  url?: string;
+  platform_link?: string;
 }
 
 export interface ShareBarProps {
@@ -49,7 +42,6 @@ export interface ShareBarProps {
   share_buttons: ShareButton[];
 }
 
-// ─── TagsRow ─────────────────────────────────────────────────────────────────
 export interface ArticleTag {
   title: string;
   url_slug?: string;
@@ -61,7 +53,6 @@ export interface TagsRowProps {
   article_tags: ArticleTag[];
 }
 
-// ─── RelatedArticlesRow ──────────────────────────────────────────────────────
 export interface RelatedCard {
   title: string;
   thumbnail: string;
@@ -79,7 +70,6 @@ export interface RelatedArticlesRowProps {
   related_cards: RelatedCard[];
 }
 
-// ─── MoreFromAuthorRow ───────────────────────────────────────────────────────
 export interface AuthorArticle {
   title: string;
   thumbnail: string;
@@ -97,7 +87,6 @@ export interface MoreFromAuthorRowProps {
   author_articles: AuthorArticle[];
 }
 
-// ─── InlineVideoEmbed ────────────────────────────────────────────────────────
 export interface InlineVideoEmbedProps {
   identifier: string;
   video_url: string;
@@ -105,7 +94,6 @@ export interface InlineVideoEmbedProps {
   caption?: string;
 }
 
-// ─── TrendingArticlesRow ─────────────────────────────────────────────────────
 export interface TrendingCard {
   title: string;
   thumbnail: string;
@@ -123,7 +111,6 @@ export interface TrendingArticlesRowProps {
   trending_cards: TrendingCard[];
 }
 
-// ─── LiveBlogFeed ────────────────────────────────────────────────────────────
 export interface LiveUpdate {
   timestamp?: string;
   published_at?: string;
@@ -146,7 +133,6 @@ export interface LiveBlogFeedProps {
   live_updates: LiveUpdate[];
 }
 
-// ─── SidebarLatestNews ───────────────────────────────────────────────────────
 export interface SidebarLatestNewsItem {
   title: string;
   thumbnail?: string;

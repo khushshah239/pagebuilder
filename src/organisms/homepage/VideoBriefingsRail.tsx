@@ -5,7 +5,6 @@ import { ArticleByline } from "@/components/ArticleByline";
 import type { VideoBriefingsRailProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/VideoBriefingsRail.module.css";
 
-/** Short-video grid — 2 columns in sidebar, 4 in main. */
 export function VideoBriefingsRail({
   identifier,
   heading,

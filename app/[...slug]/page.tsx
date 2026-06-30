@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
-import { fetchArticle, fetchRelatedArticles, fetchMoreFromAuthor, fetchLatestNews } from "@/api/articleApi";
+import { fetchArticle } from "@/api/articleApi";
 import {
   fetchCategory,
   fetchCategoryPosts,
@@ -21,13 +21,13 @@ import { SectionRenderer } from "@/components/section/SectionRenderer";
 import { TagRenderer } from "@/components/tag/TagRenderer";
 import { WebStoryPlayer } from "@/components/webstory/WebStoryPlayer";
 import { VideoRenderer, VideoSidebar } from "@/components/video/VideoRenderer";
-import { articleFeedSize } from "@/lib/article/buildProps";
-import { dropCurrentFromResults } from "@/lib/article/excludeCurrent";
+import { articleBindingRootField } from "@/lib/article/buildProps";
+import { excludeCurrentFromLists, type ListOrganismConfig } from "@/lib/article/excludeCurrent";
 import { resolveBoundItems } from "@/lib/bindings";
 import { sectionFeedSize } from "@/lib/section/buildProps";
 import { tagFeedSize } from "@/lib/tag/buildProps";
 import { authorFeedSize } from "@/lib/author/buildProps";
-import { videoFeedSize, videoBindingRootField } from "@/lib/video/buildProps";
+import { videoBindingRootField } from "@/lib/video/buildProps";
 import { buildWebStory } from "@/lib/webstory/buildProps";
 import { getActivePublisher } from "@/config/publishers";
 import { CDS_PUBLISHER_ID } from "@/config/env";
@@ -42,7 +42,6 @@ const WEB_STORY_TYPE = "Web Story";
 // Mirrors ArticleRenderer's FORCED_SIDEBAR_SLUGS — organisms always routed to the aside.
 const FORCED_SIDEBAR_SLUGS = new Set(["live_blog"]);
 
-/** Returns true only when a sidebar organism has live (non-default) data to show. */
 function hasSidebarOrganisms(post: ArticleData): boolean {
   const template = post.custom_entity?.template?.[0];
   if (!template) return false;
@@ -68,12 +67,24 @@ function hasSidebarOrganisms(post: ArticleData): boolean {
     return resolveBoundItems(binding?.field_map?.dynamic_fields ?? [], root).length > 0;
   });
 }
-/** Content type the CDS assigns to video posts. */
+
 const VIDEO_TYPE = "Video";
 
+const ARTICLE_LIST_ORGANISMS: readonly ListOrganismConfig[] = [
+  { schemaSlug: "relatedarticlesrow",  defaultField: "related_article",    nested: true },
+  { schemaSlug: "morefromauthorrow",   defaultField: "more_from_author",   nested: true },
+  { schemaSlug: "sidebar-latest-news", defaultField: "laterst_news_right", nested: false },
+  { schemaSlug: "trendingarticlesrow", defaultField: "trending_articles",  nested: false },
+  { schemaSlug: "live_blog",           defaultField: "live_blog",          nested: false },
+];
+
+const VIDEO_LIST_ORGANISMS: readonly ListOrganismConfig[] = [
+  { schemaSlug: "relatedarticlesrow",  defaultField: "related_article",    nested: true },
+  { schemaSlug: "morefromauthorrow",   defaultField: "more_from_author",   nested: true },
+  { schemaSlug: "sidebar-latest-news", defaultField: "latest_news_right",  nested: false },
+];
+
 type RouteParams = { params: Promise<{ slug: string[] }> };
-
-
 
 /**
  * Reconstruct the CDS legacy URL from the catch-all path segments. Article cards
@@ -108,7 +119,6 @@ async function loadPost(slug: string[]): Promise<ArticleData | null> {
 function isWebStory(post: ArticleData): boolean {
   return post["type"] === WEB_STORY_TYPE;
 }
-/** True when the post is a video post (rendered by VideoRenderer). */
 function isVideoPost(post: ArticleData): boolean {
   return post["type"] === VIDEO_TYPE;
 }
@@ -122,13 +132,6 @@ export async function generateMetadata({ params }: RouteParams): Promise<Metadat
   return title ? { title, description } : {};
 }
 
-/**
- * Catch-all route. Resolves the path to one of four page types:
- *   - `category` (via `identify_url`)  → SectionPage (template + paginated feed).
- *   - `member`   (via `identify_url`)  → AuthorPage.
- *   - `tag`      (via `identify_url`)  → TagPage.
- *   - any other post                   → article or video.
- */
 // Cache each page type's CDS calls (including identifyUrl) so a repeat request
 // to the same URL is served from memory.
 const getIdentifiedUrl = unstable_cache(
@@ -199,217 +202,47 @@ export default async function CatchAllPage({ params }: RouteParams) {
   // network round-trip entirely.
   const post = await loadPost(slug);
 
-  if (!post) {
-    // Not an article — identify the page type.
-    const identified = await getIdentifiedUrl(legacyUrl);
-
-    if (identified?.type === "category") {
-      const template = await fetchSectionTemplate();
-      const categoryData = await getCategoryPageData(identified.url, sectionFeedSize(template));
-      if (!categoryData) notFound();
-      const { posts, category } = categoryData;
-
-      return (
-        <main className="pb-page pb-page-section">
-          <div className="pb-stack">
-            <SectionRenderer template={template} posts={posts} category={category} />
-          </div>
-        </main>
-      );
+  if (post) {
+    if (isWebStory(post)) {
+      return renderWebStoryPage(post);
     }
-
-    if (identified?.type === "member") {
-      const template = await fetchAuthorTemplate();
-      const data = await getAuthorPageData(identified.url, authorFeedSize(template));
-      if (!data) notFound();
-
-      return (
-        <main className="pb-page pb-page-section">
-          <div className="pb-stack">
-            <AuthorRenderer template={template} profile={data.profile} posts={data.posts} />
-          </div>
-        </main>
-      );
+    if (isVideoPost(post)) {
+      return renderVideoPage(post);
     }
-
-    if (identified?.type === "tag") {
-      const template = await fetchTagTemplate();
-      const data = await getTagPageData(identified.url, tagFeedSize(template));
-      if (!data) notFound();
-
-      return (
-        <main className="pb-page pb-page-section">
-          <div className="pb-stack">
-            <TagRenderer template={template} tag={data.tag} posts={data.posts} />
-          </div>
-        </main>
-      );
-    }
-
-    notFound();
+    return renderArticlePage(post);
   }
 
-  // post is non-null: article, video, or web story.
+  // Not a post — ask CDS what kind of section this URL points to.
+  const identified = await getIdentifiedUrl(legacyUrl);
 
-  if (isWebStory(post)) {
-    const { slides, animation } = buildWebStory(post as ArticleData & Record<string, unknown>);
-    return (
-      <WebStoryPlayer
-        slides={slides}
-        animation={animation}
-        publisherName={getActivePublisher().name}
-      />
-    );
+  if (identified?.type === "tag") {
+    return renderTagPage(identified.url);
+  }
+  if (identified?.type === "member") {
+    return renderAuthorPage(identified.url);
+  }
+  if (identified?.type === "category") {
+    return renderCategoryPage(identified.url);
   }
 
-  if (isVideoPost(post)) {
-    const videoTemplate = await fetchVideoTemplate(VIDEO_TEMPLATE_LEGACY_URL);
+  notFound();
+}
 
-    const videoPostId = Number(post.id) || 0;
-    // Video posts may store category as `primary_category` (object) or as the
-    // first entry of `categories[]` — try both so the slug is always found.
-    const videoPrimaryCategory = post.primary_category as { slug?: string; url_slug?: string } | null | undefined;
-    const videoCategoriesList  = post.categories as { slug?: string; url_slug?: string }[] | null | undefined;
-    const videoCategorySlug =
-      videoPrimaryCategory?.slug ??
-      videoPrimaryCategory?.url_slug ??
-      videoCategoriesList?.[0]?.slug ??
-      videoCategoriesList?.[0]?.url_slug ??
-      "";
-    const videoContributors = post.contributors as { id?: number }[] | null | undefined;
-    const videoAuthorId = Number(videoContributors?.[0]?.id ?? 0);
-
-    // Read count and data-root key for each list organism from the video template
-    // binding — zero hardcoding, everything driven by the template at /videotemplates/videotemplate.
-    const relatedSize = videoFeedSize(videoTemplate, "relatedarticlesrow", 4);
-    const authorSize  = videoFeedSize(videoTemplate, "morefromauthorrow", 4);
-    const sidebarSize = videoFeedSize(videoTemplate, "sidebar-latest-news", 6);
-
-    const relatedRootField = videoBindingRootField(videoTemplate, "relatedarticlesrow") || "related_article";
-    const authorRootField  = videoBindingRootField(videoTemplate, "morefromauthorrow")  || "more_from_author";
-    const sidebarRootField = videoBindingRootField(videoTemplate, "sidebar-latest-news") || "latest_news_right";
-
-    // Identity of the current video — drop it from every "other articles" list.
-    const videoCurrentUrls = [post.legacy_url as string | undefined, post.absolute_url as string | undefined];
-
-    const existing: Record<string, unknown> = { ...(post.custom_entity ?? {}) };
-    const existingRelated  = dropCurrentFromResults(
-      ((existing[relatedRootField] as { results?: Record<string, unknown>[] } | null)?.results ?? []),
-      videoPostId, videoCurrentUrls
-    );
-    const existingAuthor   = dropCurrentFromResults(
-      ((existing[authorRootField] as { results?: Record<string, unknown>[] } | null)?.results ?? []),
-      videoPostId, videoCurrentUrls
-    );
-    // Sidebar field lives on post root, not inside custom_entity — check both.
-    const rawSidebar: Record<string, unknown>[] = Array.isArray(post[sidebarRootField])
-      ? (post[sidebarRootField] as Record<string, unknown>[])
-      : Array.isArray(existing[sidebarRootField])
-        ? (existing[sidebarRootField] as Record<string, unknown>[])
-        : [];
-    const existingSidebar = dropCurrentFromResults(rawSidebar, videoPostId, videoCurrentUrls);
-
-    const [relatedResult, authorResult, sidebarResult] = await Promise.all([
-      existingRelated.length < relatedSize && videoCategorySlug
-        ? fetchRelatedArticles(videoCategorySlug, videoPostId, relatedSize)
-        : Promise.resolve({ data: existingRelated }),
-      existingAuthor.length < authorSize && videoAuthorId > 0
-        ? fetchMoreFromAuthor(videoAuthorId, videoPostId, authorSize)
-        : Promise.resolve({ data: existingAuthor }),
-      existingSidebar.length < sidebarSize
-        ? fetchLatestNews(videoPostId, sidebarSize)
-        : Promise.resolve({ data: existingSidebar }),
-    ]);
-
-    const videoCustomEntity: Record<string, unknown> = { ...existing };
-    if (relatedResult.data.length > 0)
-      videoCustomEntity[relatedRootField] = { results: relatedResult.data };
-    if (authorResult.data.length > 0)
-      videoCustomEntity[authorRootField] = { results: authorResult.data };
-    // Store sidebar as a flat array to match the binding paths (laterst_news_right.0.title).
-    if (sidebarResult.data.length > 0)
-      videoCustomEntity[sidebarRootField] = sidebarResult.data;
-
-    const enrichedVideoPost = { ...post, custom_entity: videoCustomEntity } as ArticleData;
-
-    return (
-      <main className="pb-page">
-        <div className="pb-article-layout">
-          <article className="pb-article">
-            <VideoRenderer data={enrichedVideoPost} template={videoTemplate} />
-          </article>
-          <aside className="pb-article-aside">
-            <VideoSidebar data={enrichedVideoPost} template={videoTemplate} />
-          </aside>
-        </div>
-      </main>
-    );
-  }
-
-  // Article — needs its `custom_entity` (template variant + collection slots).
+async function renderArticlePage(post: ArticleData) {
   if (!post.custom_entity) notFound();
 
-  const postId = Number(post.id) || 0;
-  const category = post.primary_category as { slug?: string } | null | undefined;
-  const categorySlug = category?.slug ?? "";
-  const contributors = post.contributors as { id?: number }[] | null | undefined;
-  const authorId = Number(contributors?.[0]?.id ?? 0);
-
-  // Read item counts from the template binding — no hardcoded numbers.
   const articleTemplate = post.custom_entity.template?.[0];
-  const relatedSize = articleTemplate ? articleFeedSize(articleTemplate, "relatedarticlesrow", 4) : 4;
-  const moreFromAuthorSize = articleTemplate ? articleFeedSize(articleTemplate, "morefromauthorrow", 4) : 4;
-
-  // Identity of the current article — used to drop it from every "other
-  // articles" list so a story never points to itself.
-  const currentUrls = [post.legacy_url as string | undefined, post.absolute_url as string | undefined];
-
-  // CDS may already include curated related_article / more_from_author results
-  // inside custom_entity. Drop the current article from the curated lists FIRST
-  // (so the binding skips it and proceeds to the next item), then fall back to a
-  // separate fetch only when too few real items remain.
-  const cdsRelated = dropCurrentFromResults(
-    ((post.custom_entity?.related_article as { results?: Record<string, unknown>[] } | null)?.results ?? []),
-    postId, currentUrls
+  const updatedFields = excludeCurrentFromLists(
+    post,
+    ARTICLE_LIST_ORGANISMS,
+    (schemaSlug) => (articleTemplate ? articleBindingRootField(articleTemplate, schemaSlug) : "")
   );
-  const cdsMoreFromAuthor = dropCurrentFromResults(
-    ((post.custom_entity?.more_from_author as { results?: Record<string, unknown>[] } | null)?.results ?? []),
-    postId, currentUrls
-  );
-
-  const [relatedResult, moreFromAuthorResult] = await Promise.all([
-    cdsRelated.length < relatedSize && categorySlug
-      ? fetchRelatedArticles(categorySlug, postId, relatedSize)
-      : Promise.resolve({ data: cdsRelated }),
-    cdsMoreFromAuthor.length < moreFromAuthorSize && authorId > 0
-      ? fetchMoreFromAuthor(authorId, postId, moreFromAuthorSize)
-      : Promise.resolve({ data: cdsMoreFromAuthor }),
-  ]);
-
-  // Trending + sidebar latest-news come straight from custom_entity (flat
-  // arrays) — drop the current article from those too.
-  const ce = post.custom_entity ?? {};
-  const trending = Array.isArray(ce.trending_articles)
-    ? dropCurrentFromResults(ce.trending_articles as Record<string, unknown>[], postId, currentUrls)
-    : ce.trending_articles;
-  const latestNews = Array.isArray(ce.laterst_news_right)
-    ? dropCurrentFromResults(ce.laterst_news_right as Record<string, unknown>[], postId, currentUrls)
-    : ce.laterst_news_right;
-
-  // Ensure the lists are present under custom_entity so the binding layer can
-  // resolve related_article.results.*, more_from_author.results.*, etc.
-  const enrichedPost = {
+  const enrichedPost: ArticleData = {
     ...post,
-    custom_entity: {
-      ...post.custom_entity,
-      related_article: { results: relatedResult.data },
-      more_from_author: { results: moreFromAuthorResult.data },
-      trending_articles: trending,
-      laterst_news_right: latestNews,
-    },
+    custom_entity: { ...post.custom_entity, ...updatedFields },
   };
-
   const hasSidebar = hasSidebarOrganisms(post);
+
   return (
     <main className="pb-page">
       <div className={hasSidebar ? "pb-article-layout" : "pb-article-layout pb-article-layout--full"}>
@@ -421,6 +254,87 @@ export default async function CatchAllPage({ params }: RouteParams) {
             <ArticleSidebar data={enrichedPost} />
           </aside>
         )}
+      </div>
+    </main>
+  );
+}
+
+async function renderVideoPage(post: ArticleData) {
+  const videoTemplate = await fetchVideoTemplate(VIDEO_TEMPLATE_LEGACY_URL);
+
+  const updatedFields = excludeCurrentFromLists(
+    post,
+    VIDEO_LIST_ORGANISMS,
+    (schemaSlug) => videoBindingRootField(videoTemplate, schemaSlug)
+  );
+  const enrichedVideoPost: ArticleData = {
+    ...post,
+    custom_entity: { ...(post.custom_entity ?? {}), ...updatedFields },
+  };
+
+  return (
+    <main className="pb-page">
+      <div className="pb-article-layout">
+        <article className="pb-article">
+          <VideoRenderer data={enrichedVideoPost} template={videoTemplate} />
+        </article>
+        <aside className="pb-article-aside">
+          <VideoSidebar data={enrichedVideoPost} template={videoTemplate} />
+        </aside>
+      </div>
+    </main>
+  );
+}
+
+function renderWebStoryPage(post: ArticleData) {
+  const { slides, animation } = buildWebStory(post as ArticleData & Record<string, unknown>);
+  return (
+    <WebStoryPlayer
+      slides={slides}
+      animation={animation}
+      publisherName={getActivePublisher().name}
+    />
+  );
+}
+
+async function renderTagPage(tagSlug: string) {
+  const template = await fetchTagTemplate();
+  const data = await getTagPageData(tagSlug, tagFeedSize(template));
+  if (!data) notFound();
+
+  return (
+    <main className="pb-page pb-page-section">
+      <div className="pb-stack">
+        <TagRenderer template={template} tag={data.tag} posts={data.posts} />
+      </div>
+    </main>
+  );
+}
+
+async function renderAuthorPage(authorSlug: string) {
+  const template = await fetchAuthorTemplate();
+  const data = await getAuthorPageData(authorSlug, authorFeedSize(template));
+  if (!data) notFound();
+
+  return (
+    <main className="pb-page pb-page-section">
+      <div className="pb-stack">
+        <AuthorRenderer template={template} profile={data.profile} posts={data.posts} />
+      </div>
+    </main>
+  );
+}
+
+async function renderCategoryPage(categorySlug: string) {
+  const template = await fetchSectionTemplate();
+  const categoryData = await getCategoryPageData(categorySlug, sectionFeedSize(template));
+  if (!categoryData) notFound();
+  const { posts, category } = categoryData;
+
+  return (
+    <main className="pb-page pb-page-section">
+      <div className="pb-stack">
+        <SectionRenderer template={template} posts={posts} category={category} />
       </div>
     </main>
   );

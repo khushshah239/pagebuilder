@@ -1,4 +1,3 @@
-// Article template organisms are named keys (articlehero, articleheader, …) + data_binding.
 import type { CdsBinding, CdsEnvelope } from "@/types/cds.types";
 
 export type {
@@ -13,7 +12,6 @@ interface CdsResultSlot {
   results?: Record<string, unknown>[];
 }
 
-/** Selected ArticlePageTemplate variant; organism keys appear in render order. */
 export interface CdsArticleTemplate {
   id?: number;
   title?: string;
@@ -21,7 +19,6 @@ export interface CdsArticleTemplate {
   [key: string]: unknown; // organism entries keyed by schema_slug
 }
 
-/** `data.custom_entity` of an article: template variant + collection slots. */
 export interface ArticleCustomEntity {
   id?: string;
   template?: CdsArticleTemplate[];
@@ -30,7 +27,6 @@ export interface ArticleCustomEntity {
   [slot: string]: unknown;
 }
 
-/** `data` of an article response: post fields + custom_entity with template and slots. */
 export interface ArticleData {
   id?: number;
   title?: string;
@@ -40,5 +36,4 @@ export interface ArticleData {
   [field: string]: unknown;
 }
 
-/** Full article CDS response. */
 export type CdsArticleResponse = CdsEnvelope<ArticleData>;

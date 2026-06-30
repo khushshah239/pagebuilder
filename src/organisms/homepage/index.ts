@@ -1,7 +1,3 @@
-// Barrel export for all homepage organisms.
-// Import from "@/organisms/homepage" instead of reaching into individual files.
-// Prop interfaces are imported directly from "@/types/homepage/organism.types".
-
 export { HeroCarousel } from "./HeroCarousel";
 export { PostGrid } from "./PostGrid";
 export { BreakingNewsStrip } from "./BreakingNewsStrip";

@@ -2,11 +2,6 @@ import { PbImage } from "@/components/PbImage";
 import type { AuthorProfileHeaderProps } from "@/types/author/organism.types";
 import styles from "@/styles/organisms/author/AuthorProfileHeader.module.css";
 
-/**
- * AuthorPage header: circular avatar, the author's name, bio, and a divider
- * beneath — the author-page analogue of the section hero. Renders nothing
- * without a name.
- */
 export function AuthorProfileHeader({
   identifier,
   author_name,

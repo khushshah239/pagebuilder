@@ -5,11 +5,6 @@ import { AuthorLink } from "@/components/AuthorLink";
 import type { VideoHeaderProps } from "@/types/video/organism.types";
 import styles from "@/styles/organisms/video/VideoHeader.module.css";
 
-/**
- * Video page header: a category pill, large title, published date, and an author
- * row with a circular avatar and a linked name — the video-page equivalent of
- * ArticleHeader, extended with the author avatar that article pages don't show.
- */
 export function VideoHeader({
   identifier,
   title,

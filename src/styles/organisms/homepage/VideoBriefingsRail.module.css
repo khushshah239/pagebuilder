@@ -33,10 +33,10 @@
 .card {
   position: relative;
   display: grid;
-  grid-template-columns: 130px 1fr;
-  gap: 12px;
+  grid-template-columns: 168px 1fr;
+  gap: 16px;
   align-items: center;
-  padding: 10px 0;
+  padding: 14px 0;
   border-bottom: 1px solid var(--pb-border);
   color: var(--pb-text);
   cursor: pointer;
@@ -55,8 +55,8 @@
 .media {
   position: relative;
   display: block;
-  width: 130px;
-  height: 86px;
+  width: 168px;
+  height: 110px;
   flex-shrink: 0;
   overflow: hidden;
   border-radius: var(--pb-radius-sm);
@@ -133,7 +133,7 @@
 .title {
   margin: 0;
   font-family: var(--pb-heading-font, Inter, sans-serif);
-  font-size: 14px;
+  font-size: 15.5px;
   font-weight: 700;
   line-height: 1.35;
   color: var(--pb-text);
@@ -147,6 +147,6 @@
 .card:hover .title { color: var(--pb-accent); }
 
 @media (max-width: 600px) {
-  .card { grid-template-columns: 100px 1fr; }
-  .media { width: 100px; height: 66px; }
+  .card { grid-template-columns: 128px 1fr; }
+  .media { width: 128px; height: 84px; }
 }

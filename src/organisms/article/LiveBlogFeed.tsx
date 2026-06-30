@@ -14,7 +14,7 @@ function toPath(url: string | undefined): string | undefined {
   try {
     return new URL(url).pathname;
   } catch {
-    return url; // already a relative path
+    return url;
   }
 }
 

@@ -7,7 +7,6 @@ import type {
   CdsTemplate,
 } from "@/types/cds.types";
 
-// Re-exported for backwards compatibility; canonical definition is in `@/lib/value`.
 export { isBlank };
 
 /** Returns the organism's first inline default block. */

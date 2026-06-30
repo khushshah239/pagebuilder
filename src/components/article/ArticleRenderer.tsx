@@ -48,14 +48,12 @@ function isSidebarOrganism(schemaSlug: string): boolean {
   return schemaSlug.startsWith(SIDEBAR_SLUG_PREFIX) || FORCED_SIDEBAR_SLUGS.has(schemaSlug);
 }
 
-/** Returns true if a template key/value pair represents an organism node. */
 function isOrganismNode(key: string, value: unknown): value is CdsLayoutOrganism {
   if (key === "data_binding" || !value || typeof value !== "object") return false;
   const node = value as Partial<CdsLayoutOrganism>;
   return typeof node.schema_slug === "string" && Array.isArray(node.dynamic_fields);
 }
 
-/** Renders article organisms in template key order, filtered by `include`. */
 function renderOrganisms(
   data: ArticleData,
   include: (schemaSlug: string) => boolean
@@ -88,7 +86,6 @@ function renderOrganisms(
     });
 }
 
-/** Renders the main article column (non-sidebar organisms). */
 export function ArticleRenderer({ data }: { data: ArticleData }) {
   const hasTemplate = !!data.custom_entity?.template?.[0];
   return (
@@ -99,7 +96,6 @@ export function ArticleRenderer({ data }: { data: ArticleData }) {
   );
 }
 
-/** Renders only sidebar* organisms for the right column. */
 export function ArticleSidebar({ data }: { data: ArticleData }) {
   return <>{renderOrganisms(data, isSidebarOrganism)}</>;
 }

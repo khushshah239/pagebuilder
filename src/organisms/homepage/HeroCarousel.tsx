@@ -7,17 +7,12 @@ import { CategoryLink } from "@/components/CategoryLink";
 import type { HeroCarouselProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/HeroCarousel.module.css";
 
-/**
- * Dominant visual zone at the top of the homepage — top stories presented as a
- * full-bleed, horizontally snapping carousel with pagination dots.
- */
 export function HeroCarousel({ identifier, slides }: HeroCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   if (slides.length === 0) return null;
 
-  /** Track which slide is centred as the user scrolls, to light the right dot. */
   function handleScroll() {
     const track = trackRef.current;
     if (!track) return;
@@ -34,7 +29,6 @@ export function HeroCarousel({ identifier, slides }: HeroCarouselProps) {
     setActiveIndex(nearest);
   }
 
-  /** Scroll the carousel to a given slide when its dot is clicked. */
   function goToSlide(index: number) {
     const child = trackRef.current?.children[index] as HTMLElement | undefined;
     child?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
@@ -49,8 +43,7 @@ export function HeroCarousel({ identifier, slides }: HeroCarouselProps) {
       <div className={styles.track} ref={trackRef} onScroll={handleScroll}>
         {slides.map((slide, index) => {
           const key = `${identifier}-slide-${index}`;
-          // The whole slide links to the article via a stretched overlay link;
-          // the overlay is click-through (pointer-events: none) except the
+          // The overlay is click-through (pointer-events: none) except the
           // category, which links to its section page.
           return (
             <article key={key} className={styles.slide}>

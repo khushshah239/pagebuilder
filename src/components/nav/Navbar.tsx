@@ -6,7 +6,6 @@ import { getActivePublisher } from "@/config/publishers";
 import { safeSocialHref } from "@/components/SocialIcons";
 import { NavSearchBar } from "./NavSearchBar";
 
-/** Server component — main navigation bar only (no top utility bar). */
 export async function Navbar() {
   const [navItems, publisherData] = await Promise.all([
     fetchNavigation(),
@@ -19,7 +18,6 @@ export async function Navbar() {
     <nav className="pb-main-nav" aria-label="Primary navigation">
       <div className="pb-shell pb-nav-inner">
 
-        {/* Logo */}
         <Link className="pb-brand" href="/" aria-label={`${publisher.name} home`}>
           {logoUrl ? (
             <Image
@@ -35,7 +33,6 @@ export async function Navbar() {
           )}
         </Link>
 
-        {/* Nav links */}
         <div className="pb-nav-links">
           {navItems.map((item) => (
             <Link
@@ -48,7 +45,6 @@ export async function Navbar() {
           ))}
         </div>
 
-        {/* Right cluster: search */}
         <div className="pb-nav-right">
           <NavSearchBar />
         </div>

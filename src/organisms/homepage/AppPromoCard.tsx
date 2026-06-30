@@ -3,18 +3,13 @@ import type { AppPromoCardProps } from "@/types/homepage/organism.types";
 import { fetchFooter } from "@/api/footerApi";
 import styles from "@/styles/organisms/homepage/AppPromoCard.module.css";
 
-/**
- * App-download banner.
- * Labels come from CMS fields — found by scanning all props for keys containing
- * "android" or "iphone/ios" so the exact stored key name doesn't matter.
- * URLs come from the CDS /footer/ API app_links — nothing hardcoded.
- */
+// Labels come from CMS fields — found by scanning all props for keys containing
+// "android" or "iphone/ios" so the exact stored key name doesn't matter
+// (handles cta(Android), cta_android, ctaAndroid, etc.).
 export async function AppPromoCard(props: AppPromoCardProps) {
   const { identifier, title, background_image } = props;
   if (!title) return null;
 
-  // Find labels by scanning every prop key — handles cta(Android), cta_android,
-  // ctaAndroid, etc. whatever the CDS stored.
   const allKeys = Object.keys(props) as (keyof typeof props)[];
 
   const androidLabel = allKeys

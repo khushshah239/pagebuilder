@@ -39,7 +39,6 @@ export async function fetchAuthorPosts(
   };
 }
 
-
 export const fetchAuthorTemplate = unstable_cache(
   async (): Promise<Record<string, unknown>> => {
     const response = await cdsFetch<{

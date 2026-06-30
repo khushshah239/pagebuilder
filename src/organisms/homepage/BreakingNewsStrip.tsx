@@ -2,18 +2,14 @@ import Link from "next/link";
 import type { BreakingNewsStripProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/BreakingNewsStrip.module.css";
 
-/**
- * Scrolling ticker strip for urgent breaking headlines. The headlines are
- * rendered twice (one visible copy + one `aria-hidden` copy) so the CSS marquee
- * can loop seamlessly — it translates by exactly one copy's width, so the
- * second copy slides into the first's place with no gap or pause.
- */
+// The headlines are rendered twice (one visible copy + one `aria-hidden` copy)
+// so the CSS marquee can loop seamlessly — it translates by exactly one copy's
+// width, so the second copy slides into the first's place with no gap or pause.
 export function BreakingNewsStrip({
   identifier,
   label,
   headlines,
 }: BreakingNewsStripProps) {
-  // Drop blank headlines so we never render a lone bullet with no text.
   const items = headlines.filter(
     (headline) => typeof headline.title === "string" && headline.title.trim() !== ""
   );

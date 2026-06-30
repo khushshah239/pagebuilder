@@ -6,7 +6,6 @@ import { PbImage } from "@/components/PbImage";
 import type { WebStoryRailProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/WebStoryRail.module.css";
 
-/** Small "web story" badge with a camera icon, shown on each portrait card. */
 function StoryBadge() {
   return (
     <span className={styles.badge}>
@@ -28,7 +27,6 @@ function StoryBadge() {
   );
 }
 
-/** Chevron used by the scroll buttons. */
 function Chevron({ dir }: { dir: "left" | "right" }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
@@ -38,7 +36,6 @@ function Chevron({ dir }: { dir: "left" | "right" }) {
   );
 }
 
-/** Horizontal rail of full-bleed portrait (9:16) web-story cards. */
 export function WebStoryRail({ identifier, heading, stories }: WebStoryRailProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
@@ -66,7 +63,6 @@ export function WebStoryRail({ identifier, heading, stories }: WebStoryRailProps
   const scroll = (dir: "left" | "right") => {
     const el = trackRef.current;
     if (!el) return;
-    // Scroll by ~one card width plus gap.
     const amount = el.clientWidth * 0.8;
     el.scrollBy({ left: dir === "left" ? -amount : amount, behavior: "smooth" });
   };

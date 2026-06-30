@@ -3,7 +3,6 @@ import { toInternalPath } from "@/lib/url";
 import type { TrendingTopicsChipsProps } from "@/types/homepage/organism.types";
 import styles from "@/styles/organisms/homepage/TrendingTopicsChips.module.css";
 
-/** Horizontally scrollable chip row of trending topics / keyword tags. */
 export function TrendingTopicsChips({
   identifier,
   heading,

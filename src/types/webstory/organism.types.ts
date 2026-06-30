@@ -1,5 +1,3 @@
-/** Web Story player prop contracts. */
-
 export interface WebStorySlide {
   img?: string;
   title?: string;

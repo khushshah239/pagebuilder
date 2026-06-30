@@ -13,7 +13,6 @@ import {
   SidebarLatestNews,
 } from "@/organisms/article";
 
-/** Maps video organism schema_slug to its component. */
 const VIDEO_ORGANISM_COMPONENTS: Record<string, ComponentType<any>> = {
   videohero: VideoHero,
   videoheader: VideoHeader,
@@ -30,14 +29,12 @@ function isSidebarOrganism(schemaSlug: string): boolean {
   return schemaSlug.startsWith(SIDEBAR_SLUG_PREFIX);
 }
 
-/** Returns true if a template key/value pair represents an organism node. */
 function isOrganismNode(key: string, value: unknown): value is CdsLayoutOrganism {
   if (key === "data_binding" || key === "data_bindings" || !value || typeof value !== "object") return false;
   const node = value as Partial<CdsLayoutOrganism>;
   return typeof node.schema_slug === "string" && Array.isArray(node.dynamic_fields);
 }
 
-/** Renders video organisms in template key order, filtered by `include`. */
 function renderOrganisms(
   data: ArticleData,
   template: Record<string, unknown>,
@@ -67,7 +64,6 @@ function renderOrganisms(
     });
 }
 
-/** Main video column — every organism except the sidebar ones. */
 export function VideoRenderer({
   data,
   template,
@@ -84,7 +80,6 @@ export function VideoRenderer({
   );
 }
 
-/** Right-column content — only the `sidebar*` organisms. */
 export function VideoSidebar({
   data,
   template,

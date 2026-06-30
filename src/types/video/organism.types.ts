@@ -1,6 +1,3 @@
-// Presentational prop contracts for Video Page organisms; all values pre-resolved.
-
-// ─── VideoHero ───────────────────────────────────────────────────────────────
 export interface VideoHeroProps {
   identifier: string;
   video_embed?: string; // raw iframe HTML; rendered via dangerouslySetInnerHTML
@@ -8,7 +5,6 @@ export interface VideoHeroProps {
   thumbnail?: string;
 }
 
-// ─── VideoHeader ─────────────────────────────────────────────────────────────
 export interface VideoHeaderProps {
   identifier: string;
   title: string;

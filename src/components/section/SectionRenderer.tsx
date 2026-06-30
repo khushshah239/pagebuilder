@@ -12,7 +12,6 @@ interface SectionRendererProps {
   category?: CategoryInfo | null;
 }
 
-/** Renders a category page: hero then article feed from the section template. */
 export function SectionRenderer({ template, posts, category }: SectionRendererProps) {
   const heroProps = buildSectionHeroProps(template, posts, category);
   const articles = buildSectionFeedItems(template, posts);

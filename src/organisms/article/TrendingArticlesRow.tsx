@@ -5,7 +5,6 @@ import { ScrollRail } from "@/components/ScrollRail";
 import type { TrendingArticlesRowProps } from "@/types/article/organism.types";
 import styles from "@/styles/organisms/article/TrendingArticlesRow.module.css";
 
-// Strip domain from CDS absolute_url so links stay on the current site
 function toPath(url: string | undefined | null): string {
   if (!url) return "#";
   try { return new URL(url).pathname; } catch { return url; }
