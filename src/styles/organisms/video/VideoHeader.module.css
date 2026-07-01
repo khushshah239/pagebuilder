@@ -10,6 +10,7 @@
 
 .category {
   display: inline-block;
+  align-self: flex-start;
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -19,10 +20,9 @@
   padding: 4px 10px;
   border-radius: 3px;
   text-decoration: none;
-  box-shadow: 0 2px 8px rgba(204,0,0,0.35);
-  transition: background var(--pb-dur), transform var(--pb-dur);
+  transition: background var(--pb-dur);
 }
-.category:hover { background: var(--pb-accent-dark); transform: scale(1.04); }
+.category:hover { background: var(--pb-accent-dark); }
 
 .title {
   margin: 0;

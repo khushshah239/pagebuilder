@@ -5,7 +5,6 @@
   justify-content: center;
   gap: var(--pb-space-5);
   align-items: stretch;
-  perspective: 1400px;
 }
 @media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, minmax(0, 300px)); } }
 @media (max-width: 760px)  { .grid { grid-template-columns: repeat(2, minmax(0, 320px)); gap: 16px; } }
@@ -23,14 +22,11 @@
   color: inherit;
   transition:
     box-shadow 0.3s var(--pb-ease),
-    transform   0.3s var(--pb-ease-spring),
     border-color 0.3s;
-  will-change: transform;
   animation: pb-fade-up 0.5s var(--pb-ease) both;
 }
 .card:hover {
   border-color: transparent;
-  transform: perspective(900px) rotateX(3deg);
   box-shadow: var(--pb-3d-shadow);
 }
 

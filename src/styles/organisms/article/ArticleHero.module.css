@@ -14,12 +14,9 @@
   background: var(--pb-muted-bg);
   box-shadow: 0 8px 32px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08);
   transition:
-    transform 0.4s var(--pb-ease-spring),
     box-shadow 0.4s var(--pb-ease);
-  will-change: transform;
 }
 .image:hover {
-  transform: perspective(1000px) rotateX(2deg) translateY(-4px) scale(1.005);
   box-shadow: 0 16px 48px rgba(0,0,0,0.20), 0 6px 16px rgba(0,0,0,0.10);
 }
 

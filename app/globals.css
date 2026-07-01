@@ -133,7 +133,7 @@ body {
   font-family: var(--pb-font, var(--font-inter), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
   font-size: var(--pb-fs-base);
   line-height: var(--pb-lh-base);
-  background: #f0f0f0;
+  background: #eee;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -150,6 +150,27 @@ h1, h2, h3, h4 {
   letter-spacing: -0.02em;
 }
 
+/* ── Reading progress bar (CSS scroll-driven, zero JS) ───────────────────── */
+@supports (animation-timeline: scroll()) {
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 9999;
+    background: linear-gradient(90deg, var(--pb-urgent, #CC0000) 0%, #ff6b35 50%, #ff0080 100%);
+    transform-origin: left;
+    animation: pb-scroll-progress linear both;
+    animation-timeline: scroll(root);
+  }
+  @keyframes pb-scroll-progress {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+}
+
 /* ── Root wrapper ─────────────────────────────────────────────────────────── */
 .pb-root {
   min-height: 100vh;
@@ -157,7 +178,7 @@ h1, h2, h3, h4 {
   flex-direction: column;
   position: relative;
   overflow-x: clip;
-  background: var(--pb-page-bg, #f0f0f0);
+  background: #f2f2f2;
   color: var(--pb-text, #111111);
 }
 
@@ -389,22 +410,38 @@ h1, h2, h3, h4 {
 }
 .pb-search-overlay-submit:hover { background: var(--pb-accent-dark); transform: translateY(-1px); }
 
-.pb-search-overlay-close {
-  position: fixed;
-  top: 24px;
-  right: 24px;
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: var(--pb-radius-md);
-  font-size: 20px;
-  cursor: pointer;
-  color: var(--pb-on-dark);
-  line-height: 1;
-  padding: 6px 10px;
-  z-index: 1000;
-  transition: background var(--pb-dur);
+.pb-search-overlay-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
-.pb-search-overlay-close:hover { background: rgba(255,255,255,0.22); }
+
+.pb-search-overlay-label {
+  font-family: var(--pb-heading-font, Inter, sans-serif);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--pb-muted, #6b6a64);
+}
+
+.pb-search-overlay-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--pb-muted-bg, #f5f5f5);
+  border: 1px solid var(--pb-border, #e0e0e0);
+  border-radius: var(--pb-radius-md);
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--pb-text, #111);
+  line-height: 1;
+  transition: background var(--pb-dur), color var(--pb-dur);
+}
+.pb-search-overlay-close:hover { background: var(--pb-urgent); color: #fff; border-color: var(--pb-urgent); }
 
 /* ══════════════════════════════════════════════════════════════════════════════
    SEARCH RESULTS
@@ -535,41 +572,39 @@ h1, h2, h3, h4 {
 .pb-homepage-body {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  gap: 28px;
+  gap: 24px;
   align-items: start;
-  padding: 28px 0 64px;
+  padding: 20px 0 56px;
 }
 .pb-homepage-body--full { grid-template-columns: 1fr; }
 
-.pb-homepage-main { display: flex; flex-direction: column; gap: 44px; min-width: 0; }
+.pb-homepage-main { display: flex; flex-direction: column; gap: 28px; min-width: 0; }
 
 .pb-homepage-sidebar {
   position: sticky;
   top: 80px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 20px;
   min-width: 0;
 }
 
 .pb-sidebar-block {
   background: var(--pb-surface-bg, #fff);
-  border-radius: var(--pb-radius-md);
+  border-radius: var(--pb-radius-lg);
   overflow: hidden;
-  box-shadow: var(--pb-shadow-sm);
-  border: 1px solid var(--pb-border);
-  transition: box-shadow var(--pb-dur);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  border: 1px solid rgba(0,0,0,0.07);
 }
-.pb-sidebar-block:hover { box-shadow: var(--pb-shadow-md); }
 
 @media (max-width: 1024px) {
   .pb-homepage-body { grid-template-columns: 1fr; }
-  .pb-homepage-sidebar { position: static; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .pb-homepage-sidebar { position: static; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
 }
 @media (max-width: 640px) {
   .pb-homepage-sidebar { grid-template-columns: 1fr; }
-  .pb-homepage-body { padding: 16px 0 40px; gap: 20px; }
-  .pb-homepage-main { gap: 28px; }
+  .pb-homepage-body { padding: 12px 0 32px; gap: 16px; }
+  .pb-homepage-main { gap: 20px; }
 }
 
 /* ── Article layout ───────────────────────────────────────────────────────── */
@@ -674,6 +709,27 @@ h1, h2, h3, h4 {
 .pb-footer-copy { margin: 0; font-size: var(--pb-fs-sm); color: var(--pb-on-dark-muted); text-align: center; letter-spacing: 0.02em; }
 
 @media (max-width: 760px) { .pb-footer-menus { grid-template-columns: repeat(2, 1fr); } }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   SCROLL REVEAL — pure CSS scroll-driven animations, zero JS DOM manipulation.
+   No classes are added to React-managed elements so there is no hydration risk.
+   Degrades gracefully: unsupported browsers see fully-visible elements always.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+@keyframes pb-scroll-reveal {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@supports (animation-timeline: view()) {
+  [data-organism] {
+    animation: pb-scroll-reveal linear both;
+    animation-timeline: view();
+    /* entry 0% = element's leading edge hits viewport bottom;
+       entry 14% ≈ ~100-150 px of element visible → animation completes */
+    animation-range: entry 0% entry 14%;
+  }
+}
 
 /* ══════════════════════════════════════════════════════════════════════════════
    REDUCED MOTION

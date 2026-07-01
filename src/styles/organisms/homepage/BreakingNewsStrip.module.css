@@ -1,56 +1,51 @@
-/* ── Breaking News Strip — premium urgency ticker ────────────────────────── */
+/* ── Breaking News Strip — continuous scrolling ticker ───────────────────── */
+@keyframes breaking-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes breaking-pulse {
+  0%   { transform: scale(1);   opacity: 1; }
+  70%  { transform: scale(2.2); opacity: 0; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
 .strip {
   display: flex;
   align-items: stretch;
-  border: none;
-  border-radius: 0;
+  background: #0a0a0a;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
   overflow: hidden;
-  background: var(--pb-urgent);
-  box-shadow: 0 2px 12px rgba(204,0,0,0.35);
-  border-top: 1px solid rgba(255,255,255,0.15);
+  min-height: 40px;
 }
 
-/* "LIVE" badge — white bg, pulsing red dot */
 .badge {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
-  padding: 0 18px;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  padding: 0 20px 0 14px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--pb-urgent);
-  background: #fff;
-  position: relative;
+  color: #fff;
+  background: var(--pb-urgent);
+  white-space: nowrap;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
 }
 
-/* Pulse dot */
 .badge::before {
   content: "";
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: var(--pb-urgent);
-  animation: pb-breaking-pulse 1.6s ease-out infinite;
+  background: #fff;
   flex-shrink: 0;
+  animation: breaking-pulse 1.6s ease-out infinite;
 }
 
-/* Separator triangle on the right of the badge */
-.badge::after {
-  content: "";
-  position: absolute;
-  right: -10px;
-  top: 0;
-  bottom: 0;
-  width: 0;
-  border-left: 10px solid #fff;
-  border-top: 50px solid transparent;
-  border-bottom: 0 solid transparent;
-  z-index: 1;
-}
-
+/* Exact same structure as original — position:relative + overflow:hidden only */
 .viewport {
   position: relative;
   flex: 1;
@@ -60,7 +55,7 @@
 .marquee {
   display: flex;
   width: max-content;
-  animation: pb-marquee 42s linear infinite;
+  animation: breaking-marquee 42s linear infinite;
 }
 .viewport:hover .marquee { animation-play-state: paused; }
 
@@ -68,29 +63,29 @@
   display: flex;
   align-items: center;
   gap: 0;
-  padding: 9px 0;
+  padding: 10px 0;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .item {
   font-size: 13px;
-  font-weight: 700;
-  color: #fff;
+  font-weight: 500;
+  color: rgba(255,255,255,0.88);
   text-decoration: none;
   position: relative;
   padding: 0 28px;
   letter-spacing: 0.01em;
-  transition: opacity var(--pb-dur);
+  transition: color 0.15s ease;
 }
-.item:hover { text-decoration: underline; text-underline-offset: 3px; opacity: 0.9; }
+.item:hover { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
 .item::before {
   content: "•";
   position: absolute;
-  left: -1px;
+  left: 4px;
   top: 50%;
   transform: translateY(-50%);
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.3);
   font-size: 16px;
 }
 

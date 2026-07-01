@@ -1,78 +1,109 @@
-/* ── Top Stories List — editorial ranked list ────────────────────────────── */
+/* ── Top Stories List — ranked editorial list with hot badges ─────────────── */
 .section {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 16px;
+  gap: 0;
+  overflow: hidden;
 }
 
-.head { display: flex; align-items: center; gap: 10px; }
+/* ── Header ───────────────────────────────────────────────────────────────── */
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px 0 0;
+  background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+  border-bottom: 2px solid var(--pb-urgent);
+}
 
 .heading {
   margin: 0;
-  font-family: var(--pb-heading-font, Inter, sans-serif);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--pb-urgent);
+  color: #fff;
+  padding: 10px 24px 10px 16px;
+  font-size: 11px;
+  font-weight: 900;
   text-transform: uppercase;
-  padding-left: 10px;
-  border-left: 4px solid var(--pb-urgent);
-  color: var(--pb-text);
-  line-height: 1.2;
+  letter-spacing: 0.12em;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%);
 }
 
+.headIcon {
+  width: 13px;
+  height: 13px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+/* ── Ranked list ──────────────────────────────────────────────────────────── */
 .list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  border-top: 1px solid var(--pb-border);
 }
 
 .item {
   position: relative;
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 12px 4px;
+  gap: 14px;
+  padding: 13px 16px;
   border-bottom: 1px solid var(--pb-border);
-  transition: background 0.15s ease, transform 0.2s var(--pb-ease-spring), padding-left 0.2s;
-  border-radius: var(--pb-radius-sm);
+  transition: background 0.15s ease;
+  cursor: pointer;
 }
-.item:hover {
-  background: var(--pb-muted-bg);
-  transform: translateX(4px);
-  padding-left: 8px;
-}
+.item:last-child { border-bottom: none; }
+.item:hover { background: var(--pb-muted-bg); }
 
 .link { position: absolute; inset: 0; z-index: 1; }
 
-/* Gradient rank number */
+/* Rank number — gradient red for top 3, muted for rest */
 .rank {
   flex: none;
   font-family: var(--pb-heading-font, Inter, sans-serif);
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 900;
-  line-height: 0.9;
-  background: linear-gradient(180deg, var(--pb-urgent) 0%, rgba(204,0,0,0.25) 100%);
+  line-height: 1;
+  width: 32px;
+  text-align: center;
+  user-select: none;
+  padding-top: 2px;
+  /* default muted */
+  background: linear-gradient(180deg, #bbb 0%, #ddd 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-variant-numeric: lining-nums tabular-nums;
-  width: 28px;
-  text-align: center;
-  user-select: none;
 }
 
-.body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+/* Top 3 get red gradient rank */
+.item:nth-child(1) .rank,
+.item:nth-child(2) .rank,
+.item:nth-child(3) .rank {
+  background: linear-gradient(180deg, var(--pb-urgent) 0%, rgba(204,0,0,0.3) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  flex: 1;
+}
+
 
 .category {
   position: relative;
   z-index: 2;
   align-self: flex-start;
-  font-family: var(--pb-font, inherit);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -84,9 +115,9 @@
 
 .title {
   font-family: var(--pb-heading-font, Inter, sans-serif);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-  line-height: 1.35;
+  line-height: 1.38;
   letter-spacing: -0.01em;
   color: var(--pb-text);
   display: -webkit-box;
@@ -97,3 +128,17 @@
   transition: color var(--pb-dur);
 }
 .item:hover .title { color: var(--pb-accent); }
+
+/* Right-side chevron on hover */
+.item::after {
+  content: "›";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%) translateX(4px);
+  font-size: 18px;
+  color: var(--pb-urgent);
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.2s var(--pb-ease-spring);
+}
+.item:hover::after { opacity: 1; transform: translateY(-50%) translateX(0); }

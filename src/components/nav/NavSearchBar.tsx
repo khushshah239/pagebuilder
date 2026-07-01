@@ -48,6 +48,12 @@ export function NavSearchBar() {
       {open && (
         <div className="pb-search-overlay" onClick={() => setOpen(false)}>
           <div className="pb-search-overlay-box" onClick={(e) => e.stopPropagation()}>
+            <div className="pb-search-overlay-header">
+              <span className="pb-search-overlay-label">Search</span>
+              <button className="pb-search-overlay-close" onClick={() => setOpen(false)} aria-label="Close search">
+                ✕
+              </button>
+            </div>
             <form className="pb-search-overlay-form" onSubmit={handleSubmit}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="pb-search-overlay-icon" aria-hidden="true">
                 <circle cx="11" cy="11" r="8" />
@@ -66,9 +72,6 @@ export function NavSearchBar() {
                 Search
               </button>
             </form>
-            <button className="pb-search-overlay-close" onClick={() => setOpen(false)} aria-label="Close search">
-              ✕
-            </button>
           </div>
         </div>
       )}

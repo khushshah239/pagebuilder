@@ -73,7 +73,13 @@ export function WebStoryRail({ identifier, heading, stories }: WebStoryRailProps
     <section className={styles.section} data-organism={identifier}>
       {heading ? (
         <header className={styles.head}>
-          <h2 className={styles.heading}>{heading}</h2>
+          <h2 className={styles.heading}>
+            <span className={styles.headDot} aria-hidden="true" />
+            {heading}
+          </h2>
+          <span className={styles.swipeHint} aria-hidden="true">
+            Swipe →
+          </span>
         </header>
       ) : null}
 

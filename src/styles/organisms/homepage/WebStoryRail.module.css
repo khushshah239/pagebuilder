@@ -1,31 +1,46 @@
+/* ── Web Story Rail — Instagram-story-style portrait cards ───────────────── */
 .section {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  background: #fce4ec;
-  border-radius: var(--pb-radius-md);
-  padding: 24px 20px 28px;
+  gap: 14px;
 }
 
+/* ── Header ───────────────────────────────────────────────────────────────── */
 .head {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
+  justify-content: space-between;
+  border-bottom: 3px solid var(--pb-urgent);
+  padding-bottom: 8px;
 }
 
 .heading {
   margin: 0;
   font-family: var(--pb-heading-font, Inter, sans-serif);
-  font-size: 20px;
-  font-weight: 800;
-  color: #222;
-  line-height: 1.2;
+  font-size: 17px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #111;
 }
 
-.viewport {
-  position: relative;
+.headDot { display: none; }
+
+.swipeHint {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--pb-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-bottom: 2px;
 }
 
-/* Horizontal scroll rail */
+/* ── Scroll track ─────────────────────────────────────────────────────────── */
+.viewport { position: relative; z-index: 1; }
+
 .track {
   display: flex;
   gap: 14px;
@@ -33,30 +48,47 @@
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   padding-bottom: 4px;
+  padding: 8px 4px 10px;
 }
 .track::-webkit-scrollbar { display: none; }
 
-/* Portrait cards — 9:16, ~240px wide */
+/* ── Story card — portrait with animated gradient ring ───────────────────── */
 .card {
   position: relative;
-  flex: 0 0 220px;
-  height: 420px;
+  flex: 0 0 160px;
+  height: 320px;
   scroll-snap-align: start;
-  border-radius: var(--pb-radius-lg, 8px);
+  border-radius: 14px;
   overflow: hidden;
   text-decoration: none;
   background: #222;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.16);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
   flex-shrink: 0;
+  transition: transform 0.25s var(--pb-ease-spring), box-shadow 0.25s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
 }
+
 .card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+}
+
+/* Border overlay — sits above the image so it's always visible */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 3px solid transparent;
+  z-index: 5;
+  pointer-events: none;
+  transition: border-color 0.22s ease;
+}
+.card:hover::after {
+  border-color: var(--pb-urgent);
 }
 
 @media (max-width: 640px) {
-  .card { flex: 0 0 160px; height: 255px; border-radius: var(--pb-radius-md, 6px); }
+  .card { flex: 0 0 120px; height: 210px; border-radius: 10px; }
 }
 
 .image {
@@ -66,53 +98,47 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
+.card:hover .image { transform: scale(1.06); }
 
-/* "Web Story" pill badge — top left */
+
+/* Badge */
 .badge {
   position: absolute;
-  top: 10px;
+  top: 20px;
   left: 10px;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
+  gap: 4px;
+  padding: 3px 8px;
   border-radius: 20px;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   color: #fff;
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(4px);
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(6px);
   z-index: 2;
 }
 
-.icon {
-  width: 13px;
-  height: 13px;
-}
+.icon { width: 12px; height: 12px; }
 
 /* Bottom gradient + title */
 .overlay {
   position: absolute;
   inset: auto 0 0 0;
-  padding: 40px 12px 14px;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.88) 0%,
-    rgba(0, 0, 0, 0.5) 55%,
-    transparent 100%
-  );
+  padding: 44px 10px 12px;
+  background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.55) 55%, transparent 100%);
   z-index: 1;
 }
 
 .title {
   margin: 0;
   font-family: var(--pb-heading-font, Inter, sans-serif);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   line-height: 1.35;
   color: #fff;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.4);
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
@@ -129,19 +155,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   border: none;
-  background: #fff;
-  color: #222;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  color: #fff;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  transition: box-shadow 0.2s, transform 0.2s;
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: background 0.2s, transform 0.2s;
 }
-.arrow svg { width: 18px; height: 18px; }
-.arrow:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
-.arrowPrev { left: -18px; }
-.arrowNext { right: -18px; }
+.arrow svg { width: 16px; height: 16px; }
+.arrow:hover { background: var(--pb-urgent); border-color: var(--pb-urgent); }
+.arrowPrev { left: -14px; }
+.arrowNext { right: -14px; }
 .arrowPrev:hover { transform: translateY(-50%) translateX(-1px); }
 .arrowNext:hover { transform: translateY(-50%) translateX(1px); }

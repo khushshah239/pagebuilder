@@ -15,25 +15,34 @@ export function HeroCarousel({ identifier, slides }: HeroCarouselProps) {
   if (slides.length === 0) return null;
 
   const goToSlide = useCallback((index: number) => {
-    const child = trackRef.current?.children[index] as HTMLElement | undefined;
-    child?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+    const track = trackRef.current;
+    const child = track?.children[index] as HTMLElement | undefined;
+    if (!track || !child) return;
+    // Scroll only the track, never the page
+    track.scrollTo({ left: child.offsetLeft, behavior: "smooth" });
   }, []);
 
-  // Coverflow 3D effect: rotate each slide based on distance from viewport center
+  const rafRef = useRef<number>(0);
+
+  // Coverflow 3D: each slide rotates based on how far it is from the viewport center.
+  // Uses rAF so we never block the scroll thread.
   function apply3D() {
-    const track = trackRef.current;
-    if (!track) return;
-    const viewCenter = track.scrollLeft + track.offsetWidth / 2;
-    (Array.from(track.children) as HTMLElement[]).forEach((el) => {
-      const elCenter = el.offsetLeft + el.offsetWidth / 2;
-      const offset = (elCenter - viewCenter) / track.offsetWidth; // -1 … 0 … 1
-      const rotateY = offset * 22;
-      const scale   = 1 - Math.abs(offset) * 0.10;
-      const translateZ = -Math.abs(offset) * 90;
-      el.style.transform = `perspective(1400px) rotateY(${rotateY}deg) scale(${scale}) translateZ(${translateZ}px)`;
-      el.style.opacity   = String(1 - Math.abs(offset) * 0.35);
-      el.style.zIndex    = String(10 - Math.round(Math.abs(offset) * 10));
-      el.style.transition = "transform 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.4s, z-index 0s";
+    cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      const track = trackRef.current;
+      if (!track) return;
+      const viewCenter = track.scrollLeft + track.offsetWidth / 2;
+      (Array.from(track.children) as HTMLElement[]).forEach((el) => {
+        const elCenter = el.offsetLeft + el.offsetWidth / 2;
+        // offset: 0 = active slide, ±1 = one slide away
+        const offset = (elCenter - viewCenter) / track.offsetWidth;
+        const rotateY   = offset * 18;                          // gentle curve
+        const scale     = 1 - Math.abs(offset) * 0.08;
+        const translateZ = -Math.abs(offset) * 60;
+        el.style.transform = `perspective(1400px) rotateY(${rotateY}deg) scale(${scale}) translateZ(${translateZ}px)`;
+        el.style.opacity   = String(Math.max(0.55, 1 - Math.abs(offset) * 0.4));
+        el.style.zIndex    = String(10 - Math.round(Math.abs(offset) * 10));
+      });
     });
   }
 

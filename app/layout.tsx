@@ -8,6 +8,7 @@ import { fetchNavigation } from "@/api/navApi";
 import { fetchFooter } from "@/api/footerApi";
 import { Navbar } from "@/components/nav/Navbar";
 import { Footer } from "@/components/footer/Footer";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import "./globals.css";
 
 // Self-hosted via next/font — eliminates the external Google Fonts network round-trip
@@ -54,6 +55,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           {children}
 
           <Footer />
+          <ScrollReveal />
         </div>
       </body>
     </html>
