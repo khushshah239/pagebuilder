@@ -6,29 +6,30 @@ import type { PublisherConfig } from "./theme.types";
 const SANS_STACK =
   'var(--font-inter), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
 
+const SORA_STACK =
+  'var(--font-sora), Sora, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
 
 const CRICTODAY: PublisherConfig = {
   key: "crictoday",
-  name: "Crictoday",
+  name: "CricToday",
   tagline: "Cricket News, Live Scores, Features & Opinion",
   cdsPublisherId: "4027",
   // Logos, navigation, and footer come from the CDS APIs (publisherApi / navApi /
   // footerApi) — not hardcoded here.
   theme: {
-    // Broadcast news: clean white/gray, red accent (urgency as primary).
-    accent: "#CC0000",
-    accentDark: "#990000",
-    accentSoft: "#fff0f0",
-    text: "#111111",
-    ink2: "#333333",
-    muted: "#666666",
-    mutedBg: "#f0f0f0",
-    border: "#e0e0e0",
-    pageBg: "#f2f2f2",
+    accent: "#c0392b",
+    accentDark: "#962d22",
+    accentSoft: "#fdf3f2",
+    text: "#1a2332",
+    ink2: "#334155",
+    muted: "#6b7c93",
+    mutedBg: "#f0f4f8",
+    border: "#e2e8f0",
+    pageBg: "#f5f7fa",
     surfaceBg: "#ffffff",
-    shadow: "0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05)",
+    shadow: "0 1px 4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04)",
     fontFamily: SANS_STACK,
-    headingFamily: SANS_STACK,
+    headingFamily: SORA_STACK,
   },
 };
 

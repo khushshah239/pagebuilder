@@ -12,24 +12,25 @@ export async function Navbar() {
     fetchPublisherData(),
   ]);
   const publisher = getActivePublisher();
-  const logoUrl = publisherData.logo;
+  const logoUrl = publisherData.long_logo ?? publisherData.short_logo;
+  const publisherName = publisherData.name ?? publisher.name;
 
   return (
     <nav className="pb-main-nav" aria-label="Primary navigation">
       <div className="pb-shell pb-nav-inner">
 
-        <Link className="pb-brand" href="/" aria-label={`${publisher.name} home`}>
+        <Link className="pb-brand" href="/" aria-label={`${publisherName} home`}>
           {logoUrl ? (
             <Image
               className="pb-brand-logo"
               src={logoUrl}
-              alt={publisher.name}
-              width={200}
-              height={44}
+              alt={publisherName}
+              width={220}
+              height={48}
               priority
             />
           ) : (
-            <span className="pb-brand-name">{publisher.name}</span>
+            <span className="pb-brand-name">{publisherName}</span>
           )}
         </Link>
 

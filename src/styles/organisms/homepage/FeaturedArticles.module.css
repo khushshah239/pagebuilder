@@ -2,18 +2,21 @@
 .section { display: flex; flex-direction: column; gap: 14px; }
 
 .head {
-  border-bottom: 3px solid var(--pb-urgent);
-  padding-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 12px;
 }
 
 .heading {
   margin: 0;
-  font-family: var(--pb-heading-font, Inter, sans-serif);
-  font-size: 17px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: #111;
+  font-family: var(--pb-heading-font, Sora, Inter, sans-serif);
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  color: #1a2332;
 }
 
 .cardLink { position: absolute; inset: 0; z-index: 1; }
@@ -43,9 +46,11 @@
   flex-direction: column;
   background: #fff;
   overflow: hidden;
-  transition: box-shadow 0.25s ease;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
-.hero:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.12); }
+.hero:hover { box-shadow: 0 12px 32px rgba(0,0,0,0.10); transform: translateY(-2px); }
 
 .heroMedia { position: relative; overflow: hidden; }
 
@@ -66,7 +71,7 @@
 .heroTitle {
   margin: 0;
   font-family: var(--pb-heading-font, Inter, sans-serif);
-  font-size: clamp(15px, 1.8vw, 20px);
+  font-size: clamp(15px, 1.8vw, 21px);
   font-weight: 800;
   line-height: 1.25;
   letter-spacing: -0.02em;
@@ -89,9 +94,11 @@
   flex-direction: column;
   background: #fff;
   overflow: hidden;
-  transition: box-shadow 0.25s ease;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
-.card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.11); }
+.card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.10); transform: translateY(-2px); }
 
 .media { position: relative; overflow: hidden; }
 
@@ -115,9 +122,10 @@
 .title {
   margin: 0;
   font-family: var(--pb-heading-font, Inter, sans-serif);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1.35;
+  letter-spacing: -0.01em;
   color: #111;
   display: -webkit-box;
   -webkit-line-clamp: 3;

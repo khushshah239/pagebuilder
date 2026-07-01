@@ -1,19 +1,28 @@
-/* ── Opinion & Editorial Row ─────────────────────────────────────────────── */
-.section { display: flex; flex-direction: column; gap: 14px; }
+/* ── Opinion & Editorial Row — warm parchment editorial treatment ────────── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px 18px 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
 
 .head {
-  border-bottom: 3px solid var(--pb-urgent);
-  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 12px;
 }
 
 .heading {
   margin: 0;
-  font-family: var(--pb-heading-font, Inter, sans-serif);
-  font-size: 17px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: #111;
+  font-family: var(--pb-heading-font, Sora, Inter, sans-serif);
+  font-size: 16px;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.01em;
+  color: #1a2332;
+  text-transform: none;
 }
 
 .cardLink { position: absolute; inset: 0; z-index: 1; }
@@ -43,9 +52,12 @@
   flex-direction: column;
   background: #fff;
   overflow: hidden;
-  transition: box-shadow 0.25s ease;
+  border: 1px solid rgba(0,0,0,0.09);
+  border-radius: var(--pb-radius-sm, 4px);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  transition: box-shadow 0.28s ease, border-color 0.28s ease;
 }
-.hero:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.12); }
+.hero:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.10); border-color: rgba(0,0,0,0.16); }
 
 .heroMedia { position: relative; overflow: hidden; }
 
@@ -66,8 +78,9 @@
 .heroTitle {
   margin: 0;
   font-family: var(--pb-heading-font, Inter, sans-serif);
-  font-size: clamp(15px, 1.8vw, 20px);
+  font-size: clamp(15px, 1.8vw, 21px);
   font-weight: 800;
+  font-style: italic;
   line-height: 1.25;
   letter-spacing: -0.02em;
   color: #111;
@@ -77,8 +90,9 @@
 
 .heroExcerpt {
   margin: 0;
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.55;
+  font-style: italic;
   color: var(--pb-muted);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -100,9 +114,12 @@
   flex-direction: column;
   background: #fff;
   overflow: hidden;
-  transition: box-shadow 0.25s ease;
+  border: 1px solid rgba(0,0,0,0.09);
+  border-radius: var(--pb-radius-sm, 4px);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  transition: box-shadow 0.28s ease, border-color 0.28s ease;
 }
-.card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.11); }
+.card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.09); border-color: rgba(0,0,0,0.16); }
 
 .media { position: relative; overflow: hidden; }
 
@@ -126,9 +143,11 @@
 .title {
   margin: 0;
   font-family: var(--pb-heading-font, Inter, sans-serif);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
+  font-style: italic;
   line-height: 1.35;
+  letter-spacing: -0.01em;
   color: #111;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -140,7 +159,8 @@
 
 .excerpt {
   margin: 0;
-  font-size: 11px;
+  font-size: 12px;
+  font-style: italic;
   color: var(--pb-muted);
   line-height: 1.5;
   display: -webkit-box;

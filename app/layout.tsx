@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Sora } from "next/font/google";
 import { getActivePublisher } from "@/config/publishers";
 import { themeToCssVariables } from "@/theme/cssVariables";
 import { fetchPublisherData } from "@/api/publisherApi";
@@ -11,8 +11,6 @@ import { Footer } from "@/components/footer/Footer";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import "./globals.css";
 
-// Self-hosted via next/font — eliminates the external Google Fonts network round-trip
-// and the DOM reconciler conflict that caused "Cannot read properties of null (removeChild)".
 const inter = Inter({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
@@ -20,12 +18,10 @@ const inter = Inter({
   display: "swap",
 });
 
-// High-contrast Didone serif — used for editorial display numerals (e.g. the
-// Top Stories rank), where Georgia can't render the heavy thick/thin strokes.
-const playfair = Playfair_Display({
+const sora = Sora({
   subsets: ["latin"],
-  weight: ["700", "800", "900"],
-  variable: "--font-playfair",
+  weight: ["400", "600", "700", "800"],
+  variable: "--font-sora",
   display: "swap",
 });
 
@@ -45,7 +41,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   ]);
 
   return (
-    <html lang={publisher.lang ?? "en"} className={`${inter.variable} ${playfair.variable}`}>
+    <html lang={publisher.lang ?? "en"} className={`${inter.variable} ${sora.variable}`}>
       <body>
         <div className="pb-root" style={themeToCssVariables(publisher.theme)}>
           <header className="pb-site-header">
