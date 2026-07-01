@@ -30,7 +30,7 @@
 }
 .card:hover {
   border-color: transparent;
-  transform: perspective(900px) rotateX(3deg) translateY(-8px);
+  transform: perspective(900px) rotateX(3deg);
   box-shadow: var(--pb-3d-shadow);
 }
 

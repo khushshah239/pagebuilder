@@ -7,23 +7,32 @@
 
 .head {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-bottom: 12px;
-  border-bottom: 3px solid var(--pb-urgent);
+  align-items: stretch;
+  gap: 0;
+}
+.head::after {
+  content: "";
+  flex: 1;
+  height: 3px;
+  align-self: center;
+  background: linear-gradient(90deg, var(--pb-urgent) 0%, var(--pb-border) 100%);
 }
 
 .heading {
   margin: 0;
+  display: flex;
+  align-items: center;
+  background: var(--pb-urgent);
+  color: #fff;
+  padding: 9px 20px;
   font-family: var(--pb-heading-font, Inter, sans-serif);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
-  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--pb-text);
-  padding-left: 12px;
-  border-left: 4px solid var(--pb-urgent);
-  line-height: 1.2;
+  letter-spacing: 0.09em;
+  white-space: nowrap;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
+  padding-right: 28px;
 }
 
 /* 3-column grid on desktop, horizontal scroll on small */
@@ -67,7 +76,7 @@
 }
 .card:hover {
   border-color: transparent;
-  transform: perspective(900px) rotateX(3deg) translateY(-8px);
+  transform: perspective(900px) rotateX(3deg);
   box-shadow: var(--pb-3d-shadow);
 }
 

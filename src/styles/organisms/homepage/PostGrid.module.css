@@ -20,7 +20,7 @@
 }
 .lead:hover {
   border-color: transparent;
-  transform: perspective(1100px) rotateX(1.5deg) translateY(-5px);
+  transform: perspective(1100px) rotateX(1.5deg);
   box-shadow: var(--pb-3d-shadow);
 }
 
@@ -124,7 +124,7 @@
 }
 .card:hover {
   border-color: transparent;
-  transform: perspective(900px) rotateX(3deg) translateY(-6px);
+  transform: perspective(900px) rotateX(3deg);
   box-shadow: var(--pb-3d-shadow);
 }
 

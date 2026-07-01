@@ -79,7 +79,7 @@
   will-change: transform;
 }
 .hero:hover {
-  transform: perspective(900px) rotateX(2deg) translateY(-6px);
+  transform: perspective(900px) rotateX(2deg);
   box-shadow: var(--pb-3d-shadow);
   border-color: transparent;
 }
@@ -136,7 +136,7 @@
   will-change: transform;
 }
 .card:hover {
-  transform: perspective(900px) rotateX(2.5deg) translateY(-6px);
+  transform: perspective(900px) rotateX(2.5deg);
   box-shadow: var(--pb-3d-shadow);
   border-color: transparent;
 }

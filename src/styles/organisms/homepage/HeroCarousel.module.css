@@ -13,8 +13,8 @@
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
-  /* 3D perspective on the scroll container */
-  perspective: 1200px;
+  /* preserve-3d lets child rotateY / translateZ be visible */
+  transform-style: preserve-3d;
 }
 .track::-webkit-scrollbar { display: none; }
 
