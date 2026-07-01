@@ -5,33 +5,39 @@
 }
 
 .head {
-  padding-bottom: var(--pb-space-3);
-  border-bottom: 1px solid var(--pb-border);
+  display: flex;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 3px solid var(--pb-urgent);
 }
 
 .heading {
   margin: 0;
   font-family: var(--pb-heading-font, Inter, sans-serif);
-  font-size: var(--pb-fs-lg);
-  font-weight: var(--pb-heading-weight);
-  letter-spacing: -0.01em;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--pb-text);
+  padding-left: 12px;
+  border-left: 4px solid var(--pb-urgent);
+  line-height: 1.2;
 }
 
-/* Horizontal scroll rail */
 .grid {
   display: flex;
-  gap: 22px;
+  gap: 18px;
   overflow-x: auto;
   scroll-snap-type: x proximity;
   scrollbar-width: none;
-  padding: 4px 2px 8px;
+  padding: 6px 4px 12px;
+  perspective: 1200px;
 }
 .grid::-webkit-scrollbar { display: none; }
 
 .card {
   position: relative;
-  flex: 0 0 max(260px, calc((100% - 44px) / 3));
+  flex: 0 0 max(240px, calc((100% - 36px) / 3));
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
@@ -40,14 +46,16 @@
   border-radius: var(--pb-radius-md);
   overflow: hidden;
   color: inherit;
-  transition: box-shadow var(--pb-dur) var(--pb-ease),
-    transform var(--pb-dur) var(--pb-ease),
-    border-color var(--pb-dur) var(--pb-ease);
+  transition:
+    box-shadow 0.3s var(--pb-ease),
+    transform   0.3s var(--pb-ease-spring),
+    border-color 0.3s;
+  will-change: transform;
 }
 .card:hover {
   border-color: transparent;
-  box-shadow: var(--pb-shadow-hover);
-  transform: translateY(-3px);
+  transform: perspective(900px) rotateX(3deg) translateY(-8px);
+  box-shadow: var(--pb-3d-shadow);
 }
 
 .cardLink {
@@ -93,11 +101,12 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 3px 8px;
-  border-radius: 2px;
+  border-radius: 3px;
   text-decoration: none;
-  transition: background var(--pb-dur);
+  box-shadow: 0 2px 8px rgba(204,0,0,0.4);
+  transition: background var(--pb-dur), transform var(--pb-dur);
 }
-.category:hover { background: var(--pb-accent-dark); }
+.category:hover { background: var(--pb-accent-dark); transform: scale(1.05); }
 
 .title {
   position: relative;

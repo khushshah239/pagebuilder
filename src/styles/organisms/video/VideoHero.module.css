@@ -1,21 +1,25 @@
+/* ── Video Hero — cinematic embed player ─────────────────────────────────── */
 .hero {
   margin: 0;
   width: 100%;
+  animation: pb-fade-up 0.5s var(--pb-ease) 0.1s both;
 }
 
-/* 16:9 wrapper — overrides any inline width/height attributes on the injected
-   iframe so the embed always fills the container at the correct aspect ratio. */
 .embedWrapper {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: var(--pb-muted-bg);
+  background: #000;
   border-radius: var(--pb-radius-md);
   overflow: hidden;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.28), 0 4px 16px rgba(0,0,0,0.14);
+  transition: box-shadow 0.4s var(--pb-ease), transform 0.4s var(--pb-ease-spring);
+}
+.embedWrapper:hover {
+  box-shadow: 0 20px 64px rgba(0,0,0,0.36), 0 8px 24px rgba(0,0,0,0.18);
+  transform: translateY(-2px);
 }
 
-/* Force the CMS-supplied iframe to fill the wrapper regardless of its own
-   width/height attributes (e.g. height="auto" from the Publive embed HTML). */
 .embedWrapper iframe {
   position: absolute;
   inset: 0;
@@ -25,7 +29,7 @@
   display: block;
 }
 
-/* ── Poster fallback (when no embed HTML) ─────────────────────────────────── */
+/* Poster fallback */
 .posterLink {
   position: relative;
   display: block;
@@ -33,24 +37,21 @@
   aspect-ratio: 16 / 9;
   border-radius: var(--pb-radius-md);
   overflow: hidden;
-  background: var(--pb-muted-bg);
+  background: #000;
   text-decoration: none;
   color: inherit;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.28);
+  transition: box-shadow 0.4s var(--pb-ease), transform 0.4s var(--pb-ease-spring);
+}
+.posterLink:hover {
+  transform: perspective(1000px) rotateX(2deg) translateY(-4px);
+  box-shadow: 0 20px 64px rgba(0,0,0,0.36);
 }
 
-.poster {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
+.poster { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s cubic-bezier(0.2,0.7,0.2,1); }
+.posterLink:hover .poster { transform: scale(1.03); }
 
-.posterFallback {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: var(--pb-muted-bg);
-}
+.posterFallback { display: block; width: 100%; height: 100%; background: #111; }
 
 .playBadge {
   position: absolute;
@@ -58,8 +59,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 52px;
-  color: #fff;
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
   pointer-events: none;
 }
+.playBadge::after {
+  content: "▶";
+  font-size: 56px;
+  color: #fff;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.7);
+  opacity: 0.9;
+  transition: transform 0.3s var(--pb-ease-spring), opacity 0.3s;
+}
+.posterLink:hover .playBadge::after { transform: scale(1.15); opacity: 1; }

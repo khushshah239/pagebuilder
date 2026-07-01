@@ -1,30 +1,29 @@
+/* ── Share Bar — floating social share with 3D button press ─────────────── */
 .bar {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 14px;
-  margin-top: -20px;
-  padding-top: 14px;
+  gap: 16px;
+  padding: 20px;
+  margin-top: -12px;
+  background: linear-gradient(135deg, var(--pb-surface-bg) 0%, var(--pb-muted-bg) 100%);
+  border: 1px solid var(--pb-border);
+  border-radius: var(--pb-radius-lg);
+  box-shadow: var(--pb-shadow-md);
+  animation: pb-fade-up 0.45s var(--pb-ease) 0.25s both;
 }
 
-/* Soft fading hairline — gentler than the old hard top/bottom borders. */
 .bar::before {
   content: "";
   width: 100%;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--pb-border) 25%,
-    var(--pb-border) 75%,
-    transparent
-  );
+  display: none;
 }
 
 .label {
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--pb-muted);
@@ -34,15 +33,15 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   padding: 0;
   border: none;
   border-radius: 50%;
@@ -50,54 +49,42 @@
   text-decoration: none;
   background: var(--pb-accent);
   color: #fff;
-  transition: background var(--pb-dur), transform var(--pb-dur), box-shadow var(--pb-dur);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition:
+    background var(--pb-dur),
+    transform 0.2s var(--pb-ease-spring),
+    box-shadow 0.2s var(--pb-ease);
+  will-change: transform;
 }
 .button:hover {
   background: var(--pb-accent-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  transform: translateY(-4px) scale(1.08);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.22);
+}
+.button:active {
+  transform: translateY(-1px) scale(0.96);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
-.iconSvg {
-  width: 20px;
-  height: 20px;
-  display: block;
-  fill: currentColor;
-}
-
-/* Fallback for platforms without a built-in glyph — uses the CMS-supplied
-   icon image, clipped to a circle so it matches the solid-button look. */
-.icon {
-  width: 24px;
-  height: 24px;
-  object-fit: cover;
-  display: block;
-  border-radius: 50%;
-}
-
-.fallbackInitial {
-  font-size: 14px;
-  font-weight: 700;
-  color: inherit;
-  line-height: 1;
-}
+.iconSvg { width: 20px; height: 20px; display: block; fill: currentColor; }
+.icon { width: 22px; height: 22px; object-fit: cover; display: block; border-radius: 50%; }
+.fallbackInitial { font-size: 14px; font-weight: 700; color: inherit; line-height: 1; }
 
 .copied {
   position: absolute;
-  bottom: calc(100% + 6px);
+  bottom: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
   background: var(--pb-text, #111);
   color: #fff;
   font-size: 11px;
   font-weight: 600;
-  padding: 4px 9px;
-  border-radius: var(--pb-radius-sm, 4px);
+  padding: 5px 10px;
+  border-radius: var(--pb-radius-sm);
   white-space: nowrap;
   pointer-events: none;
+  box-shadow: var(--pb-shadow-md);
+  animation: pb-scale-in 0.2s var(--pb-ease-spring) both;
 }
 
-.buttonWrap {
-  position: relative;
-  display: inline-flex;
-}
+.buttonWrap { position: relative; display: inline-flex; }

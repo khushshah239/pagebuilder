@@ -1,19 +1,15 @@
+/* ── Infinite Article Feed — 3D cards with stagger animation ─────────────── */
 .grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 280px));
   justify-content: center;
   gap: var(--pb-space-5);
   align-items: stretch;
+  perspective: 1400px;
 }
-@media (max-width: 1100px) {
-  .grid { grid-template-columns: repeat(3, minmax(0, 300px)); }
-}
-@media (max-width: 760px) {
-  .grid { grid-template-columns: repeat(2, minmax(0, 320px)); gap: 18px; }
-}
-@media (max-width: 480px) {
-  .grid { grid-template-columns: minmax(0, 360px); gap: var(--pb-space-4); }
-}
+@media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, minmax(0, 300px)); } }
+@media (max-width: 760px)  { .grid { grid-template-columns: repeat(2, minmax(0, 320px)); gap: 16px; } }
+@media (max-width: 480px)  { .grid { grid-template-columns: minmax(0, 380px); gap: var(--pb-space-4); } }
 
 .card {
   position: relative;
@@ -25,21 +21,20 @@
   overflow: hidden;
   text-decoration: none;
   color: inherit;
-  transition: box-shadow var(--pb-dur) var(--pb-ease),
-    transform var(--pb-dur) var(--pb-ease),
-    border-color var(--pb-dur) var(--pb-ease);
+  transition:
+    box-shadow 0.3s var(--pb-ease),
+    transform   0.3s var(--pb-ease-spring),
+    border-color 0.3s;
+  will-change: transform;
+  animation: pb-fade-up 0.5s var(--pb-ease) both;
 }
 .card:hover {
   border-color: transparent;
-  box-shadow: var(--pb-shadow-hover);
-  transform: translateY(-3px);
+  transform: perspective(900px) rotateX(3deg) translateY(-8px);
+  box-shadow: var(--pb-3d-shadow);
 }
 
-.cardLink {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-}
+.cardLink { position: absolute; inset: 0; z-index: 1; }
 
 .thumb {
   width: 100%;
@@ -50,7 +45,7 @@
   transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
   flex-shrink: 0;
 }
-.card:hover .thumb { transform: scale(1.04); }
+.card:hover .thumb { transform: scale(1.05); }
 
 .text {
   display: flex;
@@ -62,13 +57,12 @@
 
 .category {
   align-self: flex-start;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.07em;
   color: var(--pb-accent);
 }
-
 a.category {
   position: relative;
   z-index: 2;
@@ -104,11 +98,8 @@ a.category:hover { color: var(--pb-accent-dark); }
   color: var(--pb-muted);
   padding-top: var(--pb-space-3);
   border-top: 1px solid var(--pb-border);
-  text-transform: none;
-  letter-spacing: 0;
 }
 
-/* Top line: author (may wrap to 2 lines) on the left, "Read →" pinned right. */
 .metaTop {
   display: flex;
   align-items: center;
@@ -116,14 +107,7 @@ a.category:hover { color: var(--pb-accent-dark); }
   min-width: 0;
 }
 
-/* Timestamp sits on its own second line — left-aligned under the author name and
-   never wraps, so a long author name above it can never break it. */
-.time {
-  text-align: left;
-  white-space: nowrap;
-  color: var(--pb-muted);
-  font-variant-numeric: tabular-nums;
-}
+.time { text-align: left; white-space: nowrap; color: var(--pb-muted); font-variant-numeric: tabular-nums; }
 
 a.author {
   position: relative;
@@ -136,27 +120,24 @@ a.author {
 }
 a.author:hover { color: var(--pb-accent); }
 
-/* "Read story →" affordance that slides up on hover */
 .metaTop::after {
   content: "Read →";
   margin-left: auto;
   flex-shrink: 0;
   white-space: nowrap;
   font-family: var(--pb-heading-font, Inter, sans-serif);
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.04em;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.05em;
   color: var(--pb-muted);
   opacity: 0;
   transform: translateX(-6px);
-  transition: opacity var(--pb-dur) var(--pb-ease),
-    transform var(--pb-dur) var(--pb-ease), color var(--pb-dur);
+  transition:
+    opacity var(--pb-dur) var(--pb-ease),
+    transform var(--pb-dur) var(--pb-ease),
+    color var(--pb-dur);
 }
-.card:hover .metaTop::after {
-  opacity: 1;
-  transform: translateX(0);
-  color: var(--pb-accent);
-}
+.card:hover .metaTop::after { opacity: 1; transform: translateX(0); color: var(--pb-accent); }
 
 .empty {
   margin: 0;

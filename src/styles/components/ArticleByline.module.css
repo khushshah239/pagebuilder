@@ -1,4 +1,4 @@
-/* Colour inherits from context (dark on cards, white on the hero overlay). */
+/* ── Article Byline — author + timestamp ─────────────────────────────────── */
 .byline {
   display: flex;
   flex-direction: column;
@@ -12,17 +12,9 @@
   color: var(--pb-muted, #666);
 }
 
-/* "By" reads as a small label */
-.by {
-  font-size: 12px;
-  font-weight: 400;
-  opacity: 0.8;
-}
+.by { font-size: 12px; font-weight: 400; opacity: 0.8; }
 
-.author {
-  font-weight: 600;
-  color: var(--pb-muted, #555);
-}
+.author { font-weight: 600; color: var(--pb-muted, #555); }
 
 a.author {
   position: relative;
@@ -32,15 +24,13 @@ a.author {
   text-decoration: none;
   transition: color 0.15s ease;
 }
-a.author:hover {
-  color: var(--pb-accent);
-}
+a.author:hover { color: var(--pb-accent); }
 
 .metaLine {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   font-size: 12px;
   font-weight: 500;
   line-height: 1.4;
@@ -56,9 +46,11 @@ a.author:hover {
   white-space: nowrap;
 }
 
-.icon {
-  width: 13px;
-  height: 13px;
-  flex-shrink: 0;
-  opacity: 0.7;
+.metaItem + .metaItem::before {
+  content: "·";
+  color: var(--pb-border-strong, #ccc);
+  font-size: 14px;
+  margin-right: 4px;
 }
+
+.icon { width: 13px; height: 13px; flex-shrink: 0; opacity: 0.65; }

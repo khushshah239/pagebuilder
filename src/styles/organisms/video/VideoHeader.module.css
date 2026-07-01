@@ -1,33 +1,36 @@
+/* ── Video Header — editorial metadata block ─────────────────────────────── */
 .header {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  padding-bottom: var(--pb-space-5);
+  border-bottom: 1px solid var(--pb-border);
+  animation: pb-fade-up 0.5s var(--pb-ease) 0.15s both;
 }
 
 .category {
   display: inline-block;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--pb-accent);
+  color: #fff;
+  background: var(--pb-urgent);
+  padding: 4px 10px;
+  border-radius: 3px;
   text-decoration: none;
-  position: relative;
-  z-index: 1;
-  transition: color var(--pb-dur);
+  box-shadow: 0 2px 8px rgba(204,0,0,0.35);
+  transition: background var(--pb-dur), transform var(--pb-dur);
 }
-
-.category:hover {
-  color: var(--pb-accent-dark);
-}
+.category:hover { background: var(--pb-accent-dark); transform: scale(1.04); }
 
 .title {
   margin: 0;
   font-family: var(--pb-heading-font, inherit);
-  font-size: clamp(22px, 3vw, 34px);
-  font-weight: var(--pb-heading-weight);
-  line-height: 1.2;
-  letter-spacing: -0.015em;
+  font-size: clamp(22px, 3vw, 36px);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
   color: var(--pb-text);
 }
 
@@ -35,13 +38,10 @@
   margin: 0;
   font-size: var(--pb-fs-xs);
   color: var(--pb-muted);
+  font-variant-numeric: tabular-nums;
 }
 
-.author {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+.author { display: flex; align-items: center; gap: 10px; }
 
 .avatar {
   width: 36px;
@@ -49,6 +49,7 @@
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .avatarFallback {
@@ -60,7 +61,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 15px;
   flex-shrink: 0;
 }
@@ -70,11 +71,6 @@
   font-weight: 600;
   color: var(--pb-text);
   text-decoration: none;
-  position: relative;
-  z-index: 1;
   transition: color var(--pb-dur);
 }
-
-.authorName:hover {
-  color: var(--pb-accent);
-}
+.authorName:hover { color: var(--pb-accent); }

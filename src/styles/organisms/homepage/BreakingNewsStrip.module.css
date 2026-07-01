@@ -1,29 +1,32 @@
-/* Urgency strip — red survives here via --pb-urgent (never --pb-accent) */
+/* ── Breaking News Strip — premium urgency ticker ────────────────────────── */
 .strip {
   display: flex;
   align-items: stretch;
-  gap: 0;
   border: none;
   border-radius: 0;
   overflow: hidden;
   background: var(--pb-urgent);
-  box-shadow: none;
+  box-shadow: 0 2px 12px rgba(204,0,0,0.35);
+  border-top: 1px solid rgba(255,255,255,0.15);
 }
 
-/* White "● LIVE" badge with a pulsing urgent dot */
+/* "LIVE" badge — white bg, pulsing red dot */
 .badge {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
-  padding: 0 14px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  padding: 0 18px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--pb-urgent);
   background: #fff;
+  position: relative;
 }
+
+/* Pulse dot */
 .badge::before {
   content: "";
   width: 8px;
@@ -31,6 +34,21 @@
   border-radius: 50%;
   background: var(--pb-urgent);
   animation: pb-breaking-pulse 1.6s ease-out infinite;
+  flex-shrink: 0;
+}
+
+/* Separator triangle on the right of the badge */
+.badge::after {
+  content: "";
+  position: absolute;
+  right: -10px;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 10px solid #fff;
+  border-top: 50px solid transparent;
+  border-bottom: 0 solid transparent;
+  z-index: 1;
 }
 
 .viewport {
@@ -42,52 +60,38 @@
 .marquee {
   display: flex;
   width: max-content;
-  animation: pb-marquee 45s linear infinite;
+  animation: pb-marquee 42s linear infinite;
 }
-.viewport:hover .marquee {
-  animation-play-state: paused;
-}
+.viewport:hover .marquee { animation-play-state: paused; }
 
 .group {
   display: flex;
   align-items: center;
   gap: 0;
-  padding: 8px 0;
+  padding: 9px 0;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
-/* White headlines separated by bullet markers */
 .item {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: #fff;
   text-decoration: none;
   position: relative;
-  padding: 0 22px;
+  padding: 0 28px;
+  letter-spacing: 0.01em;
+  transition: opacity var(--pb-dur);
 }
-.item:hover {
-  text-decoration: underline;
-}
+.item:hover { text-decoration: underline; text-underline-offset: 3px; opacity: 0.9; }
 .item::before {
   content: "•";
   position: absolute;
-  left: -2px;
+  left: -1px;
   top: 50%;
   transform: translateY(-50%);
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 14px;
-}
-
-@keyframes pb-breaking-pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(200, 16, 46, 0.55); }
-  70%  { box-shadow: 0 0 0 7px rgba(200, 16, 46, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(200, 16, 46, 0); }
-}
-
-@keyframes pb-marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  color: rgba(255,255,255,0.6);
+  font-size: 16px;
 }
 
 @media (prefers-reduced-motion: reduce) {

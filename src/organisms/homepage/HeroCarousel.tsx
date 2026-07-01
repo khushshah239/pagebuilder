@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { PbImage } from "@/components/PbImage";
 import { CategoryLink } from "@/components/CategoryLink";
@@ -10,8 +10,29 @@ import styles from "@/styles/organisms/homepage/HeroCarousel.module.css";
 export function HeroCarousel({ identifier, slides }: HeroCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const isPaused = useRef(false);
 
   if (slides.length === 0) return null;
+
+  const goToSlide = useCallback((index: number) => {
+    const child = trackRef.current?.children[index] as HTMLElement | undefined;
+    child?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+  }, []);
+
+  // Auto-advance every 5 seconds
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    const timer = setInterval(() => {
+      if (!isPaused.current) {
+        setActiveIndex((prev) => {
+          const next = (prev + 1) % slides.length;
+          goToSlide(next);
+          return next;
+        });
+      }
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [slides.length, goToSlide]);
 
   function handleScroll() {
     const track = trackRef.current;
@@ -21,17 +42,9 @@ export function HeroCarousel({ identifier, slides }: HeroCarouselProps) {
     let smallest = Infinity;
     children.forEach((child, index) => {
       const distance = Math.abs(child.offsetLeft - track.scrollLeft);
-      if (distance < smallest) {
-        smallest = distance;
-        nearest = index;
-      }
+      if (distance < smallest) { smallest = distance; nearest = index; }
     });
     setActiveIndex(nearest);
-  }
-
-  function goToSlide(index: number) {
-    const child = trackRef.current?.children[index] as HTMLElement | undefined;
-    child?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
   }
 
   return (
@@ -39,6 +52,8 @@ export function HeroCarousel({ identifier, slides }: HeroCarouselProps) {
       className={styles.carousel}
       data-organism={identifier}
       aria-label="Featured stories"
+      onMouseEnter={() => { isPaused.current = true; }}
+      onMouseLeave={() => { isPaused.current = false; }}
     >
       <div className={styles.track} ref={trackRef} onScroll={handleScroll}>
         {slides.map((slide, index) => {
