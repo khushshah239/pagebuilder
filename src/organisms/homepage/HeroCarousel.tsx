@@ -12,8 +12,6 @@ export function HeroCarousel({ identifier, slides }: HeroCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const isPaused = useRef(false);
 
-  if (slides.length === 0) return null;
-
   const goToSlide = useCallback((index: number) => {
     const track = trackRef.current;
     const child = track?.children[index] as HTMLElement | undefined;
@@ -62,7 +60,9 @@ export function HeroCarousel({ identifier, slides }: HeroCarouselProps) {
   }, [slides.length, goToSlide]);
 
   // Run 3D on mount so initial state is correct
-  useEffect(() => { apply3D(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { apply3D(); }, []);
+
+  if (slides.length === 0) return null;
 
   function handleScroll() {
     const track = trackRef.current;
