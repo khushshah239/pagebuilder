@@ -28,7 +28,7 @@ const sora = Sora({
 const publisher = getActivePublisher();
 
 export const metadata: Metadata = {
-  title: `${publisher.name} — ${publisher.tagline}`,
+  title: publisher.name,
   description: `${publisher.name} — pages assembled from CDS components.`,
 };
 

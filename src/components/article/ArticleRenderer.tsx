@@ -10,7 +10,6 @@ import {
   ArticleBody,
   ArticleHeader,
   ArticleHero,
-
   InlineVideoEmbed,
   LiveBlogFeed,
   MoreFromAuthorRow,
@@ -25,7 +24,6 @@ import {
 const ARTICLE_ORGANISM_COMPONENTS: Record<string, ComponentType<any>> = {
   articlehero: ArticleHero,
   articleheader: ArticleHeader,
-
   articlebody: ArticleBody,
   inlinevideoembed: InlineVideoEmbed,
   sharebar: ShareBar,

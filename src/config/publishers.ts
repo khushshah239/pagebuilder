@@ -12,7 +12,6 @@ const SORA_STACK =
 const CRICTODAY: PublisherConfig = {
   key: "crictoday",
   name: "CricToday",
-  tagline: "Cricket News, Live Scores, Features & Opinion",
   cdsPublisherId: "4027",
   // Logos, navigation, and footer come from the CDS APIs (publisherApi / navApi /
   // footerApi) — not hardcoded here.

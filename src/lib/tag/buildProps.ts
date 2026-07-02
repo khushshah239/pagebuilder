@@ -75,7 +75,7 @@ export function buildTagFeedItems(
 /** Builds tag hero props from binding context (includes live tag.name). */
 export function buildTagHeroProps(
   template: TagTemplate,
-  tag: Record<string, unknown>,
+  tag: Record<string, unknown>,  
   posts: TagPostsResponse
 ): TagHeroBannerProps {
   const props: Record<string, unknown> = { identifier: "tag-hero" };
@@ -88,7 +88,7 @@ export function buildTagHeroProps(
   const context = { ...posts, tag: tag ?? {} };
 
   for (const { source, target } of tagBinding(template, "tag-hero")) {
-    const live = getByPath(context, source);
+    const live = getByPath(context, source);//context.tag.name
     if (!isBlank(live)) props[target] = live;
   }
 
